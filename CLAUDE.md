@@ -17,6 +17,8 @@ Deliverable: report + literature review + trained model + results, aimed at a pu
 **Current phase: pipeline/system design.** The literature review is complete (ADR-0012). No pipeline,
 model, sign representation, text → sign mapping, sign lexicon, avatar technology or training method has
 been chosen (ADR-0002, ADR-0010). MediaPipe Holistic is only the interim landmark-extraction step.
+A full design plan is **proposed** (`research/design_proposals/03_…`, 2026-10-21) and waits for the
+owner's answers to `open_questions.md` F1–F6.
 
 **Not a medical project** (owner, 2026-09-27). No medical audio, no medical entity extraction, no
 dialect focus (ADR-0003). The wrong context blocks were removed from analyses 01–08 (ADR-0012).
@@ -57,8 +59,10 @@ Remaining medical/dialect mentions there are genuine paper findings.
 - **Compute (ADR-0004, ADR-0009):** Google Colab (T4 GPU, ~15 GB VRAM, ~12 h session limit) for
   training; desktop for full-dataset work; laptop for code and small samples only. The 24 GB RAM /
   AMD Radeon RX 570 machine is one of these two — which one is (TBD — confirm with owner).
-- **Data location:** full dataset on the desktop or Drive → Colab. Only a 50-clip sample is in this
-  repo.
+- **Data location (verified 2026-10-21):** the full 5,010-video set is in
+  `dataset/initial_dataset/SIGN_LANGUAGE_DATA/` on the desktop and is **gitignored** — never add it to
+  git. Only the 50-clip sample (`videos/`) is committed. Drive → Colab is the cloud route (ADR-0009;
+  wording amendment pending, `open_questions.md` F10).
 - **Language:** Bangla (primary).
 
 ## CURRENT STACK

@@ -4,9 +4,11 @@
 
 **Status keys:** ⬜ Not started · 🟨 In progress · 🟦 Blocked · ✅ Done · ⛔ Retired
 
-**Last updated:** 2026-09-27
+**Last updated:** 2026-10-21
 **Current phase:** Phase 2 — Design & pipeline decision. Scope and dataset are settled
-(ADR-0007–0009); the design itself is still open (ADR-0002, ADR-0010).
+(ADR-0007–0009). A full design plan is **proposed** (Session 2,
+`research/design_proposals/03_…`) and waits for the owner's answers to `open_questions.md` F1–F6.
+The design itself is still open (ADR-0002, ADR-0010).
 
 ---
 
@@ -21,8 +23,9 @@ lead to: report + literature review + trained model + results, aimed at a publis
 | 1 | Initial literature review | ✅ | Owner declared it complete, 2026-09-27 (ADR-0012). 6 papers analysed + 2 comparisons; wrong context removed |
 | 2 | Scope questions answered | ✅ | A1–A3 answered and recorded (ADR-0007), 2026-09-27 |
 | 3 | Initial dataset understood | ✅ | B1–B6 answered and recorded (ADR-0008, ADR-0009), 2026-09-27. Left open: signer count (B7), split definition (B8) |
-| 4 | Design / pipeline chosen | ⬜ | **(TBD — decide with owner)**. At minimum, C1–C5 in `open_questions.md` are decided and recorded as ADRs. Next up |
-| … | Implementation / evaluation milestones | ⬜ | (TBD — defined after milestone 4) |
+| 3b | Read-only repo + dataset re-audit | ✅ | Done 2026-10-21. Measurements in `test_log.md` (2026-10-21); contradictions listed in `research/design_proposals/03_…` §B |
+| 4 | Design / pipeline chosen | 🟨 | Plan **proposed** 2026-10-21 (`research/design_proposals/03_…`). Done when the owner answers F1–F6 and C1–C5 are recorded as ADRs |
+| … | Implementation / evaluation milestones | ⬜ | **Proposed, not adopted:** 5-day prototype Days 1–5 (see `current_task.md`), then weeks 2–4 scale-up. Adopted only after milestone 4 |
 
 ---
 
@@ -40,10 +43,11 @@ the scope and dataset questions.
 ### Phase 2 — Design & pipeline decision (current)
 **Goal:** Research and then choose, with the owner, the end-to-end pipeline: sign representation, text →
 sign mapping, sign lexicon, avatar technology, model/training and evaluation details.
-**Move on when:** (TBD — decide with owner).
+**Move on when:** The owner approves the design (F1–F6 answered, ADRs recorded).
 
 ### Later phases
-(TBD — defined once the design is chosen.)
+**Proposed (not adopted):** Phase 3 — 5-day end-to-end prototype on a 50-video pilot. Phase 4 —
+full-dataset experiments, evaluation and report (to about 2026-11-20). Defined once the design is chosen.
 
 ---
 

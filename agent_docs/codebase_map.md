@@ -1,12 +1,12 @@
 # codebase_map.md — Where Everything Lives
 
-**Last updated:** 2026-09-27
+**Last updated:** 2026-10-21
 
 There is **no code** in this repo yet. It holds research material, data and project docs.
 
 ---
 
-## Current structure (real, verified 2026-09-27)
+## Current structure (real, verified 2026-10-21)
 
 ```
 sign_avatar_cse498r/
@@ -29,20 +29,39 @@ sign_avatar_cse498r/
 │   ├── paper_analyses/              # Filled paper forms 01–06 + comparisons 07–08 (cleaned, ADR-0012)
 │   └── design_proposals/            # AI-written design PROPOSALS, not decisions
 │       ├── 01_Beginners_Research_Guide_and_Initial_Project_Design.md   # older; partly superseded by 02
-│       └── 02_BdSL_Text-to-Sign_Research_and_Build_Guide.md            # newer
+│       ├── 02_BdSL_Text-to-Sign_Research_and_Build_Guide.md            # newer
+│       └── 03_Stage1_Audit_and_Design_Plan_2026-10-21.md               # Session 2 plan; awaits F1–F6
+├── .gitignore                       # Ignores dataset/initial_dataset/SIGN_LANGUAGE_DATA/
+├── misc/pdf/                        # EMPTY, untracked folder on disk; purpose unknown (open_questions F11)
 └── dataset/
     ├── README.md                    # Dataset facts, status of each file, known/unknown
     └── initial_dataset/
+        ├── README.md                # Directory guide + AI rules for dataset work (2026-09-28)
+        ├── DATASET_WORK_LOG.md      # Log of every dataset inspection/operation
         ├── FinalSheet2.xlsx         # CURRENT (ADR-0008). "Names" (Bangla sentence) + "Index"; 5,010 rows, Index 0–5460
         ├── FinalSheet_DuplicateGroups.xlsx  # 82 duplicate groups (178 rows); computed over FinalSheet.xlsx's 3,491 rows only
         ├── superseded/
         │   └── FinalSheet.xlsx      # Superseded (ADR-0008). 3,491 rows = first 3,491 rows of FinalSheet2.xlsx
-        └── videos/                  # 50-clip sample, <Index>.mp4 (~767 MB). Full set is on desktop / Drive (ADR-0009)
+        ├── SIGN_LANGUAGE_DATA/      # FULL SET: 5,010 <Index>.mp4 (66.3 GiB) + SESSION_LOG.md (July 2026 log). GITIGNORED — never add to git
+        └── videos/                  # 50-clip sample, <Index>.mp4 (~767 MB), committed; byte-identical to SIGN_LANGUAGE_DATA copies
 ```
 
-Not on disk: `new_project_intake/` (the inbox named in `CLAUDE.md` and `README.md`). See
-`open_questions.md` E2. `BOOTSTRAP_PROJECT_PROMPT.md`, `misc/` and `templates/` were removed (staged
-deletions; recoverable from commit `15c9496`).
+Not on disk: `new_project_intake/` (the inbox named in `CLAUDE.md` and `README.md`); see
+`open_questions.md` E2. `BOOTSTRAP_PROJECT_PROMPT.md` and `templates/` were removed in commit `43598be`
+(recoverable from `15c9496`).
+
+### Related material OUTSIDE this repo (read-only reference; found 2026-10-21)
+- `D:\CSE498R\Sign_Language\CSE498R_v2\`: the earlier project (sign→voice recognition; git remote
+  `RRM006/sign-language-to-voice`). It contains:
+  - `src/`: `features.py`, `extract_landmarks.py`, `paths.py`, …
+  - `tests/`, `analysis/`, `notebooks/` (never executed), `models/*.task` (holistic, hand, face, pose_lite);
+  - `Sign_Language/{scripts,outputs,mediapipe_models,reports,SESSION_LOG.md}`: the July 2026 analysis
+    scripts and their JSON/CSV outputs, including `duplicate_groups.csv`;
+  - its own `agent_docs/`;
+  - `Paper sign/` PDFs (not read).
+
+  Different scope; reuse only after the owner answers `open_questions.md` F8.
+- `D:\CSE498R\Sign_Language.zip` (70 GB, not opened).
 
 ### Verified dataset facts
 - Video filenames present: `0–3`, `328–332`, `784–794`, `3931–3950`, `5451–5460` (50 files). All 50 appear
@@ -71,7 +90,8 @@ decides:
 - **Don't read `research/papers/*.pdf`**. Use the analyses (ADR-0006).
 - **Keep `videos/<Index>.mp4` aligned with the `Index` column** in the sheets. Don't rename videos.
 - **Don't modify the dataset files.** The spelling is intentional (ADR-0008).
-- **Don't add the full video set to git.** It stays on the desktop / Drive (ADR-0009). The 50-clip
-  sample is already committed directly (no Git LFS).
+- **Don't add the full video set to git.** It sits in `SIGN_LANGUAGE_DATA/` on the desktop and is
+  gitignored (ADR-0009 wording to be amended: `open_questions.md` F10). The 50-clip sample is already
+  committed directly (no Git LFS).
 - Several file and folder names contain spaces (e.g. analysis 05, most PDFs). Quote paths in shell
   commands.

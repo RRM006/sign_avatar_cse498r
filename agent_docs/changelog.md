@@ -14,6 +14,32 @@
 
 ---
 
+## Session 2 — 2026-10-21 — Read-only audit + Stage-1 research design plan
+- Did: Read all agent_docs, ADRs, analyses 01 and 07, design proposal 02, the dataset logs, and the
+  earlier project `D:\CSE498R\Sign_Language\CSE498R_v2\` (found this session; sign→voice scope). Re-measured
+  dataset facts read-only:
+  - the sheet and the video ID mapping;
+  - duplicate CSV consistency, plus SHA-256 spot-checks;
+  - header metadata of all 5,010 files;
+  - rotation via OpenCV;
+  - packet timestamps on 80 clips.
+
+  Results are in `test_log.md`. Checked hardware and software read-only, and verified Bangla-SGP, the
+  mBART text-to-gloss paper, MediaPipe Holistic, torch-directml and avatar tools on the web. Wrote the
+  plan `research/design_proposals/03_Stage1_Audit_and_Design_Plan_2026-10-21.md` (PROPOSAL). Corrected
+  the wrong "only the 50-clip sample is in the repo" line in `CLAUDE.md` and `dataset/README.md`. Added
+  the `DATASET_WORK_LOG.md` entry.
+- Decided: Nothing. No owner decision was given. The proposed ADR-0014–0018 wait for F1–F6.
+- Broke / problem:
+  - PyAV 17.1 segfaulted during a long in-process packet-demux loop; it worked one file per process.
+  - PyAV did not report rotation, so OpenCV was used.
+  - Old claims are contradicted: "all VFR" and "0 badly VFR" (5/80 irregular), and stale docs
+    (reorganisation is committed, no leftover branch/worktree, the full set is inside the repo folder).
+  - The 50 sample videos (identifiable faces) are pushed to GitHub; repo visibility unknown.
+- Deferred: All implementation (owner rule: wait for "go"). Full SHA-256 re-hash, pHash re-run,
+  MediaPipe re-runs, signer inspection. ADR-0009 / constitution wording fixes (need an owner decision).
+- Next: Owner answers F1–F6, then "go" for Day 1 step 1 (environment check + config only).
+
 ## Session 1 — 2026-09-27 — Finalize setup: record owner answers, retire old worktree
 - Did: Confirmed the session runs in the real folder (not a worktree). Verified the owner's manual
   fixes: dataset files are byte-identical moves, `FinalSheet.xlsx` is in `superseded/`, `videos.txt`

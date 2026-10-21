@@ -15,7 +15,9 @@ Team-owned Bangla sentence → BdSL video dataset. Full permissions are secured.
 
 ## Full dataset
 
-- The full video set is stored on the desktop. Only the 50-clip sample above is in this folder.
+- The full video set (5,010 MP4, 66.3 GiB) is stored on the desktop in
+  `initial_dataset/SIGN_LANGUAGE_DATA/`, which is **gitignored** (verified 2026-10-21). Only the 50-clip
+  sample above is committed to git. See `initial_dataset/README.md`.
 - Full-dataset work runs on the desktop or via Drive → Colab. The laptop is for code and small-sample work.
 - Profiling reported in `research/design_proposals/02_BdSL_Text-to-Sign_Research_and_Build_Guide.md` (not re-verified here): 5,010 MP4 files, 66.3 GB; about 3,456 unique sentence/video pairs after duplicate removal.
 
