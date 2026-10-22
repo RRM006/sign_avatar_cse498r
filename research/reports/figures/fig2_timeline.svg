@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" width="960" height="300" font-family="Segoe UI, Arial, sans-serif" font-size="12">
+  <defs><style>
+    .h{font-weight:600;font-size:13px}.s{fill:#444;font-size:11px}
+    .dot{fill:#2c5f9e}.tdot{fill:#b7791f}.ax{stroke:#888;stroke-width:2}
+  </style></defs>
+  <rect width="960" height="300" fill="#fff"/>
+  <text x="16" y="24" class="h" font-size="15">Figure 2. Project chronology (from git history and agent_docs/changelog.md)</text>
+  <line class="ax" x1="40" y1="150" x2="920" y2="150"/>
+  <circle class="dot" cx="60" cy="150" r="6"/><text x="40" y="128" class="h">2026-09-26</text><text x="40" y="176" class="s">repo created,</text><text x="40" y="190" class="s">50 sample videos</text>
+  <circle class="dot" cx="170" cy="150" r="6"/><text x="150" y="128" class="h">09-27</text><text x="150" y="176" class="s">Sessions 0–1:</text><text x="150" y="190" class="s">memory system,</text><text x="150" y="204" class="s">ADR-0001…0013</text>
+  <circle class="dot" cx="270" cy="150" r="6"/><text x="250" y="128" class="h">09-28</text><text x="250" y="176" class="s">dataset docs,</text><text x="250" y="190" class="s">full set ignored</text>
+  <circle class="dot" cx="370" cy="150" r="6"/><text x="350" y="128" class="h">10-21</text><text x="350" y="176" class="s">Session 2: read-only</text><text x="350" y="190" class="s">audit, design 03</text>
+  <circle class="dot" cx="480" cy="150" r="6"/><text x="455" y="110" class="h">10-22 Session 3</text><text x="455" y="176" class="s">design 04 approved</text><text x="455" y="190" class="s">Day 1: env, manifest,</text><text x="455" y="204" class="s">S1 v0, pilot50_v1</text><text x="455" y="218" class="s">Day 2: features, G0</text>
+  <circle class="dot" cx="600" cy="150" r="6"/><text x="580" y="128" class="h">10-22 S4</text><text x="580" y="176" class="s">commit edadec9,</text><text x="580" y="190" class="s">pushed</text>
+  <circle class="tdot" cx="700" cy="150" r="6"/><text x="680" y="128" class="h">10-22 S5</text><text x="680" y="176" class="s">Day 3 TEST run</text><text x="680" y="190" class="s">(fake review),</text><text x="680" y="204" class="s">merge 0eef7c6</text>
+  <circle class="dot" cx="800" cy="150" r="6"/><text x="780" y="128" class="h">10-22 S5</text><text x="780" y="176" class="s">Day 4 Model B</text><text x="780" y="190" class="s">d7335a8</text>
+  <circle class="dot" cx="900" cy="150" r="6"/><text x="850" y="128" class="h">10-22 S5</text><text x="850" y="176" class="s">Day 5 avatar</text><text x="850" y="190" class="s">6ecc353</text><text x="850" y="204" class="s">(local, unpushed)</text>
+  <text x="40" y="270" class="s">Commits after edadec9 (4fe7262 … 6ecc353) exist only locally: main is 6 commits ahead of origin/main (verified 2026-10-22).</text>
+</svg>

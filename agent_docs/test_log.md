@@ -24,6 +24,40 @@ Results are logged here only after they are actually run.
 
 ---
 
+## 2026-10-22 — Audit + report generation (Session 6)
+- Setup: read-only audit of the repository, `work/`, git, hardware and PDF tools; then (owner-approved)
+  the two reports. `.venv` unchanged (no installs). PDFs built with system Python 3.14.4 +
+  markdown-it-py 4.2.0 and headless Google Chrome (`research/reports/build_reports.py`); checked with
+  pdf.js 4.10.38 (jsDelivr) in the browser pane.
+- Metric(s) / checks and results:
+  - **Hashes:** manifest_v1 `2ff133cf…`, S1_v0 `40481a5f…`, pilot selection `8affc876…` equal their
+    meta files; holistic model `e2dab611…`; VRM `1995f174…`.
+  - **Pilot copies:** 50/50 SHA-256 match `pilot50_manifest.csv` (40/5/5).
+  - **Leakage re-check on S1 v0:** 0 SHA-256 / 0 sentences / 0 groups across splits.
+  - **Representative clips:** 3,456; 25,286.8 s ≈ 379,301 frames at 15 fps.
+  - **Runs:** 12 current + 6 superseded folders; all 60 checkpoint files load; every run has its
+    run/metrics files; every `run.json` records `dirty=True`.
+  - **pytest:** 140 passed. **gloss-validate:** exit 1 (normal), exit 0 (`--allow-test-data`).
+  - **Hardware:** Ryzen 5 3500X 6C/6T, 23.9 GB RAM, RX 570; D: 83.4 GB free, C: 121.7 GB free.
+  - **Line endings:** `core.autocrlf=true`, no `.gitattributes`; annotation CSV working copy
+    `9cd37d3d…` vs committed blob `a0be4e91…` (identical after removing CR).
+  - **Training code:** no `.to(device)` in `src/bdsl/models/` → CPU only.
+  - **Notebooks:** all 7 saved without outputs; only 00 was ever executed.
+  - **PDFs:** `PILOT_TEST_VERSION_COMPLETE_REPORT.pdf` 19 pages (813,922 B);
+    `FULL_DATASET_EXECUTION_PLAN.pdf` 31 pages (1,168,225 B). Text extractable on every page; all
+    Markdown headings present (29 / 120); all 7 figures present (checked by text inside each
+    diagram); "Page n of N" on every page except the title page; Bangla text intact; spot pages
+    checked visually (tables, code blocks and figures fit).
+- Notes:
+  - My own build-script bugs, fixed: image paths not rewritten (first PDFs had only alt text, and my
+    first figure check wrongly passed on that alt text); Chrome reused cached SVGs; the chart font
+    was missing on Windows.
+  - The pilot PDF could not be replaced while Adobe Acrobat Reader held it open; after the owner
+    quit Acrobat, the final build was written at 21:14:43 and verified.
+  - The table of contents links to sections but has no page numbers.
+
+---
+
 ## 2026-10-22 — Day 5 — retargeting, skeleton video, avatar viewer, end-to-end demo ("pipeline test")
 - Setup:
   - Command: `bdsl.cli demo --sentence <3246>` → `work/demo/demo_20261022T141520Z/`.

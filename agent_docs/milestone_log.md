@@ -29,7 +29,7 @@ lead to: report + literature review + trained model + results, aimed at a publis
 | 8 | Day 3 — Model A pilot | 🟨 | G0 vs GRU curves + per-item table ("pipeline test") on team-reviewed rows — or, only if the owner decides, a clearly labelled auto-draft pipeline test; resume test passes. Needs G10 (team review). 2026-10-22: code done and run in TEST mode on fake review data (ADR-0025): overfit 1/40 and kill-and-resume pass, 111 tests (`test_log.md`). The real run waits for a real video review |
 | 9 | Day 4 — Model B + text ablation + B0/B1 | ✅ | masked-loss unit test; overfit 1 → 40; table vs B0/B1 ("pipeline test"). Done 2026-10-22: masked-loss test passes; overfit 1 → 5.1% of the start loss, overfit 40 beats B0 on train; 3 seeds × {gloss, text}; kill-and-resume identical; 125 tests (`test_log.md`, ADR-0026). Finding: Model B ≈ B0 on held-out clips (G11) |
 | 10 | Day 5 — retarget + viewer + end-to-end demo | ✅ | one sentence → video with versioned log; skeleton fallback; limitations written. Done 2026-10-22: sentence 3246 → Model B + B1 side by side (G11, ADR-0027); skeleton MP4 + browser VRM viewer with .webm recording; `demo_log.json` (versions, hashes); round-trip ≤ 3.4° on the real avatar; `LIMITATIONS.md`; 140 tests (`test_log.md`). Not reviewed by a BdSL-competent person |
-| 11 | Weeks 2–4 — full data, model comparison, evaluation, report | ⬜ | per design doc 04 §G; deadline (TBD — G6) |
+| 11 | Weeks 2–4 — full data, model comparison, evaluation, report | ⬜ | per design doc 04 §G; deadline (TBD — G6). Full-dataset plan drafted as proposal 05 on 2026-10-22; not approved |
 
 ---
 

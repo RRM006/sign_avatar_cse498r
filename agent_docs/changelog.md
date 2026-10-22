@@ -14,6 +14,23 @@
 
 ---
 
+## Session 6 — 2026-10-22 — Read-only audit; pilot report and full-dataset plan (Markdown + PDF)
+- Did: Stage 1 read-only audit (repo, work/ artifacts, git, hardware, PDF tools): manifest/split/pilot
+  hashes match their meta; 50/50 pilot copies match; leakage re-check 0/0/0 on S1 v0; all 60
+  checkpoints load; pytest 140 passed; gloss-validate exits 1 (normal) / 0 (--allow-test-data).
+  Stage 2 (owner-approved): research/reports/ with PILOT_TEST_VERSION_COMPLETE_REPORT.{md,pdf},
+  FULL_DATASET_EXECUTION_PLAN.pdf, figures/ (7 SVG), build_reports.py; research/design_proposals/
+  05_FULL_DATASET_EXECUTION_PLAN.md (PROPOSAL). PDFs: system Python markdown-it-py 4.2.0 + headless
+  Chrome; checked with pdf.js in the browser pane.
+- Decided: No design decision (the owner approved the report files and toolchain: process only, no ADR).
+- Broke / problem: Found — core.autocrlf=true without .gitattributes changes tracked-CSV hashes
+  (annotation CSV: working copy 9cd37d3d…, committed a0be4e91…); every run.json has dirty=True; the
+  training code has no GPU device support; notebooks 01–06 never executed; README.md status stale.
+  Fixed in my own build script: image paths, cached figures, chart font.
+- Deferred: All implementation in proposal 05; committing the reports (public repo); README,
+  .gitattributes, device support (owner decisions).
+- Next: Owner reviews both reports and answers the Phase A decision register (proposal 05, Appendix C).
+
 ## Session 5 (continued) — 2026-10-22 — Day 5: retargeting + avatar viewer + end-to-end demo
 - Did: On the owner's go (Steps 1 and 2, defaults; G11 = Model B and B1 side by side):
   - added `src/bdsl/avatar/` (`postprocess` One-Euro + hand rest blend; `retarget` rt-v1 direction-

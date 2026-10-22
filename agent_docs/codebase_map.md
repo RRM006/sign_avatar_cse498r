@@ -51,11 +51,13 @@ sign_avatar_cse498r/
 │   ├── papers/                      # 6 source PDFs — AI must NOT read these
 │   │   └── README.md                # "Do not read" notice (ADR-0006) + PDF ↔ analysis index
 │   ├── paper_analyses/              # Filled paper forms 01–06 + comparisons 07–08 (cleaned, ADR-0012)
-│   └── design_proposals/            # AI-written design PROPOSALS, not decisions
-│       ├── 01_Beginners_Research_Guide_and_Initial_Project_Design.md   # older; partly superseded by 02
-│       ├── 02_BdSL_Text-to-Sign_Research_and_Build_Guide.md            # newer
-│       ├── 03_Stage1_Audit_and_Design_Plan_2026-10-21.md               # Session 2 plan; partly superseded by 04
-│       └── 04_Phase1_Design_Review_2026-10-22.md                       # Design review, approved in principle (ADR-0014–0021)
+│   ├── design_proposals/            # AI-written design PROPOSALS, not decisions
+│   │   ├── 01_Beginners_Research_Guide_and_Initial_Project_Design.md   # older; partly superseded by 02
+│   │   ├── 02_BdSL_Text-to-Sign_Research_and_Build_Guide.md            # newer
+│   │   ├── 03_Stage1_Audit_and_Design_Plan_2026-10-21.md               # Session 2 plan; partly superseded by 04
+│   │   ├── 04_Phase1_Design_Review_2026-10-22.md                       # Design review, approved in principle (ADR-0014–0021)
+│   │   └── 05_FULL_DATASET_EXECUTION_PLAN.md                           # Session 6: full-dataset plan, PROPOSAL (not approved)
+│   └── reports/                     # Session 6 (2026-10-22): PILOT_TEST_VERSION_COMPLETE_REPORT.{md,pdf} · FULL_DATASET_EXECUTION_PLAN.pdf (from proposal 05) · figures/ (7 SVG) · build_reports.py (system Python markdown-it-py + headless Chrome)
 ├── .gitignore                       # Ignores SIGN_LANGUAGE_DATA/, work/, dataset/pilot50_v1/videos/, .venv/, __pycache__/, .ipynb_checkpoints/
 ├── misc/pdf/                        # EMPTY, untracked folder on disk; left alone (ADR-0021)
 └── dataset/

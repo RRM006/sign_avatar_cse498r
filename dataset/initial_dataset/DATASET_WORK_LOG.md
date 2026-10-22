@@ -129,3 +129,20 @@
 - Errors/warnings: None.
 - Next step: Owner registers reviewer code(s) in `annotations/REVIEWERS.csv` and arranges the team
   review (`annotations/REVIEW_GUIDE.md`) before Day 3.
+
+## 2026-10-22 (Session 6 audit)
+
+- Computer: Desktop (`DESKTOP-4NDR99B`)
+- Task: Read-only audit for the pilot report and the full-dataset plan.
+- Files/folders inspected:
+  - `dataset/pilot50_v1/videos/` (SHA-256 of all 50 copies, compared with `pilot50_manifest.csv`);
+  - `SIGN_LANGUAGE_DATA/` (listing and size only: 5,012 entries, 67 GB on disk);
+  - `videos/` (file count only: 50).
+- Action performed: Read-only hashing and listing. No video was opened or decoded.
+- Files changed: This log entry only.
+- Dataset files changed: None.
+- Result: 50/50 pilot copies match their manifest. Details in `agent_docs/test_log.md` (2026-10-22,
+  Audit + report generation).
+- Errors/warnings: None.
+- Next step: Owner reviews `research/reports/` and proposal 05; any dataset processing follows its
+  approval gates.

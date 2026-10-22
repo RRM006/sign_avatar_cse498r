@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" font-family="Segoe UI, Arial, sans-serif" font-size="12">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker>
+    <style>
+      .v{fill:#e3f1e6;stroke:#2f7d43;stroke-width:1.4}
+      .t{fill:#fdf0d8;stroke:#b7791f;stroke-width:1.4;stroke-dasharray:5 3}
+      .b{fill:#e6eef8;stroke:#2c5f9e;stroke-width:1.4}
+      .h{font-weight:600;font-size:13px}
+      .s{fill:#444;font-size:11px}
+      .l{stroke:#444;stroke-width:1.4;fill:none;marker-end:url(#a)}
+      .lane{fill:#f7f7f5;stroke:#cfcfca}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="960" height="400" fill="#ffffff"/>
+  <text x="16" y="24" class="h" font-size="15">Figure 1. Pilot pipeline as built (2026-10-22)</text>
+
+  <rect class="lane" x="10" y="40" width="940" height="150" rx="6"/>
+  <text x="20" y="58" class="s" font-weight="600">DATA / TRAINING LANE (local desktop CPU)</text>
+  <rect class="v" x="22" y="72" width="150" height="56" rx="5"/><text x="32" y="94" class="h">5,010 videos</text><text x="32" y="112" class="s">3,456 unique · 66.3 GiB</text>
+  <rect class="v" x="200" y="72" width="160" height="56" rx="5"/><text x="210" y="94" class="h">Manifest v1 + S1 v0</text><text x="210" y="112" class="s">3,376 leakage groups</text>
+  <rect class="v" x="388" y="72" width="170" height="56" rx="5"/><text x="398" y="94" class="h">pilot50_v1 (40/5/5)</text><text x="398" y="112" class="s">copies, SHA-256 checked</text>
+  <rect class="v" x="586" y="72" width="170" height="56" rx="5"/><text x="596" y="94" class="h">MediaPipe Holistic</text><text x="596" y="112" class="s">VIDEO mode, 15 fps grid</text>
+  <rect class="v" x="784" y="72" width="156" height="56" rx="5"/><text x="794" y="94" class="h">Features .npz</text><text x="794" y="112" class="s">feat_ver fa89892d4908</text>
+  <path class="l" d="M172,100 H198"/><path class="l" d="M360,100 H386"/><path class="l" d="M558,100 H584"/><path class="l" d="M756,100 H782"/>
+  <rect class="t" x="200" y="142" width="300" height="40" rx="5"/><text x="210" y="160" class="h">50 gloss rows: FAKE review (is_mock=true)</text><text x="210" y="175" class="s">only usable with --allow-test-data (ADR-0025)</text>
+
+  <rect class="lane" x="10" y="204" width="940" height="160" rx="6"/>
+  <text x="20" y="222" class="s" font-weight="600">INFERENCE LANE (one sentence → avatar)</text>
+  <rect class="v" x="22" y="236" width="130" height="56" rx="5"/><text x="32" y="258" class="h">Bangla sentence</text><text x="32" y="276" class="s">e.g. pilot clip 3246</text>
+  <rect class="v" x="176" y="236" width="120" height="56" rx="5"/><text x="186" y="258" class="h">norm_v1</text><text x="186" y="276" class="s">NFC, punctuation</text>
+  <rect class="v" x="320" y="236" width="150" height="56" rx="5"/><text x="330" y="258" class="h">G0 rule glosser</text><text x="330" y="276" class="s">pseudo-gloss + tags</text>
+  <rect class="t" x="320" y="300" width="150" height="50" rx="5"/><text x="330" y="320" class="h">Model A A-GRU</text><text x="330" y="337" class="s">TEST mode only, not used</text>
+  <rect class="v" x="494" y="236" width="150" height="40" rx="5"/><text x="504" y="261" class="h">Model B (NAR)</text>
+  <rect class="b" x="494" y="284" width="150" height="40" rx="5"/><text x="504" y="309" class="h">B1 retrieval</text>
+  <rect class="v" x="668" y="236" width="130" height="88" rx="5"/><text x="678" y="258" class="h">Post-process</text><text x="678" y="276" class="s">One-Euro smoothing</text><text x="678" y="292" class="s">hand rest blend</text><text x="678" y="308" class="s">retarget rt-v1</text>
+  <rect class="v" x="822" y="236" width="118" height="88" rx="5"/><text x="832" y="258" class="h">Outputs</text><text x="832" y="276" class="s">VRM viewer</text><text x="832" y="292" class="s">skeleton MP4</text><text x="832" y="308" class="s">demo_log.json</text>
+  <path class="l" d="M152,264 H174"/><path class="l" d="M296,264 H318"/><path class="l" d="M470,258 H492"/><path class="l" d="M470,270 C480,290 482,300 492,304"/>
+  <path class="l" d="M644,256 H666"/><path class="l" d="M644,304 H666"/><path class="l" d="M798,280 H820"/>
+  <path class="l" d="M862,128 C862,170 570,200 570,234"/>
+
+  <rect class="v" x="22" y="372" width="14" height="12"/><text x="42" y="382" class="s">built and verified on the pilot</text>
+  <rect class="t" x="220" y="372" width="14" height="12"/><text x="240" y="382" class="s">test / fake data only — not a result</text>
+  <rect class="b" x="470" y="372" width="14" height="12"/><text x="490" y="382" class="s">baseline</text>
+</svg>

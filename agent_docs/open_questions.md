@@ -257,6 +257,23 @@ is report + literature review + trained model + results, aimed at a publishable 
 - Options: Model B output, B1 output, or both side by side, each clearly labelled.
   **Status:** Answered 2026-10-22 — both side by side, labelled (ADR-0027).
 
+### G12. Line-ending policy (`.gitattributes`)
+- Found in the 2026-10-22 audit: Git `core.autocrlf=true` and no `.gitattributes`, so tracked CSV
+  files get Windows line endings on checkout and their byte hash changes (annotation CSV: working
+  copy `9cd37d3d…`, committed blob `a0be4e91…`, which the Day 3 runs recorded). Proposal 05 Step B4
+  suggests fixed `eol=lf`. (TBD — decide with owner). **Status:** Open (owner input).
+
+### G13. GPU device support in the training code
+- Found in the 2026-10-22 audit: `src/bdsl/models/` never moves models or tensors to a GPU, so
+  `configs/env/kaggle.yaml` `device: cuda` has no effect and Kaggle runs would be CPU-only. Proposal
+  05 Appendix A lists the change. (TBD — decide with owner). **Status:** Open (owner input).
+
+### G14. Clean-commit rule for result runs
+- Found in the 2026-10-22 audit: every `run.json` records `dirty=True` (uncommitted code at run
+  time), so the exact code of a run cannot be recovered from its commit. Proposal 05 Step B4
+  suggests refusing result runs on a dirty tree. (TBD — decide with owner). **Status:** Open
+  (owner input).
+
 ---
 
 ## Answered

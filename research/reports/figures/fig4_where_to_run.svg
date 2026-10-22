@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" width="960" height="470" font-family="Segoe UI, Arial, sans-serif" font-size="12">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker>
+    <style>
+      .h{font-weight:600;font-size:12.5px}.s{fill:#333;font-size:11px}
+      .q{fill:#fff7e0;stroke:#b7791f;stroke-width:1.4}
+      .loc{fill:#e3f1e6;stroke:#2f7d43;stroke-width:1.4}
+      .kag{fill:#e6eef8;stroke:#2c5f9e;stroke-width:1.4}
+      .col{fill:#f3e8f7;stroke:#7a4a8c;stroke-width:1.4}
+      .l{stroke:#444;stroke-width:1.4;fill:none;marker-end:url(#a)}
+    </style>
+  </defs>
+  <rect width="960" height="470" fill="#fff"/>
+  <text x="16" y="24" class="h" font-size="15">Figure 4. Decision tree: local PC, Kaggle or Colab? (PLANNED)</text>
+
+  <rect class="q" x="330" y="40" width="300" height="46" rx="6"/><text x="344" y="60" class="h">Does the task touch raw videos</text><text x="344" y="76" class="h">or frames?</text>
+  <rect class="loc" x="40" y="120" width="250" height="56" rx="6"/><text x="52" y="142" class="h">LOCAL PC only</text><text x="52" y="160" class="s">manifest, extraction, QC, review</text>
+  <path class="l" d="M330,70 C200,70 165,90 165,118"/><text x="190" y="66" class="s">yes</text>
+
+  <rect class="q" x="330" y="120" width="300" height="46" rx="6"/><text x="344" y="140" class="h">Is it a test, demo, or a run that</text><text x="344" y="156" class="h">finishes on CPU within ~1 night?</text>
+  <path class="l" d="M480,86 V118"/><text x="488" y="106" class="s">no</text>
+  <path class="l" d="M330,150 C300,150 290,160 290,170"/><text x="296" y="140" class="s">yes →</text>
+
+  <rect class="q" x="330" y="200" width="300" height="46" rx="6"/><text x="344" y="220" class="h">Kaggle account ready, approved upload</text><text x="344" y="236" class="h">done, quota left this week?</text>
+  <path class="l" d="M480,166 V198"/><text x="488" y="186" class="s">no</text>
+  <rect class="kag" x="680" y="200" width="250" height="56" rx="6"/><text x="692" y="222" class="h">KAGGLE</text><text x="692" y="240" class="s">training, multi-seed runs</text>
+  <path class="l" d="M630,222 H678"/><text x="642" y="214" class="s">yes</text>
+
+  <rect class="q" x="330" y="280" width="300" height="46" rx="6"/><text x="344" y="300" class="h">Drive storage + approved Drive copy</text><text x="344" y="316" class="h">available? Colab GPU assigned?</text>
+  <path class="l" d="M480,246 V278"/><text x="488" y="266" class="s">no</text>
+  <rect class="col" x="680" y="280" width="250" height="56" rx="6"/><text x="692" y="302" class="h">COLAB</text><text x="692" y="320" class="s">checkpoints to Drive every N epochs</text>
+  <path class="l" d="M630,302 H678"/><text x="642" y="294" class="s">yes</text>
+
+  <rect class="loc" x="330" y="360" width="300" height="56" rx="6"/><text x="344" y="382" class="h">LOCAL PC, CPU, longer runs</text><text x="344" y="400" class="s">run overnight with --resume; fewer seeds</text>
+  <path class="l" d="M480,326 V358"/><text x="488" y="346" class="s">no</text>
+  <text x="16" y="452" class="s">The RX 570 is not used for PyTorch: the installed torch build is CPU-only and DirectML is not installed (verified 2026-10-22).</text>
+</svg>
