@@ -205,7 +205,9 @@ is report + literature review + trained model + results, aimed at a publishable 
 
 ### G5. Avatar model details
 - Whether the chosen CC0 VRM model has finger bones; VRM 0.x handling in three-vrm. Checked on Day 5.
-  **Status:** Open (measurement).
+  **Status:** Answered 2026-10-22 — `Base_Female.vrm` has 54 humanoid bones, including 30 finger bones.
+  three-vrm 3.5.5 loads it as VRM 0.x; with `rotateVRM0` and x/z-negated quaternions, the round-trip
+  error is ≤ 3.4° (`test_log.md`).
 
 ### G6. Deadline of the one-month deliverable
 - Plan 03 assumed a buffer to 2026-11-20; not confirmed. **Status:** Open (owner input).
@@ -252,8 +254,8 @@ is report + literature review + trained model + results, aimed at a publishable 
 - B1 (retrieval of a real training clip) has realistic motion amounts (velocity ratio ≈ 1.0), but it
   only replays a different sentence.
 - Design doc 04 (D4 risk row): "Model does not fit → report it, keep B1 output for the demo".
-- Options: Model B output, B1 output, or both side by side, each clearly labelled. (TBD — decide
-  with owner) before Day 5. **Status:** Open (owner input).
+- Options: Model B output, B1 output, or both side by side, each clearly labelled.
+  **Status:** Answered 2026-10-22 — both side by side, labelled (ADR-0027).
 
 ---
 

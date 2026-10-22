@@ -2,8 +2,8 @@
 
 **Date:** 2026-10-22 (end of Session 5)
 **Phase:** Phase 3 — 5-day prototype, in progress. Days 1–2 are done (milestones 5–7). Day 3 code is
-done and was run in TEST mode only, on fake review data (milestone 8 🟨, ADR-0025). Day 4 (Model B) is
-done (milestone 9 ✅, ADR-0026). The design was approved in principle on 2026-10-22 (ADR-0014–0026). Implementation runs one owner-approved step at a time.
+done and was run in TEST mode only, on fake review data (milestone 8 🟨, ADR-0025). Days 4–5 (Model B,
+avatar demo) are done (milestones 9–10 ✅, ADR-0026/0027). The design was approved in principle on 2026-10-22 (ADR-0014–0027). Implementation runs one owner-approved step at a time.
 
 ## Where we are right now
 - Day 1: `.venv`, configs, env check 8/8; manifest v1 (5,010 rows); split S1 v0; pilot50_v1 copied
@@ -22,30 +22,35 @@ done (milestone 9 ✅, ADR-0026). The design was approved in principle on 2026-1
 - Day 4: `train-gloss2motion` (Model B NAR, ablation T, B0/B1). Model B ≈ B0 on held-out clips and
   moves at ~20–30% of real speed; B1 moves realistically (`test_log.md` 2026-10-22, open question
   G11). Predictions for all 50 clips: `work/runs/gloss2motion_gloss_pilot50_20261022T133822Z/seed42/predictions/`.
-- 125 tests pass. No avatar yet.
+- Day 5: `bdsl.cli demo` + `web/avatar_viewer/`. Sentence 3246 → Model B and B1 side by side (ADR-0027),
+  `work/demo/demo_20261022T141520Z/` (skeleton MP4, motion JSON, log, LIMITATIONS.md). Round-trip on the
+  real avatar ≤ 3.4°. Not reviewed by a BdSL-competent person.
+- 140 tests pass.
 - Open owner inputs: G1 licence, G6 deadline, G8 hand sides / mirroring, G9 QC thresholds,
-  G10 real team review, **G11 motion source for the Day 5 demo**. Open measurements: G2, G3, G5 (`open_questions.md`).
+  G10 real team review. Open measurements: G2, G3 (`open_questions.md`). G5 and G11 answered.
 
 ## Start of the next session (after the standard start-of-session reading)
 1. `git status` / `git log --oneline -5`: `main` is ahead of `origin/main` with the Session 5
    commits and has no uncommitted changes. If not, stop and tell the owner.
-2. `uv run pytest` → expected 125 passed.
+2. `uv run pytest` → expected 140 passed.
 3. If T1 has done the real video review: `uv run python -m bdsl.cli gloss-validate` (no option) and
    report the result. Never fix reviewed rows yourself.
 
 ## The one thing we are doing next
-👉 **Day 5 (milestone 10): show the owner the plan and wait for the go. Ask G11 first.**
+👉 **The 5-day prototype (Phase 3) is complete as a pipeline test. Owner: review the demo, then decide the
+Phase 4 / Week 2 plan (design doc 04 §G). No implementation before the owner's go.**
 
-Day 5 (design doc 04 §F-12, ADR-0019):
-- Post-process predicted motion (de-normalise, smoothing, bone lengths, masked hands → rest pose).
-- Own direction-based retargeter → `motion_<run>.json`; a skeleton viewer (always) and a three.js +
-  three-vrm viewer with a CC0 VRM model (G5).
-- One sentence → video, with a versioned log; limitations written.
-- Owner inputs first: G11 (Model B, B1 or both, labelled), and G8 (hand sides) for retargeting.
-- Ask before installing or downloading anything (three.js / three-vrm versions, the VRM model).
+How to view the demo: `uv run python -m http.server 8765 --bind 127.0.0.1`, then open
+`http://127.0.0.1:8765/web/avatar_viewer/?demo=/work/demo/demo_20261022T141520Z/` (or play
+`skeleton_side_by_side.mp4` in that folder).
 
-Still owed: the real Day 3 run, after a real video review (`gloss-validate` without the test option
-→ 0 problems → `train-text2gloss`).
+Candidate next steps (proposals, not decisions; see design doc 04 §G):
+- The real Day 3 run: T1's real video review of the 50 pilot glosses → `gloss-validate` (no option) →
+  `train-text2gloss`.
+- Week 2: full-set extraction (owner's go), the shared-segment scan (G2) → split S1 v1, Kaggle setup (G3).
+- More training data for Model B (the pilot result is close to the mean motion).
+- Owner inputs still open: G1, G6, G8, G9; a BdSL-competent reviewer for the demo.
+- Pushing: `main` is ahead of `origin` and contains the fake-labelled Day 3 rows (ADR-0025); a push publishes them.
 
 ## Evidence rules
 - Pilot numbers are "pipeline test", never "generalisation". All results are signer-dependent.
@@ -58,7 +63,7 @@ Still owed: the real Day 3 run, after a real video review (`gloss-validate` with
 
 ## Locked decisions — do NOT re-open without the owner
 - ADR-0003, 0006, 0007, 0008, 0012; ADR-0004/0005/0009/0010/0011/0013 as amended;
-  ADR-0014–0021 (owner bullets Accepted; technical specifics Accepted in principle); ADR-0022–0026.
+  ADR-0014–0021 (owner bullets Accepted; technical specifics Accepted in principle); ADR-0022–0027.
 
 ## Important environment / gotchas
 - Run everything through `uv run …` (CLAUDE.md COMMANDS). Notebooks: the `.venv` kernel.

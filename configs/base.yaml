@@ -19,6 +19,8 @@ paths:
   features_dir: ${paths.work_dir}/features             # <feat_ver>/<Index>.npz + qc.csv
   annotations_dir: ${project_root}/annotations         # tracked in git: a commit publishes it (ADR-0017)
   runs_dir: ${paths.work_dir}/runs                     # training runs: logs, metrics, checkpoints
+  demo_dir: ${paths.work_dir}/demo                     # Day 5 demo outputs
+  vrm_file: ${paths.models_dir}/vrm/Base_Female.vrm    # CC0 VRoid sample avatar (VRM 0.x), gitignored
 
 data:
   sheet: FinalSheet2.xlsx
@@ -119,6 +121,12 @@ gloss2motion:        # Day 4, Model B; design doc 04 §F-10 (NAR), §F-9 (gaps),
     overfit_epochs: 400
   max_frames: 300     # cap on the predicted length (longest pilot clip: 272 frames)
   seeds: [42, 43, 44]
+
+avatar:              # Day 5; design doc 04 §F-12, ADR-0019; owner choices 2026-10-22 (G11: Model B + B1)
+  demo_model_run: gloss2motion_gloss_pilot50_20261022T133822Z
+  demo_seed: 42
+  smooth: {min_cutoff: 1.0, beta: 0.3, d_cutoff: 1.0}   # One-Euro filter on body + hands
+  viewer: {three: "0.186.1", three_vrm: "3.5.5", cdn: cdn.jsdelivr.net, vrm: Base_Female.vrm}
 
 env_check:
   report_file: env_report.json

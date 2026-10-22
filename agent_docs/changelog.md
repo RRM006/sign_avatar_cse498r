@@ -14,6 +14,26 @@
 
 ---
 
+## Session 5 (continued) — 2026-10-22 — Day 5: retargeting + avatar viewer + end-to-end demo
+- Did: On the owner's go (Steps 1 and 2, defaults; G11 = Model B and B1 side by side):
+  - added `src/bdsl/avatar/` (`postprocess` One-Euro + hand rest blend; `retarget` rt-v1 direction-
+    based solver; `export` motion JSON + skeleton video; `demo` end-to-end) and
+    `bdsl.cli demo --sentence`;
+  - added `web/avatar_viewer/` (three 0.186.1 + three-vrm 3.5.5 via jsDelivr; side-by-side
+    avatars, labels, mirror toggle, record to .webm), `.claude/launch.json` (local preview server),
+    notebook 06 and 15 tests (140 pass);
+  - downloaded the approved CC0 `base_female.zip` (13,149,860 bytes) → `work/models/vrm/Base_Female.vrm`
+    (gitignored);
+  - ran the demo for sentence 3246 and checked the viewer in the built-in browser (`test_log.md`).
+- Decided: ADR-0027 (owner): G11 = both motions side by side, labelled; the Day 5 defaults.
+- Broke / problem: Four bugs in my own new code were found and fixed during the run (`test_log.md`).
+- Deferred:
+  - A BdSL-competent review of the demo.
+  - The real Day 3 run (G10).
+  - Pushing (`main` holds the fake-labelled Day 3 rows).
+  - Phase 4 planning.
+- Next: Owner reviews the demo; decide the Phase 4 / Week 2 plan (design doc 04 §G).
+
 ## Session 5 (continued) — 2026-10-22 — Day 4: Model B pilot (gloss → motion) + ablation T + B0/B1
 - Did: On the owner's go (Steps 1 and 2, with my recommendations):
   - added `src/bdsl/features/normalize.py`: 208-value frames, part masks, hand gaps ≤ 5 frames

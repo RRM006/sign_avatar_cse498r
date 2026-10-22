@@ -14,7 +14,7 @@ and showing the result through a 3D avatar.
 sign → text). Sentence-level translation with BdSL grammar/word order, not word-by-word lookup.
 Deliverable: report + literature review + trained model + results, aimed at a publishable paper.
 
-**Current phase: 5-day prototype (Phase 3), in progress (Days 1–2 done 2026-10-22; Day 3 code done and run in TEST mode on fake review data only, ADR-0025; Day 4 Model B done 2026-10-22, ADR-0026; real pilot gloss review pending).** The literature review is complete
+**Current phase: 5-day prototype (Phase 3), in progress (Days 1–2 done 2026-10-22; Day 3 code done and run in TEST mode on fake review data only, ADR-0025; Day 4 Model B and Day 5 avatar demo done 2026-10-22, ADR-0026/0027; real pilot gloss review pending).** The literature review is complete
 (ADR-0012). The research design was approved in principle on 2026-10-22 (ADR-0014–0021; rationale in
 `research/design_proposals/04_…`): Bangla → gloss (Model A) → motion (Model B, MediaPipe-derived
 features) → retargeted VRM avatar. Technical specifics marked "Accepted in principle" may change from
@@ -76,7 +76,8 @@ Remaining medical/dialect mentions there are genuine paper findings.
 ## CURRENT STACK
 
 Installed in `.venv` (2026-10-22, pins in `pyproject.toml` / `uv.lock`): Python 3.12.13, mediapipe
-0.10.35, opencv-contrib-python 5.0.0.93, numpy 2.4.6, PyYAML 6.0.3, pandas 3.0.3, openpyxl 3.1.5, torch 2.14.1 (CPU), sacrebleu 2.6.0; dev: pytest,
+0.10.35, opencv-contrib-python 5.0.0.93, numpy 2.4.6, PyYAML 6.0.3, pandas 3.0.3, openpyxl 3.1.5, torch 2.14.1 (CPU), sacrebleu 2.6.0; viewer (browser, jsDelivr): three 0.186.1,
+@pixiv/three-vrm 3.5.5; dev: pytest,
 ipykernel, nbclient, nbformat. Planned (ADR-0019): three.js + three-vrm.
 
 ## COMMANDS
@@ -98,6 +99,10 @@ Run from the project root. The environment is the uv-managed `.venv` (Python 3.1
   (ADR-0025).
 - Model B (Day 4): `uv run python -m bdsl.cli train-gloss2motion --input gloss` (and `--input text`
   for ablation T; `--overfit N`, `--resume <run folder>`). Uses G0 glosses, not reviewed ones.
+- Avatar demo (Day 5): `uv run python -m bdsl.cli demo --sentence "…"` → `work/demo/demo_<time>/`.
+  Viewer: `uv run python -m http.server 8765 --bind 127.0.0.1`, then open
+  `http://127.0.0.1:8765/web/avatar_viewer/?demo=/work/demo/<demo folder>/` (needs
+  `work/models/vrm/Base_Female.vrm` and internet access for the pinned jsDelivr libraries).
 - Choose the platform layer with `BDSL_ENV` (local / kaggle / colab); move outputs with `BDSL_WORK_DIR`.
 - Never `git add` work/, .venv/ or videos (CLAUDE.md rules 6–7, ADR-0017).
 

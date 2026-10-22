@@ -382,3 +382,21 @@
 - Why: Owner's go for Day 4 with the AI's recommendations (2026-10-22).
 - Rejected: An 11-point set (no 2 extra points were named); excluding weak clips on the pilot.
 - Status: Accepted (owner bullets); Accepted in principle (wrist-relative hands).
+
+## ADR-0027 — 2026-10-22 — Day 5 demo setup (answers G11; G5 measured)
+- Decision:
+  - (owner) The demo shows Model B output and B1 retrieval side by side, each clearly labelled
+    (G11).
+  - (owner) Avatar: CC0 VRoid `Base_Female.vrm` (VRM 0.x) from opengameart.org, kept in
+    `work/models/vrm/` (gitignored, never committed).
+  - (owner) Viewer libraries: three 0.186.1 and @pixiv/three-vrm 3.5.5, loaded from jsDelivr at
+    runtime (no npm install).
+  - (owner) MediaPipe hand labels are used as given, with a mirror toggle in the viewer (G8 stays
+    open). The demo sentence is pilot test clip 3246. Text → gloss uses G0. Model B = seed 42 of the
+    gloss run `…T133822Z`.
+  - (in principle) Our own direction-based retargeter (rt-v1, `src/bdsl/avatar/retarget.py`; the
+    same algorithm in `web/avatar_viewer/viewer.js` with the model's own rest directions); One-Euro
+    smoothing; a rough blendshape → VRM expression mapping.
+- Why: Owner's go for Day 5 with the AI's defaults (2026-10-22); design doc 04 §F-12; ADR-0019.
+- Rejected: Kalidokit (deprecated); committing the VRM file.
+- Status: Accepted (owner bullets); Accepted in principle (retargeter, smoothing, expression mapping).

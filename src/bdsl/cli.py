@@ -8,6 +8,7 @@
     uv run python -m bdsl.cli gloss-draft --data pilot50 | gloss-validate [--allow-test-data]
     uv run python -m bdsl.cli train-text2gloss [--allow-test-data] [--overfit N] [--resume RUN_DIR]
     uv run python -m bdsl.cli train-gloss2motion [--input gloss|text] [--overfit N] [--resume RUN_DIR]
+    uv run python -m bdsl.cli demo --sentence "…" [--model-run RUN] [--seed N]
 """
 
 from __future__ import annotations
@@ -387,6 +388,21 @@ def cmd_train_gloss2motion(args) -> int:
     return 0
 
 
+def cmd_demo(args) -> int:
+    from .avatar.demo import run_demo
+
+    cfg = load_config(env=args.env, data="pilot50")
+    a = cfg["avatar"]
+    result = run_demo(cfg, args.sentence, cfg_path(cfg, "demo_dir"), args.model_run or a["demo_model_run"],
+                      args.seed if args.seed is not None else a["demo_seed"])
+    log = result["log"]
+    print(json.dumps({"out_dir": result["out_dir"], "g0_gloss": log["g0_gloss"],
+                      "model_b_frames": log["model_b"]["predicted_frames"], "unknown_tokens": log["model_b"]["unknown_tokens"],
+                      "b1": {k: log["b1"][k] for k in ("index", "sentence_norm", "frames")},
+                      "roundtrip_pilot50_deg": log["roundtrip_pilot50_deg"]}, indent=1, ensure_ascii=False))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="bdsl.cli", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--env", default=None, help="config env layer (default: auto-detect)")
@@ -430,6 +446,11 @@ def main(argv: list[str] | None = None) -> int:
     b.add_argument("--resume", default=None, help="run folder to continue from its last checkpoints")
     b.add_argument("--stop-after-epochs", type=int, default=None, help="stop each seed after N epochs (resume test)")
     b.set_defaults(func=cmd_train_gloss2motion)
+    d = sub.add_parser("demo", help="Day 5: one sentence → Model B + B1 motion JSON, skeleton video, log")
+    d.add_argument("--sentence", required=True)
+    d.add_argument("--model-run", default=None, help="default: avatar.demo_model_run")
+    d.add_argument("--seed", type=int, default=None, help="default: avatar.demo_seed")
+    d.set_defaults(func=cmd_demo)
     args = ap.parse_args(argv)
     return args.func(args)
 

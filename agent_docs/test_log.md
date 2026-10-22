@@ -24,6 +24,53 @@ Results are logged here only after they are actually run.
 
 ---
 
+## 2026-10-22 — Day 5 — retargeting, skeleton video, avatar viewer, end-to-end demo ("pipeline test")
+- Setup:
+  - Command: `bdsl.cli demo --sentence <3246>` → `work/demo/demo_20261022T141520Z/`.
+  - Text → gloss by G0. Model B = run `gloss2motion_gloss_pilot50_20261022T133822Z`, seed 42, best
+    checkpoint (SHA-256 b7639820…). B1 = training clip 3225.
+  - Post-processing: One-Euro filter (min cutoff 1.0, β 0.3) on body + hands; hands blend to rest
+    over 3 frames where missing.
+  - Retargeter rt-v1; avatar = CC0 VRoid `Base_Female.vrm` (VRM 0.x, SHA-256 1995f174…).
+  - Viewer: three 0.186.1 + @pixiv/three-vrm 3.5.5 from jsDelivr, served by `http.server` on
+    127.0.0.1, checked in the built-in browser.
+- Measured before building:
+  - MediaPipe "left shoulder" x > "right shoulder" x in 50/50 clips; y points down.
+  - The hand world wrist equals the pose wrist (distance 0.000 m), so hands and pose share one frame.
+  - The VRM declares CC0 in its own metadata. It has 54 humanoid bones, including 30 finger bones and
+    upperChest (G5 answered).
+  - Expression presets: a/i/u/e/o, blink (both, left, right), joy, angry, sorrow, fun (no "surprised").
+- Checks and results:
+  - Demo: G0 gloss "আমি স্কুল? যাই?", no unknown tokens. Model B predicts 91 frames; B1 = 3225
+    "আমি সোমবার স্কুল এ যাই", 79 frames, hand coverage L 0.81 / R 0.51.
+  - Hash checks (inputs, vocab, standardiser vs the run) all pass.
+  - Round-trip, Python canonical T-pose, all 50 pilot recordings (4,806 frames): body / hands /
+    fingers / head max ≤ 2.5e-6° (exact by construction; checks the quaternion maths).
+  - Round-trip on the real avatar (three-vrm, raw bones after normalised → raw transfer), mean (max):
+    - Model B: body 0.50° (3.42°), hand frames ~0° (n=182), fingers ~0° (n=2730);
+    - B1: body 0.35° (2.79°), hand frames ~0° (n=104), fingers ~0° (n=1560).
+    The body error is not broken down per bone. A likely source: the torso check measures from the
+    hips, while the spine rotates around its own joint.
+  - Avatar sides: after `rotateVRM0`, leftUpperArm x = +0.108 and rightUpperArm x = −0.109, so the
+    avatar's left is on screen right, the same as the skeleton video.
+  - Skeleton video: 91 frames, 15 fps, 960×570, two labelled panels; the B1 panel holds its last
+    frame marked "(ended)".
+  - Viewer: plays at 15 fps (30 frames in 2 s), no console errors. Mirror mode runs. "Record one
+    pass" produced a 1.1 MB `.webm`, offered as a save link; it was not downloaded.
+  - `uv run pytest`: 140 passed (15 new in `tests/test_avatar.py`).
+- Notes:
+  - A pipeline test only; nothing here is checked by a BdSL-competent person (`LIMITATIONS.md` in
+    the demo folder).
+  - Bugs found and fixed during the run:
+    - a zero-length hand vector crashed the frame solver;
+    - a negative first time-step crashed the viewer;
+    - fingertip bones were measured with the previous bone's direction in the first viewer
+      round-trip (mean 19°), fixed by measuring each fingertip bone's own rotation;
+    - the VRM path under `avatar:` changed the config hash when the work folder moved (moved to
+      `paths:`).
+
+---
+
 ## 2026-10-22 — Day 4 — Model B pilot (gloss → motion), ablation T, B0/B1 ("pipeline test")
 - Setup:
   - Environment: desktop CPU, torch 2.14.1+cpu, 2 threads per run (OMP/MKL_NUM_THREADS=2).

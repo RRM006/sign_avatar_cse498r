@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BdSL Avatar Demo</title>
+<!-- Day 5 viewer (design doc 04 §F-12, ADR-0019). Pinned versions; served locally, never deployed.
+     Open via: uv run python -m http.server 8765 --bind 127.0.0.1   (from the project root), then
+     http://127.0.0.1:8765/web/avatar_viewer/?demo=/work/demo/<demo folder>/ -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
+    "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3.5.5/lib/three-vrm.module.min.js"
+  }
+}
+</script>
+<style>
+  :root { --bg: #f4f4f2; --fg: #1d1d1b; --muted: #66665f; --line: #d4d4cf; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.4 system-ui, "Nirmala UI", sans-serif; }
+  main { max-width: 1000px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .muted { color: var(--muted); }
+  #out { width: 100%; height: auto; display: block; border: 1px solid var(--line); background: #fff; }
+  #gl { display: none; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
+  button { padding: 6px 12px; border: 1px solid var(--line); background: #fff; border-radius: 4px; cursor: pointer; }
+  #status { white-space: pre-wrap; font: 12px/1.4 ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<main>
+  <h1>BdSL avatar demo: Model B and B1 retrieval, side by side</h1>
+  <p class="muted">Pipeline test on 50 pilot clips. Not checked by a BdSL-competent person. See LIMITATIONS.md in the demo folder.</p>
+  <canvas id="out"></canvas>
+  <canvas id="gl"></canvas>
+  <div class="controls">
+    <button id="play">Pause</button>
+    <button id="restart">Restart</button>
+    <label><input type="checkbox" id="mirror"> Mirror (swap left/right, G8)</label>
+    <button id="record">Record one pass (.webm)</button>
+  </div>
+  <div id="status" class="muted">Loading…</div>
+</main>
+<script type="module" src="./viewer.js"></script>
+</body>
+</html>

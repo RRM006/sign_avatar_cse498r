@@ -5,7 +5,7 @@
 **Status keys:** ⬜ Not started · 🟨 In progress · 🟦 Blocked · ✅ Done · ⛔ Retired
 
 **Last updated:** 2026-10-22
-**Current phase:** Phase 3 — 5-day prototype, in progress (milestones 5–7 done 2026-10-22; milestone 8 code done and run in TEST mode only, ADR-0025; milestone 9 done 2026-10-22; real team review of the pilot drafts pending). The design was approved in principle on
+**Current phase:** Phase 3 — 5-day prototype, in progress (milestones 5–7 done 2026-10-22; milestone 8 code done and run in TEST mode only, ADR-0025; milestones 9–10 done 2026-10-22; real team review of the pilot drafts pending). The design was approved in principle on
 2026-10-22 (ADR-0014–0021). Each step starts only on the owner's explicit go.
 
 ---
@@ -28,7 +28,7 @@ lead to: report + literature review + trained model + results, aimed at a publis
 | 7 | Day 2 — Step 1: pilot extraction + QC; Step 2: gloss convention v0.1 + G0 drafts (+ team review) | ✅ | 50/50 extracted or failures logged; timestamp irregularity measured per clip; kill-and-resume test passes; 50/50 annotation rows with a status (no row marked reviewed without a real review). Step 1 done 2026-10-22: 50/50 per mode, resume test passed, VIDEO mode chosen (ADR-0023). Step 2 done 2026-10-22: 50/50 rows auto_draft, validation clean (ADR-0024). The team review itself is pending (open_questions G10) (`test_log.md`) |
 | 8 | Day 3 — Model A pilot | 🟨 | G0 vs GRU curves + per-item table ("pipeline test") on team-reviewed rows — or, only if the owner decides, a clearly labelled auto-draft pipeline test; resume test passes. Needs G10 (team review). 2026-10-22: code done and run in TEST mode on fake review data (ADR-0025): overfit 1/40 and kill-and-resume pass, 111 tests (`test_log.md`). The real run waits for a real video review |
 | 9 | Day 4 — Model B + text ablation + B0/B1 | ✅ | masked-loss unit test; overfit 1 → 40; table vs B0/B1 ("pipeline test"). Done 2026-10-22: masked-loss test passes; overfit 1 → 5.1% of the start loss, overfit 40 beats B0 on train; 3 seeds × {gloss, text}; kill-and-resume identical; 125 tests (`test_log.md`, ADR-0026). Finding: Model B ≈ B0 on held-out clips (G11) |
-| 10 | Day 5 — retarget + viewer + end-to-end demo | ⬜ | one sentence → video with versioned log; skeleton fallback; limitations written |
+| 10 | Day 5 — retarget + viewer + end-to-end demo | ✅ | one sentence → video with versioned log; skeleton fallback; limitations written. Done 2026-10-22: sentence 3246 → Model B + B1 side by side (G11, ADR-0027); skeleton MP4 + browser VRM viewer with .webm recording; `demo_log.json` (versions, hashes); round-trip ≤ 3.4° on the real avatar; `LIMITATIONS.md`; 140 tests (`test_log.md`). Not reviewed by a BdSL-competent person |
 | 11 | Weeks 2–4 — full data, model comparison, evaluation, report | ⬜ | per design doc 04 §G; deadline (TBD — G6) |
 
 ---
