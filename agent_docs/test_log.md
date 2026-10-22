@@ -24,6 +24,16 @@ Results are logged here only after they are actually run.
 
 ---
 
+## 2026-10-22 — Git publish (Session 7)
+- Setup: Owner explicitly requested commit and push on `main`.
+- Metric(s) / checks: `git diff --check`; confirmed the mock pilot annotation CSV marks rows with
+  `is_mock=true` and notes that they are not video-verified; pushed `main` to `origin`.
+- Result: Commit `62e719e` created; push advanced `origin/main` from `edadec9` to `62e719e`.
+  No test suite was run for this documentation-only commit; the preceding audit recorded 140 passing
+  tests.
+- Notes: The push included six earlier unpublished commits, including the clearly marked TEST run and
+  mock review data. The broader push policy remains open for owner review.
+
 ## 2026-10-22 — Audit + report generation (Session 6)
 - Setup: read-only audit of the repository, `work/`, git, hardware and PDF tools; then (owner-approved)
   the two reports. `.venv` unchanged (no installs). PDFs built with system Python 3.14.4 +

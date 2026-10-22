@@ -62,5 +62,5 @@ the scope and dataset questions.
   (in `test_log.md` where measurement applies).
 - Don't start a later milestone early without the owner's go.
 - 2026-10-22: notebooks `01_manifest`, `02_extract`, `03_gloss` were added as thin wrappers of the
-  Day 1–2 CLI steps (not executed); `00_env_check` ran on Day 1. All work since commit 1809048 is
-  uncommitted.
+  Day 1–2 CLI steps (not executed); `00_env_check` ran on Day 1. The Session 6 reports and memory
+  updates, along with six earlier commits, were published in Session 7 at `62e719e`.

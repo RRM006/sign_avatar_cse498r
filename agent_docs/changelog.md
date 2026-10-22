@@ -14,6 +14,19 @@
 
 ---
 
+## Session 7 — 2026-10-22 — Publish audit reports and prototype work
+- Did: At the owner's request, committed the Session 6 reports and documentation as `62e719e`, then
+  pushed `main` to `origin/main` (`edadec9..62e719e`). This also published the six commits already
+  ahead of origin, including the Day 3 TEST run and mock annotation rows; the rows are explicitly
+  marked `is_mock=true` and "TEST DATA: ... not video-verified".
+- Decided: No standing push-policy decision or ADR; this push was explicitly requested by the owner.
+- Broke / problem: None during commit or push. `git diff --check` passed; no test suite was run for
+  the documentation-only commit (the prior audit recorded 140 passing tests).
+- Deferred: Owner review of the reports and Phase A decision register; push policy, G12, G13 and G14
+  remain open.
+- Next: Owner reviews both reports and answers the Phase A decision register in proposal 05,
+  Appendix C.
+
 ## Session 6 — 2026-10-22 — Read-only audit; pilot report and full-dataset plan (Markdown + PDF)
 - Did: Stage 1 read-only audit (repo, work/ artifacts, git, hardware, PDF tools): manifest/split/pilot
   hashes match their meta; 50/50 pilot copies match; leakage re-check 0/0/0 on S1 v0; all 60
