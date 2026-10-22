@@ -4,7 +4,7 @@ Per clip, on a uniform `fps` grid of T frames (NaN where a part is missing):
     t_ms, src_t_ms, src_frame (T,)       grid time, source frame time and index used
     pose_world, pose_img (T,33,3)        body landmarks (world metres / normalised image coords)
     pose_vis (T,33)                      pose landmark visibility
-    lhand_world, rhand_world (T,21,3)    hand landmarks, hand-centred metres
+    lhand_world, rhand_world (T,21,3)    hand world landmarks, metres (not hand-centred: wrist ≈ 0.55 m from origin)
     lhand_img, rhand_img (T,21,3)        hand landmarks, normalised image coords
     blendshapes (T,52), blendshape_names (52,)
     head_rot (T,3)                       approx. yaw/pitch/roll in degrees from 4 face points

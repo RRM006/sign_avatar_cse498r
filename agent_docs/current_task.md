@@ -2,8 +2,8 @@
 
 **Date:** 2026-10-22 (end of Session 5)
 **Phase:** Phase 3 — 5-day prototype, in progress. Days 1–2 are done (milestones 5–7). Day 3 code is
-done and was run in TEST mode only, on fake review data (milestone 8 🟨, ADR-0025). The design was
-approved in principle on 2026-10-22 (ADR-0014–0025). Implementation runs one owner-approved step at a time.
+done and was run in TEST mode only, on fake review data (milestone 8 🟨, ADR-0025). Day 4 (Model B) is
+done (milestone 9 ✅, ADR-0026). The design was approved in principle on 2026-10-22 (ADR-0014–0026). Implementation runs one owner-approved step at a time.
 
 ## Where we are right now
 - Day 1: `.venv`, configs, env check 8/8; manifest v1 (5,010 rows); split S1 v0; pilot50_v1 copied
@@ -19,32 +19,33 @@ approved in principle on 2026-10-22 (ADR-0014–0025). Implementation runs one o
     sentences. Not a Model A result.
 - `main` = local merge `0eef7c6` (practice branch `test-run-fake-review` + Day 3 code), plus the
   Session 5 docs commit. **Not pushed**: a push publishes the fake-labelled annotation rows.
-- 111 tests pass. No Model B or avatar yet.
+- Day 4: `train-gloss2motion` (Model B NAR, ablation T, B0/B1). Model B ≈ B0 on held-out clips and
+  moves at ~20–30% of real speed; B1 moves realistically (`test_log.md` 2026-10-22, open question
+  G11). Predictions for all 50 clips: `work/runs/gloss2motion_gloss_pilot50_20261022T133822Z/seed42/predictions/`.
+- 125 tests pass. No avatar yet.
 - Open owner inputs: G1 licence, G6 deadline, G8 hand sides / mirroring, G9 QC thresholds,
-  G10 real team review. Open measurements: G2, G3, G5 (`open_questions.md`).
+  G10 real team review, **G11 motion source for the Day 5 demo**. Open measurements: G2, G3, G5 (`open_questions.md`).
 
 ## Start of the next session (after the standard start-of-session reading)
 1. `git status` / `git log --oneline -5`: `main` is ahead of `origin/main` with the Session 5
    commits and has no uncommitted changes. If not, stop and tell the owner.
-2. `uv run pytest` → expected 111 passed.
+2. `uv run pytest` → expected 125 passed.
 3. If T1 has done the real video review: `uv run python -m bdsl.cli gloss-validate` (no option) and
    report the result. Never fix reviewed rows yourself.
 
 ## The one thing we are doing next
-👉 **Day 4 Step 1 (Model B pilot): the plan was shown to the owner in Session 5; wait for the go.**
+👉 **Day 5 (milestone 10): show the owner the plan and wait for the go. Ask G11 first.**
 
-Day 4 (milestone 9, design doc 04 §F-10):
-- Model B (gloss → motion), the NAR Transformer from design doc 04 §F-10; ablation T (text → motion);
-  baselines B0 (mean motion) and B1 (nearest-sentence retrieval).
-- Model B input: G0 pseudo-glosses (`gloss_auto`, markers removed; ADR-0014). It does not need the
-  review.
-- Acceptance: a masked-loss unit test; overfit 1 → 40; a table vs B0/B1 labelled "pipeline test";
-  a resume test.
-- Ask the owner first about G8 (hand sides) and G9 (weak clips) if the plan depends on them.
-- Ask before installing anything.
+Day 5 (design doc 04 §F-12, ADR-0019):
+- Post-process predicted motion (de-normalise, smoothing, bone lengths, masked hands → rest pose).
+- Own direction-based retargeter → `motion_<run>.json`; a skeleton viewer (always) and a three.js +
+  three-vrm viewer with a CC0 VRM model (G5).
+- One sentence → video, with a versioned log; limitations written.
+- Owner inputs first: G11 (Model B, B1 or both, labelled), and G8 (hand sides) for retargeting.
+- Ask before installing or downloading anything (three.js / three-vrm versions, the VRM model).
 
-The real Day 3 run, which is still owed: after a real review, run `gloss-validate` (0 problems), then
-`train-text2gloss` without the test option.
+Still owed: the real Day 3 run, after a real video review (`gloss-validate` without the test option
+→ 0 problems → `train-text2gloss`).
 
 ## Evidence rules
 - Pilot numbers are "pipeline test", never "generalisation". All results are signer-dependent.
@@ -57,7 +58,7 @@ The real Day 3 run, which is still owed: after a real review, run `gloss-validat
 
 ## Locked decisions — do NOT re-open without the owner
 - ADR-0003, 0006, 0007, 0008, 0012; ADR-0004/0005/0009/0010/0011/0013 as amended;
-  ADR-0014–0021 (owner bullets Accepted; technical specifics Accepted in principle); ADR-0022–0025.
+  ADR-0014–0021 (owner bullets Accepted; technical specifics Accepted in principle); ADR-0022–0026.
 
 ## Important environment / gotchas
 - Run everything through `uv run …` (CLAUDE.md COMMANDS). Notebooks: the `.venv` kernel.

@@ -15,20 +15,21 @@ sign_avatar_cse498r/
 ├── pyproject.toml                   # Package `bdsl`; pinned deps (extras: extract, train; group: dev)
 ├── uv.lock                          # Exact resolved versions (96 packages); `uv sync` rebuilds .venv
 ├── configs/                         # Layered YAML: base.yaml ← env/{local,kaggle,colab}.yaml ← data/{pilot50,full}.yaml
-├── src/bdsl/                        # config.py (layers, ${…} refs, hash) · paths.py (project root) · io.py (atomic writes, SHA-256) · env.py (environment checks) · cli.py (manifest / split / pilot-select / pilot-copy / extract / gloss-draft / gloss-validate [--allow-test-data] / train-text2gloss)
+├── src/bdsl/                        # config.py (layers, ${…} refs, hash) · paths.py (project root) · io.py (atomic writes, SHA-256) · env.py (environment checks) · cli.py (manifest / split / pilot-select / pilot-copy / extract / gloss-draft / gloss-validate [--allow-test-data] / train-text2gloss / train-gloss2motion)
 │   ├── text/                        # normalize.py (norm_v1) · tags.py (indicative word lists) · gloss_rules.py (G0 v0.1) · annotations.py (schema, validator incl. test-data rule, overwrite guard)
-│   ├── models/                      # text2gloss.py (A-GRU, vocab, greedy/beam) · baselines.py (G0 as baseline) · train_text2gloss.py (Day 3 run: seeds, early stopping, checkpoints/resume, TEST labels)
-│   ├── eval/                        # text_metrics.py (gloss WER, exact match, tag accuracy, BLEU-4/chrF via sacreBLEU)
+│   ├── models/                      # text2gloss.py (A-GRU, vocab, greedy/beam) · train_text2gloss.py (Day 3 run, TEST labels) · gloss2motion.py (Model B NAR Transformer, masked loss) · train_gloss2motion.py (Day 4 run, B0/B1, predictions) · baselines.py (G0, B0 mean motion, B1 retrieval)
+│   ├── eval/                        # text_metrics.py (gloss WER, exact match, tag accuracy, BLEU-4/chrF via sacreBLEU) · motion_metrics.py (MPJPE, DTW-MJE, duration, velocity/jerk, hand energy, diversity)
 │   ├── data/                        # video.py (probe) · manifest.py · groups.py (leakage groups) · split.py (S1, leakage checks) · pilot.py (selection + copy)
-│   └── features/                    # layout.py (npz contents, feat_ver, privacy check) · extract.py (MediaPipe, 15 fps grid) · qc.py (QC + mode comparison)
-├── tests/                           # pytest: config, paths, io, normalize, groups_split, pilot, features, gloss, text2gloss (111 tests)
+│   └── features/                    # layout.py (npz contents, feat_ver, privacy check) · extract.py (MediaPipe, 15 fps grid) · qc.py (QC + mode comparison) · normalize.py (Model B frames: 208 values, masks, gap interpolation, standardiser)
+├── tests/                           # pytest: config, paths, io, normalize, groups_split, pilot, features, gloss, text2gloss, gloss2motion (125 tests)
 ├── notebooks/
 │   ├── 00_env_check.ipynb           # Writes work/reports/env_report.json; stored without outputs (run on Day 1)
 │   ├── 01_manifest.ipynb            # = bdsl.cli manifest / split / pilot-select (pilot-copy behind the approval note)
 │   ├── 02_extract.ipynb             # = bdsl.cli extract --data pilot50 --mode video + QC summary
 │   ├── 03_gloss.ipynb               # = bdsl.cli gloss-draft / gloss-validate (01–03: no outputs, not yet executed)
-│   └── 04_train_text2gloss.ipynb    # = bdsl.cli train-text2gloss (no outputs, not executed)
-├── work/                            # GITIGNORED generated outputs: models/, reports/, manifests/ (manifest_v1), splits/ (S1_v0), pilot/ (selection), features/<feat_ver>/ (VIDEO fa89892d4908 = chosen, IMAGE 395e878f9861), features_resume_test/, runs/ (TEST_text2gloss_… Day 3 practice runs, ADR-0025)
+│   ├── 04_train_text2gloss.ipynb    # = bdsl.cli train-text2gloss (no outputs, not executed)
+│   └── 05_train_gloss2motion.ipynb  # = bdsl.cli train-gloss2motion (no outputs, not executed)
+├── work/                            # GITIGNORED generated outputs: models/, reports/, manifests/ (manifest_v1), splits/ (S1_v0), pilot/ (selection), features/<feat_ver>/ (VIDEO fa89892d4908 = chosen, IMAGE 395e878f9861), features_resume_test/, runs/ (TEST_text2gloss_… Day 3 practice runs, ADR-0025; gloss2motion_… Day 4 runs + _superseded_day4_hand_offset/)
 ├── .venv/                           # GITIGNORED: Python 3.12.13 environment (uv)
 ├── annotations/                     # TRACKED (public): GLOSS_CONVENTION_v0.1.md (provisional) · REVIEW_GUIDE.md · REVIEWERS.csv (owner-maintained codes) · pilot50_v1_gloss_v01.csv (ADR-0015/0024)
 ├── agent_docs/                      # Living project docs (the "shared brain")
@@ -97,7 +98,7 @@ See `research/papers/README.md`.
 
 ## Planned structure (approved in principle, ADR-0014–0021)
 
-Created step by step, only after the owner's go for each step. **Exists now (Days 1–3, 2026-10-22):** the configs base/env/data layers, src/bdsl/{config,paths,env,io,cli}.py, src/bdsl/{text,data,features,models,eval}/ (models: Model A only), tests/, notebooks/00_env_check … 04_train_text2gloss.ipynb, dataset/pilot50_v1/, annotations/, pyproject.toml + uv.lock. Everything else below is not created yet:
+Created step by step, only after the owner's go for each step. **Exists now (Days 1–4, 2026-10-22):** the configs base/env/data layers, src/bdsl/{config,paths,env,io,cli}.py, src/bdsl/{text,data,features,models,eval}/ (models: Model A and Model B), tests/, notebooks/00_env_check … 05_train_gloss2motion.ipynb, dataset/pilot50_v1/, annotations/, pyproject.toml + uv.lock. Everything else below is not created yet:
 ```
 configs/ base.yaml · env/{local,kaggle,colab}.yaml · data/{pilot50,full}.yaml · model/*.yaml
 src/bdsl/ config · paths · env · io · data/ · text/ · features/ · models/ · train/ · eval/ · avatar/ · cli

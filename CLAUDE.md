@@ -14,7 +14,7 @@ and showing the result through a 3D avatar.
 sign → text). Sentence-level translation with BdSL grammar/word order, not word-by-word lookup.
 Deliverable: report + literature review + trained model + results, aimed at a publishable paper.
 
-**Current phase: 5-day prototype (Phase 3), in progress (Days 1–2 done 2026-10-22; Day 3 code done and run in TEST mode on fake review data only, ADR-0025; real pilot gloss review pending).** The literature review is complete
+**Current phase: 5-day prototype (Phase 3), in progress (Days 1–2 done 2026-10-22; Day 3 code done and run in TEST mode on fake review data only, ADR-0025; Day 4 Model B done 2026-10-22, ADR-0026; real pilot gloss review pending).** The literature review is complete
 (ADR-0012). The research design was approved in principle on 2026-10-22 (ADR-0014–0021; rationale in
 `research/design_proposals/04_…`): Bangla → gloss (Model A) → motion (Model B, MediaPipe-derived
 features) → retargeted VRM avatar. Technical specifics marked "Accepted in principle" may change from
@@ -96,6 +96,8 @@ Run from the project root. The environment is the uv-managed `.venv` (Python 3.1
   `gloss-validate` is clean; `--overfit N`, `--resume <run folder>`). `--allow-test-data` on both
   commands is for practice runs on fake data only: outputs are named `TEST_…` and are never results
   (ADR-0025).
+- Model B (Day 4): `uv run python -m bdsl.cli train-gloss2motion --input gloss` (and `--input text`
+  for ablation T; `--overfit N`, `--resume <run folder>`). Uses G0 glosses, not reviewed ones.
 - Choose the platform layer with `BDSL_ENV` (local / kaggle / colab); move outputs with `BDSL_WORK_DIR`.
 - Never `git add` work/, .venv/ or videos (CLAUDE.md rules 6–7, ADR-0017).
 

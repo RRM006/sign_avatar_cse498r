@@ -24,6 +24,58 @@ Results are logged here only after they are actually run.
 
 ---
 
+## 2026-10-22 — Day 4 — Model B pilot (gloss → motion), ablation T, B0/B1 ("pipeline test")
+- Setup:
+  - Environment: desktop CPU, torch 2.14.1+cpu, 2 threads per run (OMP/MKL_NUM_THREADS=2).
+  - Data: pilot50_v1 (40/5/5), features `fa89892d4908`. Inputs: G0 `gloss_auto` (markers removed)
+    plus G0 tag tokens, or the normalised Bangla words (ablation T). Reviewed glosses are not used.
+  - Frames: 208 values (9 body points in shoulder widths; wrist-relative hands; 52 blendshapes;
+    head rotation), standardised on the train clips.
+  - Model B: NAR Transformer d 192, 4 heads, 3+3 layers, ff 512, dropout 0.1; 2,663,441 parameters
+    (gloss vocab 100). AdamW 5e-4, batch 8, patience 60 on val masked L1. Loss weights: hands ×2,
+    λ_v 0.5, λ_len 0.1 (ADR-0026).
+- Measured before the runs:
+  - Hand world points are NOT hand-centred: |wrist| p50 0.551 m (p5 0.399, max 0.854), while wrist
+    → middle fingertip p50 0.128 m. Features were changed to wrist-relative hands, and the runs
+    made before that change were superseded.
+  - Feature NaNs match the masks exactly. Shoulder width 0.309–0.339 m.
+- Checks and results:
+  - Unit tests: 14 new, 125 total pass. They cover the masked loss (zero gradient and no effect
+    from missing or padded values), gap interpolation, the layout, metrics, B0/B1, model shapes,
+    resume and the input guard.
+  - Overfit 1 clip (`…overfit1…T133821Z`): train masked L1 0.808 → 0.041 (5.1%) in 400 epochs.
+  - Overfit 40 clips (`…overfit40…T134024Z`): 0.707 → 0.136 (19.2%). Train MPJPE body 0.107 vs B0
+    0.216; hands 23.8/24.8 mm vs B0 51.8/59.6 mm.
+  - Full runs (`gloss…T133822Z`, `text…T133822Z`), 3 seeds each. Gloss best epochs 37/26/38; text
+    best epochs 48/45/36. Model B values are the mean over 3 seeds (sd ≤ 0.01 body, ≤ 6 mm hands).
+    Body and DTW are in shoulder widths, hands (L/R) in mm, duration error in seconds:
+
+    | split | method | body | hands L / R | DTW body | duration err | velocity ratio | hand-energy ratio | diversity ratio |
+    |---|---|---|---|---|---|---|---|---|
+    | val | B (gloss) | 0.220 | 63.7 / 57.2 | 0.199 | 3.18 | 0.25 | 0.07 | 0.32 |
+    | val | B (text) | 0.217 | 60.0 / 61.1 | 0.199 | 2.99 | 0.30 | 0.09 | 0.39 |
+    | val | B0 | 0.235 | 63.2 / 57.1 | 0.215 | 3.20 | 0.23 | 0.05 | 0.00 |
+    | val | B1 | 0.244 | 73.4 / 69.0 | 0.210 | 3.76 | 1.06 | 1.30 | 0.89 |
+    | test | B (gloss) | 0.224 | 55.9 / 65.3 | 0.209 | 1.91 | 0.20 | 0.05 | 0.27 |
+    | test | B (text) | 0.224 | 58.4 / 65.1 | 0.207 | 2.28 | 0.24 | 0.07 | 0.39 |
+    | test | B0 | 0.221 | 58.2 / 59.7 | 0.208 | 2.08 | 0.17 | 0.04 | 0.00 |
+    | test | B1 | 0.270 | 63.2 / 75.2 | 0.233 | 2.03 | 0.99 | 1.64 | 1.01 |
+
+  - Kill-and-resume: a seed-42 gloss process was force-killed at epoch 50, then `--resume`
+    (`…T134800Z`). Last and best checkpoints are weight-identical to the full run, and the metrics
+    are identical.
+- Notes:
+  - Pilot "pipeline test" only (5 items per split, signer-dependent).
+  - Model B and ablation T are about as good as mean motion (B0) on held-out clips and move far
+    less than real signing (velocity ratio 0.2–0.3). B1 moves realistically but replays another
+    sentence. Gloss vs text input shows no clear difference at this size.
+  - DTW-MJE is computed for val/test only (cost).
+  - The first seed's predictions for all 50 clips are in `seed42/predictions/` for Day 5.
+  - Bugs found and fixed in my own code during the run: a too-coarse time code; hand coordinates not
+    wrist-relative.
+
+---
+
 ## 2026-10-22 — Day 3 Step 1 — Model A pilot, TEST mode (fake review data; ADR-0025)
 > **TEST RUN.** The references are fake: they were derived from the sentence text, and no video was
 > watched. None of these numbers is a Model A result. G0 is favoured because the references were

@@ -367,3 +367,18 @@
   review (owner, 2026-10-22).
 - Rejected: Rewriting the notes to say the videos were checked; turning the test option on by default.
 - Status: Accepted. Milestone 8 stays open until the real run.
+
+## ADR-0026 — 2026-10-22 — Day 4 Model B feature and loss choices
+- Decision:
+  - (owner) Upper body = the 9 points named in design doc 04: nose, shoulders, elbows, wrists,
+    hips. The "11 points" in the same doc is treated as a counting slip.
+  - (owner) MediaPipe "left/right hand" labels are used as given for Day 4; G8 stays open for Day 5.
+  - (owner) No pilot clip is excluded for weak hand coverage (G9). Missing hands are masked; gaps
+    ≤ 5 frames are interpolated and flagged.
+  - (owner) Loss weights: hands ×2, λ_velocity 0.5, λ_length 0.1.
+  - (in principle) Hands are wrist-relative: hand world points minus the hand's own wrist. Global
+    hand position comes from the body wrist (design doc 04 §C1). Reason: the stored hand world
+    points are not hand-centred (measured 2026-10-22, `test_log.md`).
+- Why: Owner's go for Day 4 with the AI's recommendations (2026-10-22).
+- Rejected: An 11-point set (no 2 extra points were named); excluding weak clips on the pilot.
+- Status: Accepted (owner bullets); Accepted in principle (wrist-relative hands).

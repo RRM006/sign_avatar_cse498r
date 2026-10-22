@@ -7,11 +7,13 @@
     uv run python -m bdsl.cli extract --data pilot50 --mode video|image|both
     uv run python -m bdsl.cli gloss-draft --data pilot50 | gloss-validate [--allow-test-data]
     uv run python -m bdsl.cli train-text2gloss [--allow-test-data] [--overfit N] [--resume RUN_DIR]
+    uv run python -m bdsl.cli train-gloss2motion [--input gloss|text] [--overfit N] [--resume RUN_DIR]
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import datetime, timezone
@@ -327,6 +329,64 @@ def cmd_train_text2gloss(args) -> int:
     return 0
 
 
+MODEL_B_INPUT_COLUMNS = ["index", "split", "sentence_raw", "sentence_norm", "norm_ver", "g0_ver", "gloss_auto",
+                         "tags_auto"]
+
+
+def check_model_b_inputs(cfg) -> tuple[pd.DataFrame, list[str], str]:
+    """Model B reads only the G0 columns of the annotation file (never the reviewed ones). Checks them,
+    the split and the feature files; returns (inputs, problems, SHA-256 of the inputs)."""
+    from .features.layout import read_meta
+    from .text.annotations import read_csv
+    from .text.normalize import NORM_VER, normalize
+
+    path, _ = _annotation_paths(cfg)
+    df = read_csv(path)[MODEL_B_INPUT_COLUMNS]
+    pilot = pd.read_csv(Path(cfg["paths"]["pilot_dest_dir"]) / "pilot50_manifest.csv", dtype={"index": str})
+    split_of = dict(zip(pilot["index"], pilot["split"]))
+    features_dir = Path(cfg["paths"]["features_dir"]) / cfg["gloss2motion"]["feat_ver"]
+    problems = []
+    if sorted(df["index"]) != sorted(split_of):
+        problems.append("annotation rows do not match the pilot manifest")
+    for r in df.to_dict("records"):
+        if r["split"] != split_of.get(r["index"]):
+            problems.append(f"row {r['index']}: split differs from pilot50_manifest.csv")
+        if r["g0_ver"] != cfg["annotations"]["g0_ver"]:
+            problems.append(f"row {r['index']}: g0_ver {r['g0_ver']!r} is not {cfg['annotations']['g0_ver']!r}")
+        if r["sentence_norm"] != normalize(r["sentence_raw"]) or r["norm_ver"] != NORM_VER:
+            problems.append(f"row {r['index']}: sentence_norm does not match {NORM_VER}")
+        meta = read_meta(features_dir / f"{r['index']}.npz")
+        if not meta or meta.get("feat_ver") != cfg["gloss2motion"]["feat_ver"]:
+            problems.append(f"row {r['index']}: no features with feat_ver {cfg['gloss2motion']['feat_ver']}")
+    inputs_sha = hashlib.sha256(_csv_text(df.sort_values("index")).encode("utf-8")).hexdigest()
+    return df, problems, inputs_sha
+
+
+def cmd_train_gloss2motion(args) -> int:
+    from .models.train_gloss2motion import ResumeMismatch, run
+
+    if args.data != "pilot50":
+        print("Only --data pilot50 is authorised so far.")
+        return 2
+    cfg = load_config(env=args.env, data=args.data)
+    df, problems, inputs_sha = check_model_b_inputs(cfg)
+    if problems:
+        print(json.dumps({"problems": problems}, indent=1, ensure_ascii=False))
+        print("Refusing to train: Model B inputs failed the checks.")
+        return 2
+    manifest_path = Path(cfg["paths"]["pilot_dest_dir"]) / "pilot50_manifest.csv"
+    try:
+        result = run(cfg, df, mode=args.input, features_dir=Path(cfg["paths"]["features_dir"]) / cfg["gloss2motion"]["feat_ver"],
+                     pilot_manifest_sha256=sha256_file(manifest_path), inputs_sha256=inputs_sha,
+                     run_dir=Path(args.resume) if args.resume else None, runs_root=cfg_path(cfg, "runs_dir"),
+                     seeds=args.seeds, overfit=args.overfit, stop_after=args.stop_after_epochs)
+    except ResumeMismatch as e:
+        print(f"Refusing to resume: {e}")
+        return 2
+    print(json.dumps({"run_dir": result["run_dir"], "finished": result["finished"]}, indent=1))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="bdsl.cli", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--env", default=None, help="config env layer (default: auto-detect)")
@@ -362,6 +422,14 @@ def main(argv: list[str] | None = None) -> int:
     t.add_argument("--resume", default=None, help="run folder to continue from its last checkpoints")
     t.add_argument("--stop-after-epochs", type=int, default=None, help="stop each seed after N epochs (resume test)")
     t.set_defaults(func=cmd_train_text2gloss)
+    b = sub.add_parser("train-gloss2motion", help="Model B pilot: G0 gloss (or text) → motion vs B0/B1")
+    b.add_argument("--data", default="pilot50")
+    b.add_argument("--input", choices=["gloss", "text"], default="gloss", help="text = ablation T")
+    b.add_argument("--seeds", type=int, nargs="+", default=None, help="default: gloss2motion.seeds")
+    b.add_argument("--overfit", type=int, default=None, help="overfit check: train and score on the first N train clips")
+    b.add_argument("--resume", default=None, help="run folder to continue from its last checkpoints")
+    b.add_argument("--stop-after-epochs", type=int, default=None, help="stop each seed after N epochs (resume test)")
+    b.set_defaults(func=cmd_train_gloss2motion)
     args = ap.parse_args(argv)
     return args.func(args)
 

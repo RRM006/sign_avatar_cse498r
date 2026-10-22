@@ -104,6 +104,22 @@ text2gloss:          # Day 3 Step 1, Model A; design doc 04 §F-10 (A-GRU), ADR-
   seeds: [42, 43, 44]
   tag_prefix: true    # reviewed tags become target tokens before the gloss, e.g. "<q-wh> তোমার বাবা কি করা"
 
+gloss2motion:        # Day 4, Model B; design doc 04 §F-10 (NAR), §F-9 (gaps), ADR-0019 (representation)
+  feat_ver: fa89892d4908   # pilot features, VIDEO mode (ADR-0023)
+  max_gap: 5          # hand gaps up to 5 frames (0.33 s) are interpolated and flagged; longer stay masked
+  model: {d: 192, heads: 4, enc_layers: 3, dec_layers: 3, ff: 512, dropout: 0.1}
+  loss: {hand_weight: 2.0, lambda_vel: 0.5, lambda_len: 0.1}   # owner OK 2026-10-22
+  train:
+    lr: 0.0005        # AdamW
+    weight_decay: 0.01
+    batch_size: 8
+    max_epochs: 600
+    patience: 60      # early stopping on val masked position L1 (true lengths)
+    clip: 1.0
+    overfit_epochs: 400
+  max_frames: 300     # cap on the predicted length (longest pilot clip: 272 frames)
+  seeds: [42, 43, 44]
+
 env_check:
   report_file: env_report.json
   expected_python: "3.12"

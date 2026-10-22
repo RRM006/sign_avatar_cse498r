@@ -14,6 +14,27 @@
 
 ---
 
+## Session 5 (continued) — 2026-10-22 — Day 4: Model B pilot (gloss → motion) + ablation T + B0/B1
+- Did: On the owner's go (Steps 1 and 2, with my recommendations):
+  - added `src/bdsl/features/normalize.py`: 208-value frames, part masks, hand gaps ≤ 5 frames
+    interpolated, standardiser;
+  - added `src/bdsl/eval/motion_metrics.py` (MPJPE, DTW-MJE, duration, velocity/jerk, hand energy,
+    diversity) and B0/B1 in `models/baselines.py`;
+  - added the NAR Transformer `models/gloss2motion.py` (2,663,441 parameters) with a masked loss, and
+    `models/train_gloss2motion.py`;
+  - added `bdsl.cli train-gloss2motion [--input gloss|text]`, notebook 05 and 14 tests (125 pass).
+  Ran overfit 1 and 40, 3 seeds × {gloss, text} and a real kill-and-resume test (`test_log.md`). No
+  installs.
+- Decided: ADR-0026 (owner): 9 named upper-body points; MediaPipe hand labels as given (G8); no clip
+  excluded (G9); loss weights hands ×2, λ_v 0.5, λ_len 0.1.
+- Broke / problem: Found and fixed during the run:
+  - the decoder's time code was too coarse to tell neighbouring frames apart;
+  - MediaPipe Holistic hand "world" points are not hand-centred: the wrist is ≈ 0.55 m from their
+    origin. The Day 2 layout note was wrong; hands are now made wrist-relative.
+  The runs from before the hand fix are in `work/runs/_superseded_day4_hand_offset/`.
+- Deferred: Day 5 (retarget + viewer + demo). Which motion drives the demo is new open question G11.
+- Next: Day 5 plan — show it and wait for the owner's go.
+
 ## Session 5 — 2026-10-22 — Day 3 Step 1 as a labelled TEST run; merged into main
 - Did: Checked the pilot review twice; both versions failed `gloss-validate`.
   - First version: role `reviewer` was not allowed, and the notes said "video not checked".

@@ -225,7 +225,8 @@ is report + literature review + trained model + results, aimed at a publishable 
   MediaPipe's "left" is the signer's real right hand. This matters for the avatar (Day 5) and for any
   statement about the dominant hand. Not inferred from the data.
 - Needs: someone who knows how the videos were recorded, or a team member looking at a few clips per
-  recording type. **Status:** Open (owner input).
+  recording type. **Status:** Open (owner input). Day 4 used the labels as given (ADR-0026); the
+  answer matters for Day 5 retargeting.
 
 ### G9. QC thresholds for weak clips
 - Pilot QC reports values only. For example:
@@ -243,6 +244,16 @@ is report + literature review + trained model + results, aimed at a publishable 
 - 2026-10-22: T1 is registered (role `team`). The current rows are fake on purpose: no clip
   watched, `is_mock=true` (ADR-0025). Day 3 ran only as a labelled TEST run. **Status:** Open — a
   real video review by T1 is still needed for the real Model A run.
+
+### G11. Which motion drives the Day 5 avatar demo?
+- Day 4 pilot (`test_log.md`, 2026-10-22): Model B is close to the mean-motion baseline B0 on val/test.
+  It moves at about 20–30% of the real speed (velocity ratio 0.20–0.30; hand-energy ratio
+  0.05–0.09); diversity ratio 0.27–0.39.
+- B1 (retrieval of a real training clip) has realistic motion amounts (velocity ratio ≈ 1.0), but it
+  only replays a different sentence.
+- Design doc 04 (D4 risk row): "Model does not fit → report it, keep B1 output for the demo".
+- Options: Model B output, B1 output, or both side by side, each clearly labelled. (TBD — decide
+  with owner) before Day 5. **Status:** Open (owner input).
 
 ---
 
