@@ -21,6 +21,7 @@ extract = [
 ]
 # Model training. Kaggle and Colab keep their preinstalled torch; this extra is for the desktop.
 train = [
+    "sacrebleu==2.6.0",   # BLEU-4 / chrF for Model A (ADR-0020); installed 2026-10-22
     "torch==2.14.1",
 ]
 

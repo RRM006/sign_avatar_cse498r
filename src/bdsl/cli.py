@@ -5,7 +5,8 @@
     uv run python -m bdsl.cli pilot-select
     uv run python -m bdsl.cli pilot-copy --confirm      # only after the owner approved the 50-clip list
     uv run python -m bdsl.cli extract --data pilot50 --mode video|image|both
-    uv run python -m bdsl.cli gloss-draft --data pilot50 | gloss-validate
+    uv run python -m bdsl.cli gloss-draft --data pilot50 | gloss-validate [--allow-test-data]
+    uv run python -m bdsl.cli train-text2gloss [--allow-test-data] [--overfit N] [--resume RUN_DIR]
 """
 
 from __future__ import annotations
@@ -259,18 +260,71 @@ def cmd_gloss_draft(args) -> int:
     return 1 if problems else 0
 
 
-def cmd_gloss_validate(args) -> int:
-    from .text.annotations import read_csv, usable_for_training, validate
+TEST_DATA_WARNING = ("TEST RUN: --allow-test-data accepts mock / not-video-verified rows. "
+                     "Nothing produced with it is a real result.")
 
-    cfg = load_config(env=args.env, data="pilot50")
+
+def check_annotations(cfg, allow_test_data: bool = False) -> dict:
+    """Validate the pilot annotation file; training code must refuse to start unless `problems` is empty."""
+    from .text.annotations import is_test_data, read_csv, usable_for_training, validate
+
     path, reviewers_path = _annotation_paths(cfg)
     df = read_csv(path)
     pilot = pd.read_csv(Path(cfg["paths"]["pilot_dest_dir"]) / "pilot50_manifest.csv")
-    problems = validate(df, read_csv(reviewers_path), set(pilot["index"].astype(int)))
-    print(json.dumps({"file": path.name, "rows": len(df), "status": df["status"].value_counts().to_dict(),
-                      "usable_for_training": len(usable_for_training(df)), "problems": problems},
-                     indent=1, ensure_ascii=False))
-    return 1 if problems else 0
+    problems = validate(df, read_csv(reviewers_path), set(pilot["index"].astype(int)), allow_test_data)
+    report = {"file": path.name, "file_sha256": sha256_file(path), "rows": len(df),
+              "status": df["status"].value_counts().to_dict(), "test_data_rows": int(is_test_data(df).sum()),
+              "usable_for_training": len(usable_for_training(df, allow_test_data)), "problems": problems}
+    if allow_test_data:
+        report = {"TEST_RUN": True, "warning": TEST_DATA_WARNING, **report}
+    return report
+
+
+def cmd_gloss_validate(args) -> int:
+    cfg = load_config(env=args.env, data="pilot50")
+    report = check_annotations(cfg, args.allow_test_data)
+    print(json.dumps(report, indent=1, ensure_ascii=False))
+    return 1 if report["problems"] else 0
+
+
+def cmd_train_text2gloss(args) -> int:
+    from .models.train_text2gloss import ResumeMismatch, run
+    from .text.annotations import read_csv, usable_for_training
+
+    if args.data != "pilot50":
+        print("Only --data pilot50 is authorised so far.")
+        return 2
+    cfg = load_config(env=args.env, data=args.data)
+    # Guard: no training unless the annotation check is clean (ADR-0024).
+    check = check_annotations(cfg, args.allow_test_data)
+    if check["problems"]:
+        print(json.dumps(check, indent=1, ensure_ascii=False))
+        print("Refusing to train: gloss-validate reports problems.")
+        return 2
+    if args.allow_test_data:
+        print(TEST_DATA_WARNING)
+    path, _ = _annotation_paths(cfg)
+    df = usable_for_training(read_csv(path), args.allow_test_data)
+    manifest_path = Path(cfg["paths"]["pilot_dest_dir"]) / "pilot50_manifest.csv"
+    pilot = pd.read_csv(manifest_path, dtype={"index": str})
+    split_of = dict(zip(pilot["index"], pilot["split"]))
+    moved = [i for i, s in zip(df["index"], df["split"]) if split_of.get(i) != s]
+    if moved:
+        print(f"Refusing to train: split differs from pilot50_manifest.csv for rows {moved}.")
+        return 2
+    try:
+        result = run(cfg, df, check, allow_test_data=args.allow_test_data,
+                     pilot_manifest_sha256=sha256_file(manifest_path),
+                     run_dir=Path(args.resume) if args.resume else None, runs_root=cfg_path(cfg, "runs_dir"),
+                     seeds=args.seeds, overfit=args.overfit, stop_after=args.stop_after_epochs)
+    except ResumeMismatch as e:
+        print(f"Refusing to resume: {e}")
+        return 2
+    if sha256_file(path) != check["file_sha256"]:
+        print(f"{path.name} changed during training: discard run {result['run_dir']}.")
+        return 1
+    print(json.dumps({"run_dir": result["run_dir"], "finished": result["finished"]}, indent=1))
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -295,7 +349,19 @@ def main(argv: list[str] | None = None) -> int:
     g = sub.add_parser("gloss-draft", help="write G0 auto_draft glosses (never overwrites reviewed rows)")
     g.add_argument("--data", default="pilot50")
     g.set_defaults(func=cmd_gloss_draft)
-    sub.add_parser("gloss-validate", help="check the pilot annotation file").set_defaults(func=cmd_gloss_validate)
+    v = sub.add_parser("gloss-validate", help="check the pilot annotation file")
+    v.add_argument("--allow-test-data", action="store_true",
+                   help="TEST RUN ONLY: accept mock / not-video-verified rows (off by default)")
+    v.set_defaults(func=cmd_gloss_validate)
+    t = sub.add_parser("train-text2gloss", help="Model A pilot: G0 vs A-GRU (refuses unless gloss-validate is clean)")
+    t.add_argument("--data", default="pilot50")
+    t.add_argument("--allow-test-data", action="store_true",
+                   help="TEST RUN ONLY: train on mock / not-video-verified rows; outputs are named TEST_")
+    t.add_argument("--seeds", type=int, nargs="+", default=None, help="default: text2gloss.seeds")
+    t.add_argument("--overfit", type=int, default=None, help="overfit check: train and score on the first N train rows")
+    t.add_argument("--resume", default=None, help="run folder to continue from its last checkpoints")
+    t.add_argument("--stop-after-epochs", type=int, default=None, help="stop each seed after N epochs (resume test)")
+    t.set_defaults(func=cmd_train_text2gloss)
     args = ap.parse_args(argv)
     return args.func(args)
 

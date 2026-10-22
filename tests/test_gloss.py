@@ -102,6 +102,21 @@ def test_invalid_rows_are_rejected(column, value, expected):
     assert any(expected in p for p in validate(df, _reviewers(), {3, 5}))
 
 
+@pytest.mark.parametrize("column, value", [
+    ("is_mock", "true"),
+    ("notes", "TEST DATA: glosses derived from sentence text, not video-verified"),
+])
+def test_test_data_refused_by_default_and_accepted_only_with_the_test_option(column, value):
+    df, _ = _drafts()
+    team = _reviewers([("T1", "team", "owner", "2026-10-22", "")])
+    fake = _reviewed(df, **{column: value})
+    assert validate(fake, team, {3, 5}) != []
+    assert usable_for_training(fake).empty
+    assert validate(fake, team, {3, 5}, allow_test_data=True) == []
+    assert len(usable_for_training(fake, allow_test_data=True)) == 1
+    assert any("not registered" in p for p in validate(fake, _reviewers(), {3, 5}, allow_test_data=True))
+
+
 def test_rejected_needs_a_note_and_guard_detects_human_work(tmp_path):
     df, _ = _drafts()
     team = _reviewers([("T1", "team", "owner", "2026-10-22", "")])
@@ -126,3 +141,24 @@ def test_cli_refuses_to_overwrite_reviewed_file(tmp_path, monkeypatch):
     monkeypatch.setattr(cli, "_annotation_paths", lambda cfg: (target, tmp_path / "REVIEWERS.csv"))
     assert cli.main(["gloss-draft", "--data", "pilot50"]) == 2
     assert target.read_bytes() == before
+
+
+def test_cli_validate_test_option_is_off_by_default(tmp_path, monkeypatch, capsys):
+    import json
+
+    import bdsl.cli as cli
+
+    df, _ = _drafts()
+    target = write_csv(_reviewed(df, is_mock="true"), tmp_path / "pilot.csv")
+    reviewers = write_csv(_reviewers([("T1", "team", "owner", "2026-10-22", "")]), tmp_path / "REVIEWERS.csv")
+    pilot_dir = tmp_path / "pilot"
+    pilot_dir.mkdir()
+    (pilot_dir / "pilot50_manifest.csv").write_text("index\n3\n5\n", encoding="utf-8")
+    monkeypatch.setattr(cli, "_annotation_paths", lambda cfg: (target, reviewers))
+    monkeypatch.setattr(cli, "load_config", lambda **kw: {"paths": {"pilot_dest_dir": str(pilot_dir)}})
+    assert cli.main(["gloss-validate"]) == 1
+    normal = json.loads(capsys.readouterr().out)
+    assert "TEST_RUN" not in normal and normal["usable_for_training"] == 0
+    assert cli.main(["gloss-validate", "--allow-test-data"]) == 0
+    test = json.loads(capsys.readouterr().out)
+    assert test["TEST_RUN"] is True and test["usable_for_training"] == 1 and test["test_data_rows"] == 1
