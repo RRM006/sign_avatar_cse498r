@@ -239,7 +239,10 @@ is report + literature review + trained model + results, aimed at a publishable 
 - The 50 drafts in `annotations/pilot50_v1_gloss_v01.csv` need a registered team reviewer
   (`annotations/REVIEWERS.csv`, `annotations/REVIEW_GUIDE.md`) before Model A can be trained on them
   (ADR-0024). Who reviews, and when: (TBD — decide with owner). Blocks Day 3 as planned; the
-  alternatives are listed in `current_task.md`. **Status:** Open (owner input).
+  alternatives are listed in `current_task.md`.
+- 2026-10-22: T1 is registered (role `team`). The current rows are fake on purpose: no clip
+  watched, `is_mock=true` (ADR-0025). Day 3 ran only as a labelled TEST run. **Status:** Open — a
+  real video review by T1 is still needed for the real Model A run.
 
 ---
 

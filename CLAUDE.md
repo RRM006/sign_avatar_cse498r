@@ -14,7 +14,7 @@ and showing the result through a 3D avatar.
 sign → text). Sentence-level translation with BdSL grammar/word order, not word-by-word lookup.
 Deliverable: report + literature review + trained model + results, aimed at a publishable paper.
 
-**Current phase: 5-day prototype (Phase 3), in progress (Days 1–2 done 2026-10-22; pilot gloss review pending).** The literature review is complete
+**Current phase: 5-day prototype (Phase 3), in progress (Days 1–2 done 2026-10-22; Day 3 code done and run in TEST mode on fake review data only, ADR-0025; real pilot gloss review pending).** The literature review is complete
 (ADR-0012). The research design was approved in principle on 2026-10-22 (ADR-0014–0021; rationale in
 `research/design_proposals/04_…`): Bangla → gloss (Model A) → motion (Model B, MediaPipe-derived
 features) → retargeted VRM avatar. Technical specifics marked "Accepted in principle" may change from
@@ -76,7 +76,7 @@ Remaining medical/dialect mentions there are genuine paper findings.
 ## CURRENT STACK
 
 Installed in `.venv` (2026-10-22, pins in `pyproject.toml` / `uv.lock`): Python 3.12.13, mediapipe
-0.10.35, opencv-contrib-python 5.0.0.93, numpy 2.4.6, PyYAML 6.0.3, pandas 3.0.3, openpyxl 3.1.5, torch 2.14.1 (CPU); dev: pytest,
+0.10.35, opencv-contrib-python 5.0.0.93, numpy 2.4.6, PyYAML 6.0.3, pandas 3.0.3, openpyxl 3.1.5, torch 2.14.1 (CPU), sacrebleu 2.6.0; dev: pytest,
 ipykernel, nbclient, nbformat. Planned (ADR-0019): three.js + three-vrm.
 
 ## COMMANDS
@@ -92,6 +92,10 @@ Run from the project root. The environment is the uv-managed `.venv` (Python 3.1
   mode, ADR-0023; full-set extraction only on the owner's go).
 - Annotations (Day 2 Step 2): `uv run python -m bdsl.cli gloss-draft --data pilot50` (never overwrites
   reviewed rows) and `… gloss-validate` (run after every review session).
+- Model A (Day 3 Step 1): `uv run python -m bdsl.cli train-text2gloss` (refuses unless
+  `gloss-validate` is clean; `--overfit N`, `--resume <run folder>`). `--allow-test-data` on both
+  commands is for practice runs on fake data only: outputs are named `TEST_…` and are never results
+  (ADR-0025).
 - Choose the platform layer with `BDSL_ENV` (local / kaggle / colab); move outputs with `BDSL_WORK_DIR`.
 - Never `git add` work/, .venv/ or videos (CLAUDE.md rules 6–7, ADR-0017).
 

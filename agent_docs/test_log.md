@@ -24,6 +24,51 @@ Results are logged here only after they are actually run.
 
 ---
 
+## 2026-10-22 — Day 3 Step 1 — Model A pilot, TEST mode (fake review data; ADR-0025)
+> **TEST RUN.** The references are fake: they were derived from the sentence text, and no video was
+> watched. None of these numbers is a Model A result. G0 is favoured because the references were
+> made by editing its drafts.
+- Setup:
+  - Environment: desktop CPU, torch 2.14.1+cpu, sacreBLEU 2.6.0, branch `test-run-fake-review`
+    (code commit `de6db35`), later merged into `main`.
+  - Data: pilot50_v1 (40/5/5), `annotations/pilot50_v1_gloss_v01.csv` with 50 rows `team_reviewed`,
+    `is_mock=true`. Command: `train-text2gloss --allow-test-data`.
+  - A-GRU: emb 128, BiGRU 256, Bahdanau 256, GRU decoder 256, dropout 0.2, Adam 1e-3, batch 8,
+    label smoothing 0.1, patience 30 on val greedy WER, beam 4 at the end.
+  - Vocab (train only): src 98, tgt 88 (incl. 4 specials and the tag tokens). 1,713,752 parameters.
+- Checks and results:
+  - Guard: `gloss-validate` without the option → exit 1 (100 problems: 50 mock, 50 "not
+    video-verified"). With the option → exit 0, `usable_for_training` 50. `train-text2gloss` without
+    the option → exit 2 "Refusing to train". A split that differs from the manifest is refused
+    (unit test).
+  - Overfit: 1 sentence → 100% exact (beam) at epoch 4; 40 train sentences → 100% exact at epoch 12
+    (`…overfit1…T125750Z`, `…overfit40…T125800Z`).
+  - Full run `TEST_text2gloss_pilot50_20261022T125820Z`, 46 s. Seeds 42/43/44 stopped at epochs
+    39/50/41 (best 9/20/11). G0 vs A-GRU (mean ± sd over 3 seeds):
+
+    | split | G0 WER | G0 exact | A-GRU WER | A-GRU exact | A-GRU tags | A-GRU BLEU-4 | A-GRU chrF |
+    |---|---|---|---|---|---|---|---|
+    | train (40) | 34.5 | 15% | 1.4 ± 1.5 | 94% | 99% | 97.2 | 98.8 |
+    | val (5) | 33.3 | 20% | 68.3 ± 7.3 | 0% | 87% | 8.4 | 33.8 |
+    | test (5) | 33.3 | 0% | 69.8 ± 13.7 | 0% | 87% | 9.7 | 38.6 |
+
+  - Kill-and-resume: a seed-42 process was force-killed after epoch 20, then `--resume`. The last and
+    best checkpoints are weight-identical to the uninterrupted run, with identical metrics
+    (`…T130107Z`). Resuming with other seeds is refused (exit 2).
+  - Labels: 0 files under `work/runs/` lack the `TEST_` prefix. Every JSON file and checkpoint has
+    `TEST_RUN: true`, and every log line starts with `[TEST]`.
+  - `uv run pytest`: 111 passed.
+- Notes:
+  - The A-GRU memorises its 40 sentences. On held-out sentences it outputs near-copies of training
+    sentences (e.g. 3323 → "তোমার প্রিয় রং কি" for all seeds). With 5 items per split, one item
+    moves a score by 20 points.
+  - BLEU-4 is 0 for any gloss under 4 tokens, so gloss WER is the main score.
+  - Two bugs found and fixed: the overfit stop is now judged with beam search; resume now keeps
+    the run's seeds. The superseded folders are `…overfit1…T125651Z`, `…overfit40…T125701Z` and
+    `…T125920Z`.
+
+---
+
 ## 2026-10-22 — Notebooks — structural check at the end of Session 3 (not executed)
 - Setup: new thin notebooks `notebooks/01_manifest.ipynb`, `02_extract.ipynb`, `03_gloss.ipynb`
   (call `bdsl.cli.main` and package functions; paths from config only), plus the existing

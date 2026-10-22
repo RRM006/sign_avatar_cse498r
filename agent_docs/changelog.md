@@ -14,6 +14,31 @@
 
 ---
 
+## Session 5 — 2026-10-22 — Day 3 Step 1 as a labelled TEST run; merged into main
+- Did: Checked the pilot review twice; both versions failed `gloss-validate`.
+  - First version: role `reviewer` was not allowed, and the notes said "video not checked".
+  - Second version: all 50 rows had `is_mock=true` and the notes "TEST DATA … not video-verified".
+  On the owner's request, a local practice run on branch `test-run-fake-review`:
+  - added `--allow-test-data` (off by default) to `gloss-validate`. `validate()` now also refuses
+    reviewed rows whose notes say "not video-verified";
+  - installed sacreBLEU 2.6.0 (+5 small dependencies; pinned in the `train` extra);
+  - built Day 3 Step 1: `bdsl.cli train-text2gloss` (G0 vs A-GRU, tag prefix tokens, 3 seeds, early
+    stopping, beam 4, checkpoints with resume, guard), `src/bdsl/{models,eval}/` and notebook 04;
+  - ran the guard, the overfit tests, the 3-seed TEST run and a real kill-and-resume test
+    (`test_log.md`); 111 tests pass.
+  The owner then had the branch merged into `main` (merge `0eef7c6`, not pushed).
+- Decided: ADR-0025. The practice run, including the fake annotation rows, is merged into `main`. The
+  test option stays off by default; nothing trained with it is a Model A result.
+- Broke / problem: Two bugs in my own Day 3 code were found by the run and fixed:
+  - the overfit stop used greedy decoding, while the final score uses beam search;
+  - resume ignored the run's original seeds.
+  The superseded TEST run folders stay in `work/runs/` (gitignored).
+- Deferred:
+  - A real team review of the 50 pilot glosses (G10) and the real Model A run.
+  - Pushing (a push would publish the fake-labelled annotation rows).
+  - agent_docs updates for anything beyond Day 3.
+- Next: Day 4 (Model B) plan — show it and wait for the owner's go.
+
 ## Session 4 — 2026-10-22 — Publish the approved Day 1–2 work
 - Did: Ran `uv run pytest` (93 passed). Committed and pushed the implementation, pilot metadata,
   annotations, design/docs and session memory authorized by the owner.

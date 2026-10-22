@@ -349,3 +349,21 @@
 - Why: Owner approval of the Day 2 Step 2 plan and its three scope details (2026-10-22); ADR-0015.
 - Rejected: G0 without R5 (offered as an option, not chosen).
 - Status: Accepted. Implements ADR-0015 for pilot50_v1; the convention itself stays provisional.
+
+## ADR-0025 — 2026-10-22 — Day 3 practice run on fake review data, merged into main
+- Decision:
+  - (owner) The current `annotations/pilot50_v1_gloss_v01.csv` is test data on purpose: glosses
+    derived from the sentence text, no clip watched, `is_mock=true`, notes "TEST DATA … not
+    video-verified". It is kept as is; the notes are never rewritten to claim a video check.
+  - (owner) A test-only option `--allow-test-data` on `gloss-validate` and `train-text2gloss`
+    accepts such rows. It is off by default; without it both commands refuse the data. With it,
+    every output is named `TEST_…` and carries `TEST_RUN: true`.
+  - (owner) Day 3 Step 1 was run in this TEST mode on branch `test-run-fake-review`. On the owner's
+    request, the branch was merged into `main` (merge commit `0eef7c6`, local; not pushed).
+  - (owner, rule kept) TEST numbers are never reported as Model A results. The real Model A run
+    needs a real video review by a registered reviewer, `is_mock=false`, honest notes, and no test
+    option (ADR-0024 unchanged).
+- Why: The owner wanted to learn the annotation → validation → training process before the real
+  review (owner, 2026-10-22).
+- Rejected: Rewriting the notes to say the videos were checked; turning the test option on by default.
+- Status: Accepted. Milestone 8 stays open until the real run.
