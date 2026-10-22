@@ -5,7 +5,7 @@
     uv run python -m bdsl.cli pilot-select
     uv run python -m bdsl.cli pilot-copy --confirm      # only after the owner approved the 50-clip list
     uv run python -m bdsl.cli extract --data pilot50 --mode video|image|both
-    uv run python -m bdsl.cli gloss-draft --data pilot50 | gloss-validate
+    uv run python -m bdsl.cli gloss-draft --data pilot50 | gloss-validate [--allow-test-data]
 """
 
 from __future__ import annotations
@@ -259,18 +259,31 @@ def cmd_gloss_draft(args) -> int:
     return 1 if problems else 0
 
 
-def cmd_gloss_validate(args) -> int:
-    from .text.annotations import read_csv, usable_for_training, validate
+TEST_DATA_WARNING = ("TEST RUN: --allow-test-data accepts mock / not-video-verified rows. "
+                     "Nothing produced with it is a real result.")
 
-    cfg = load_config(env=args.env, data="pilot50")
+
+def check_annotations(cfg, allow_test_data: bool = False) -> dict:
+    """Validate the pilot annotation file; training code must refuse to start unless `problems` is empty."""
+    from .text.annotations import is_test_data, read_csv, usable_for_training, validate
+
     path, reviewers_path = _annotation_paths(cfg)
     df = read_csv(path)
     pilot = pd.read_csv(Path(cfg["paths"]["pilot_dest_dir"]) / "pilot50_manifest.csv")
-    problems = validate(df, read_csv(reviewers_path), set(pilot["index"].astype(int)))
-    print(json.dumps({"file": path.name, "rows": len(df), "status": df["status"].value_counts().to_dict(),
-                      "usable_for_training": len(usable_for_training(df)), "problems": problems},
-                     indent=1, ensure_ascii=False))
-    return 1 if problems else 0
+    problems = validate(df, read_csv(reviewers_path), set(pilot["index"].astype(int)), allow_test_data)
+    report = {"file": path.name, "file_sha256": sha256_file(path), "rows": len(df),
+              "status": df["status"].value_counts().to_dict(), "test_data_rows": int(is_test_data(df).sum()),
+              "usable_for_training": len(usable_for_training(df, allow_test_data)), "problems": problems}
+    if allow_test_data:
+        report = {"TEST_RUN": True, "warning": TEST_DATA_WARNING, **report}
+    return report
+
+
+def cmd_gloss_validate(args) -> int:
+    cfg = load_config(env=args.env, data="pilot50")
+    report = check_annotations(cfg, args.allow_test_data)
+    print(json.dumps(report, indent=1, ensure_ascii=False))
+    return 1 if report["problems"] else 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -295,7 +308,10 @@ def main(argv: list[str] | None = None) -> int:
     g = sub.add_parser("gloss-draft", help="write G0 auto_draft glosses (never overwrites reviewed rows)")
     g.add_argument("--data", default="pilot50")
     g.set_defaults(func=cmd_gloss_draft)
-    sub.add_parser("gloss-validate", help="check the pilot annotation file").set_defaults(func=cmd_gloss_validate)
+    v = sub.add_parser("gloss-validate", help="check the pilot annotation file")
+    v.add_argument("--allow-test-data", action="store_true",
+                   help="TEST RUN ONLY: accept mock / not-video-verified rows (off by default)")
+    v.set_defaults(func=cmd_gloss_validate)
     args = ap.parse_args(argv)
     return args.func(args)
 

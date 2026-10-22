@@ -30,6 +30,8 @@ REVIEWER_COLUMNS = ["reviewer_id", "role", "assigned_by", "assigned_date", "note
 ROLES = ("team", "expert")
 CONFIDENCE = ("low", "med", "high")
 _CODE = re.compile(r"^[A-Za-z0-9-]{1,12}$")
+# Notes that say a reviewed row was not checked against its clip. Such rows are test data.
+_UNVERIFIED = re.compile(r"not video-verified|video not checked|test data", re.IGNORECASE)
 
 
 def read_csv(path: str | Path) -> pd.DataFrame:
@@ -84,8 +86,17 @@ def _valid_date(s: str) -> bool:
         return False
 
 
-def validate(df: pd.DataFrame, reviewers: pd.DataFrame, allowed_indices: set[int] | None = None) -> list[str]:
-    """All problems found (empty list = valid). Real annotation files only: mock rows are refused."""
+def is_test_data(df: pd.DataFrame) -> pd.Series:
+    """True for a mock row, or a reviewed row whose notes say the clip was not checked."""
+    unverified = df["notes"].str.contains(_UNVERIFIED, regex=True)
+    return (df["is_mock"] == "true") | (df["status"].isin(REVIEWED) & unverified)
+
+
+def validate(df: pd.DataFrame, reviewers: pd.DataFrame, allowed_indices: set[int] | None = None,
+             allow_test_data: bool = False) -> list[str]:
+    """All problems found (empty list = valid). Real annotation files only: mock rows and reviewed rows
+    whose notes say "not video-verified" are refused. allow_test_data=True accepts them for a TEST run
+    only; never use it for real results."""
     if list(df.columns) != COLUMNS:
         return [f"columns must be {COLUMNS}, got {list(df.columns)}"]
     problems = validate_reviewers(reviewers)
@@ -103,8 +114,10 @@ def validate(df: pd.DataFrame, reviewers: pd.DataFrame, allowed_indices: set[int
             problems.append(f"{where}: status {r['status']!r} not in {STATUSES}")
         if r["is_mock"] not in ("true", "false"):
             problems.append(f"{where}: is_mock must be true or false")
-        elif r["is_mock"] == "true":
+        elif r["is_mock"] == "true" and not allow_test_data:
             problems.append(f"{where}: mock row in a real annotation file")
+        if r["status"] in REVIEWED and _UNVERIFIED.search(r["notes"]) and not allow_test_data:
+            problems.append(f"{where}: notes say the row is test data / not video-verified")
         if r["status"] == "auto_draft":
             if r["reviewer_id"] or r["review_date"] or r["confidence"]:
                 problems.append(f"{where}: auto_draft row must not have reviewer fields")
@@ -126,6 +139,10 @@ def validate(df: pd.DataFrame, reviewers: pd.DataFrame, allowed_indices: set[int
     return problems
 
 
-def usable_for_training(df: pd.DataFrame) -> pd.DataFrame:
-    """Rows a model may learn from: reviewed by a person and not mock (design doc 04 §F-10)."""
-    return df[df["status"].isin(REVIEWED) & (df["is_mock"] == "false")]
+def usable_for_training(df: pd.DataFrame, allow_test_data: bool = False) -> pd.DataFrame:
+    """Rows a model may learn from: reviewed by a person and not test data (design doc 04 §F-10).
+    allow_test_data=True also returns test rows, for a TEST run only."""
+    keep = df["status"].isin(REVIEWED)
+    if not allow_test_data:
+        keep &= ~is_test_data(df)
+    return df[keep]

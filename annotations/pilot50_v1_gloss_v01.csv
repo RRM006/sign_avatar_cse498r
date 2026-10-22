@@ -1,51 +1,51 @@
 ﻿index,split,sentence_raw,sentence_norm,norm_ver,g0_ver,gloss_auto,tags_auto,gloss_reviewed,tags_reviewed,tense_note,status,annotator_id,reviewer_id,review_date,confidence,notes,is_mock
-185,train,আমি এপ্রিলে অস্ট্রেলিয়া যাব ,আমি এপ্রিলে অস্ট্রেলিয়া যাব,norm_v1,G0-v0.1,আমি এপ্রিলে? অস্ট্রেলিয়া? যাব?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-330,train,তোমার মামা সমুদ্র দেখতে যাবে ,তোমার মামা সমুদ্র দেখতে যাবে,norm_v1,G0-v0.1,তোমার মামা? সমুদ্র? দেখতে? যাবে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-792,train,অসৎ সাংবাদিক দের তথ্যে আমরা ভুল বুঝি,অসৎ সাংবাদিক দের তথ্যে আমরা ভুল বুঝি,norm_v1,G0-v0.1,অসৎ? সাংবাদিক? দের? তথ্যে? আমরা ভুল? বুঝি?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-929,val,আমার প্রিয় গায়ক,আমার প্রিয় গায়ক,norm_v1,G0-v0.1,আমার প্রিয়? গায়ক?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-1829,val,আমার বড় ভাই রাতে দেখা করবে না,আমার বড় ভাই রাতে দেখা করবে না,norm_v1,G0-v0.1,আমার বড়? ভাই? রাতে? দেখা? করবে? NOT,neg,,,,auto_draft,auto:G0-v0.1,,,,,false
-2224,train,পরশু আমি তোমার সাথে এক সাথে দেখা করবো,পরশু আমি তোমার সাথে এক সাথে দেখা করবো,norm_v1,G0-v0.1,পরশু? আমি তোমার সাথে? এক? সাথে? দেখা? করবো?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2297,test,সময় নাই আগে এই কাজ করি,সময় নাই আগে এই কাজ করি,norm_v1,G0-v0.1,সময়? NOT.HAVE আগে? এই কাজ? করি?,neg,,,,auto_draft,auto:G0-v0.1,,,,,false
-2352,val,আমার খালা আমেরিকা যাবে ,আমার খালা আমেরিকা যাবে,norm_v1,G0-v0.1,আমার খালা? আমেরিকা? যাবে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2364,train,আমার খালা পেয়ারা খেতে পছন্দ করে ,আমার খালা পেয়ারা খেতে পছন্দ করে,norm_v1,G0-v0.1,আমার খালা? পেয়ারা? খেতে? পছন্দ? করে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2418,train,আমার খালার রান্না খেতে মজা ,আমার খালার রান্না খেতে মজা,norm_v1,G0-v0.1,আমার খালা~ রান্না? খেতে? মজা?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2551,train,আমার চাচী আফ্রিকা যাবে ,আমার চাচী আফ্রিকা যাবে,norm_v1,G0-v0.1,আমার চাচী? আফ্রিকা? যাবে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2637,train,আমার ফুফার রান্না খেতে মজা ,আমার ফুফার রান্না খেতে মজা,norm_v1,G0-v0.1,আমার ফুফা~ রান্না? খেতে? মজা?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2665,train,আমার ফুফুর রান্না খেতে মজা ,আমার ফুফুর রান্না খেতে মজা,norm_v1,G0-v0.1,আমার ফুফু~ রান্না? খেতে? মজা?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2695,train,আমার বাবা পেয়ারা খেতে পছন্দ করে ,আমার বাবা পেয়ারা খেতে পছন্দ করে,norm_v1,G0-v0.1,আমার বাবা? পেয়ারা? খেতে? পছন্দ? করে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2778,train,আমার ভাই পেয়ারা খেতে পছন্দ করে ,আমার ভাই পেয়ারা খেতে পছন্দ করে,norm_v1,G0-v0.1,আমার ভাই? পেয়ারা? খেতে? পছন্দ? করে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2828,train,আমার মামা অস্ট্রেলিয়া যাবে ,আমার মামা অস্ট্রেলিয়া যাবে,norm_v1,G0-v0.1,আমার মামা? অস্ট্রেলিয়া? যাবে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2832,train,আমার মামা আমেরিকা যাবে ,আমার মামা আমেরিকা যাবে,norm_v1,G0-v0.1,আমার মামা? আমেরিকা? যাবে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2833,train,আমার মামা ইংল্যান্ড যাবে ,আমার মামা ইংল্যান্ড যাবে,norm_v1,G0-v0.1,আমার মামা? ইংল্যান্ড? যাবে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2851,train,আমার মামা মালদ্বীপ যাবে ,আমার মামা মালদ্বীপ যাবে,norm_v1,G0-v0.1,আমার মামা? মালদ্বীপ? যাবে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2906,train,আমার মামি পেয়ারা খেতে পছন্দ করে ,আমার মামি পেয়ারা খেতে পছন্দ করে,norm_v1,G0-v0.1,আমার মামি? পেয়ারা? খেতে? পছন্দ? করে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2923,train,আমার মায়ের রান্না খেতে মজা ,আমার মায়ের রান্না খেতে মজা,norm_v1,G0-v0.1,আমার মা~ রান্না? খেতে? মজা?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2958,train,আমি ইলেক্ট্রিশিয়ান ,আমি ইলেক্ট্রিশিয়ান,norm_v1,G0-v0.1,আমি ইলেক্ট্রিশিয়ান?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2963,train,আমি এপ্রিলে পাকিস্তান যাব ,আমি এপ্রিলে পাকিস্তান যাব,norm_v1,G0-v0.1,আমি এপ্রিলে? পাকিস্তান? যাব?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2964,train,আমি এপ্রিলে ভারত যাব ,আমি এপ্রিলে ভারত যাব,norm_v1,G0-v0.1,আমি এপ্রিলে? ভারত? যাব?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2966,train,আমি এপ্রিলে মালদ্বীপ যাব ,আমি এপ্রিলে মালদ্বীপ যাব,norm_v1,G0-v0.1,আমি এপ্রিলে? মালদ্বীপ? যাব?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2970,train,আমি কবি,আমি কবি,norm_v1,G0-v0.1,আমি কবি?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-2973,train,আমি গায়ক,আমি গায়ক,norm_v1,G0-v0.1,আমি গায়ক?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3084,train,আমি মঙ্গলবার অফিসে যাব ,আমি মঙ্গলবার অফিসে যাব,norm_v1,G0-v0.1,আমি মঙ্গলবার? অফিসে? যাব?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3085,train,আমি মঙ্গলবার অস্ট্রেলিয়া যাব ,আমি মঙ্গলবার অস্ট্রেলিয়া যাব,norm_v1,G0-v0.1,আমি মঙ্গলবার? অস্ট্রেলিয়া? যাব?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3086,train,আমি মঙ্গলবার আফ্রিকা যাব ,আমি মঙ্গলবার আফ্রিকা যাব,norm_v1,G0-v0.1,আমি মঙ্গলবার? আফ্রিকা? যাব?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3090,train,আমি মঙ্গলবার বিদেশ যাব ,আমি মঙ্গলবার বিদেশ যাব,norm_v1,G0-v0.1,আমি মঙ্গলবার? বিদেশ? যাব?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3091,test,আমি মঙ্গলবার স্কুল এ যাই,আমি মঙ্গলবার স্কুল এ যাই,norm_v1,G0-v0.1,আমি মঙ্গলবার? স্কুল? এ? যাই?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3217,train,আমি সৈনিক,আমি সৈনিক,norm_v1,G0-v0.1,আমি সৈনিক?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3225,train,আমি সোমবার স্কুল এ যাই,আমি সোমবার স্কুল এ যাই,norm_v1,G0-v0.1,আমি সোমবার? স্কুল? এ? যাই?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3246,test,আমি স্কুল যাই,আমি স্কুল যাই,norm_v1,G0-v0.1,আমি স্কুল? যাই?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3323,test,তোমার বাবা কি করে,তোমার বাবা কি করে,norm_v1,G0-v0.1,তোমার বাবা? কি করে?,q?,,,,auto_draft,auto:G0-v0.1,,,,,false
-3344,train,তোমার মামী ভালো মানুষ ,তোমার মামী ভালো মানুষ,norm_v1,G0-v0.1,তোমার মামী? ভালো? মানুষ?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3345,test,তোমার মামীর নাম কি ,তোমার মামীর নাম কি,norm_v1,G0-v0.1,তোমার মামী~ নাম? কি,q?,,,,auto_draft,auto:G0-v0.1,,,,,false
-3436,val,আপনি কি কাজ করেন,আপনি কি কাজ করেন,norm_v1,G0-v0.1,আপনি কি কাজ? করেন?,q?,,,,auto_draft,auto:G0-v0.1,,,,,false
-3437,train,আপনি কোথায় পড়াশোনা করেছেন,আপনি কোথায় পড়াশোনা করেছেন,norm_v1,G0-v0.1,আপনি কোথায় পড়াশোনা? করেছেন?,q-wh,,,,auto_draft,auto:G0-v0.1,,,,,false
-3441,train,আমরা সব সময় আল্লাহর কাছে পাৰ্থনা চাই,আমরা সব সময় আল্লাহর কাছে পাৰ্থনা চাই,norm_v1,G0-v0.1,আমরা সব? সময়? আল্লাহর? কাছে? পাৰ্থনা? চাই?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3469,train,আমার বাসায় ভালো লাগে না,আমার বাসায় ভালো লাগে না,norm_v1,G0-v0.1,আমার বাসায়? ভালো? লাগে? NOT,neg,,,,auto_draft,auto:G0-v0.1,,,,,false
-3481,val,আমি অফিসে যাই,আমি অফিসে যাই,norm_v1,G0-v0.1,আমি অফিসে? যাই?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3553,train,গ্রামে রোদে যাবেন না,গ্রামে রোদে যাবেন না,norm_v1,G0-v0.1,গ্রামে? রোদে? যাবেন? NOT,neg,,,,auto_draft,auto:G0-v0.1,,,,,false
-3640,train,"রাতে তুমি আলু ভর্তা, ডাল রান্না করবে",রাতে তুমি আলু ভর্তা ডাল রান্না করবে,norm_v1,G0-v0.1,রাতে? তুমি আলু? ভর্তা? ডাল? রান্না? করবে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3662,train,সারা রাত খুব বেশি বৃস্টি হয়েছে,সারা রাত খুব বেশি বৃস্টি হয়েছে,norm_v1,G0-v0.1,সারা? রাত? খুব? বেশি? বৃস্টি? হয়েছে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3671,train,৩টায় ঘুমাই,৩টায় ঘুমাই,norm_v1,G0-v0.1,NUM(৩টায়)? ঘুমাই?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3802,train,তৃতীয়টি C,তৃতীয়টি C,norm_v1,G0-v0.1,তৃতীয়টি? FS(C)?,,,,,auto_draft,auto:G0-v0.1,,,,,false
-3804,train,তোমার প্রিয় রং কি ,তোমার প্রিয় রং কি,norm_v1,G0-v0.1,তোমার প্রিয়? রং? কি,q?,,,,auto_draft,auto:G0-v0.1,,,,,false
-3848,train,হ্যাপি বার্থডে ,হ্যাপি বার্থডে,norm_v1,G0-v0.1,হ্যাপি? বার্থডে?,,,,,auto_draft,auto:G0-v0.1,,,,,false
+185,train,আমি এপ্রিলে অস্ট্রেলিয়া যাব ,আমি এপ্রিলে অস্ট্রেলিয়া যাব,norm_v1,G0-v0.1,আমি এপ্রিলে? অস্ট্রেলিয়া? যাব?,,আমি এপ্রিল অস্ট্রেলিয়া যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+330,train,তোমার মামা সমুদ্র দেখতে যাবে ,তোমার মামা সমুদ্র দেখতে যাবে,norm_v1,G0-v0.1,তোমার মামা? সমুদ্র? দেখতে? যাবে?,,তোমার মামা সমুদ্র দেখা যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+792,train,অসৎ সাংবাদিক দের তথ্যে আমরা ভুল বুঝি,অসৎ সাংবাদিক দের তথ্যে আমরা ভুল বুঝি,norm_v1,G0-v0.1,অসৎ? সাংবাদিক? দের? তথ্যে? আমরা ভুল? বুঝি?,,অসৎ সাংবাদিক তথ্য আমরা ভুল বোঝা,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+929,val,আমার প্রিয় গায়ক,আমার প্রিয় গায়ক,norm_v1,G0-v0.1,আমার প্রিয়? গায়ক?,,আমার প্রিয় গায়ক,,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+1829,val,আমার বড় ভাই রাতে দেখা করবে না,আমার বড় ভাই রাতে দেখা করবে না,norm_v1,G0-v0.1,আমার বড়? ভাই? রাতে? দেখা? করবে? NOT,neg,আমার বড় ভাই রাত দেখা করা NOT,neg,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2224,train,পরশু আমি তোমার সাথে এক সাথে দেখা করবো,পরশু আমি তোমার সাথে এক সাথে দেখা করবো,norm_v1,G0-v0.1,পরশু? আমি তোমার সাথে? এক? সাথে? দেখা? করবো?,,পরশু আমি তোমার সাথে একসাথে দেখা করা,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified; confirm whether both সাথে and একসাথে are signed",true
+2297,test,সময় নাই আগে এই কাজ করি,সময় নাই আগে এই কাজ করি,norm_v1,G0-v0.1,সময়? NOT.HAVE আগে? এই কাজ? করি?,neg,সময় NOT.HAVE আগে এই কাজ করা,neg,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2352,val,আমার খালা আমেরিকা যাবে ,আমার খালা আমেরিকা যাবে,norm_v1,G0-v0.1,আমার খালা? আমেরিকা? যাবে?,,আমার খালা আমেরিকা যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2364,train,আমার খালা পেয়ারা খেতে পছন্দ করে ,আমার খালা পেয়ারা খেতে পছন্দ করে,norm_v1,G0-v0.1,আমার খালা? পেয়ারা? খেতে? পছন্দ? করে?,,আমার খালা পেয়ারা খাওয়া পছন্দ,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2418,train,আমার খালার রান্না খেতে মজা ,আমার খালার রান্না খেতে মজা,norm_v1,G0-v0.1,আমার খালা~ রান্না? খেতে? মজা?,,আমার খালা রান্না খাওয়া মজা,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2551,train,আমার চাচী আফ্রিকা যাবে ,আমার চাচী আফ্রিকা যাবে,norm_v1,G0-v0.1,আমার চাচী? আফ্রিকা? যাবে?,,আমার চাচী আফ্রিকা যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2637,train,আমার ফুফার রান্না খেতে মজা ,আমার ফুফার রান্না খেতে মজা,norm_v1,G0-v0.1,আমার ফুফা~ রান্না? খেতে? মজা?,,আমার ফুফা রান্না খাওয়া মজা,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2665,train,আমার ফুফুর রান্না খেতে মজা ,আমার ফুফুর রান্না খেতে মজা,norm_v1,G0-v0.1,আমার ফুফু~ রান্না? খেতে? মজা?,,আমার ফুফু রান্না খাওয়া মজা,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2695,train,আমার বাবা পেয়ারা খেতে পছন্দ করে ,আমার বাবা পেয়ারা খেতে পছন্দ করে,norm_v1,G0-v0.1,আমার বাবা? পেয়ারা? খেতে? পছন্দ? করে?,,আমার বাবা পেয়ারা খাওয়া পছন্দ,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2778,train,আমার ভাই পেয়ারা খেতে পছন্দ করে ,আমার ভাই পেয়ারা খেতে পছন্দ করে,norm_v1,G0-v0.1,আমার ভাই? পেয়ারা? খেতে? পছন্দ? করে?,,আমার ভাই পেয়ারা খাওয়া পছন্দ,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2828,train,আমার মামা অস্ট্রেলিয়া যাবে ,আমার মামা অস্ট্রেলিয়া যাবে,norm_v1,G0-v0.1,আমার মামা? অস্ট্রেলিয়া? যাবে?,,আমার মামা অস্ট্রেলিয়া যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2832,train,আমার মামা আমেরিকা যাবে ,আমার মামা আমেরিকা যাবে,norm_v1,G0-v0.1,আমার মামা? আমেরিকা? যাবে?,,আমার মামা আমেরিকা যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2833,train,আমার মামা ইংল্যান্ড যাবে ,আমার মামা ইংল্যান্ড যাবে,norm_v1,G0-v0.1,আমার মামা? ইংল্যান্ড? যাবে?,,আমার মামা ইংল্যান্ড যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2851,train,আমার মামা মালদ্বীপ যাবে ,আমার মামা মালদ্বীপ যাবে,norm_v1,G0-v0.1,আমার মামা? মালদ্বীপ? যাবে?,,আমার মামা মালদ্বীপ যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2906,train,আমার মামি পেয়ারা খেতে পছন্দ করে ,আমার মামি পেয়ারা খেতে পছন্দ করে,norm_v1,G0-v0.1,আমার মামি? পেয়ারা? খেতে? পছন্দ? করে?,,আমার মামি পেয়ারা খাওয়া পছন্দ,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2923,train,আমার মায়ের রান্না খেতে মজা ,আমার মায়ের রান্না খেতে মজা,norm_v1,G0-v0.1,আমার মা~ রান্না? খেতে? মজা?,,আমার মা রান্না খাওয়া মজা,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2958,train,আমি ইলেক্ট্রিশিয়ান ,আমি ইলেক্ট্রিশিয়ান,norm_v1,G0-v0.1,আমি ইলেক্ট্রিশিয়ান?,,আমি ইলেক্ট্রিশিয়ান,,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2963,train,আমি এপ্রিলে পাকিস্তান যাব ,আমি এপ্রিলে পাকিস্তান যাব,norm_v1,G0-v0.1,আমি এপ্রিলে? পাকিস্তান? যাব?,,আমি এপ্রিল পাকিস্তান যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2964,train,আমি এপ্রিলে ভারত যাব ,আমি এপ্রিলে ভারত যাব,norm_v1,G0-v0.1,আমি এপ্রিলে? ভারত? যাব?,,আমি এপ্রিল ভারত যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2966,train,আমি এপ্রিলে মালদ্বীপ যাব ,আমি এপ্রিলে মালদ্বীপ যাব,norm_v1,G0-v0.1,আমি এপ্রিলে? মালদ্বীপ? যাব?,,আমি এপ্রিল মালদ্বীপ যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2970,train,আমি কবি,আমি কবি,norm_v1,G0-v0.1,আমি কবি?,,আমি কবি,,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+2973,train,আমি গায়ক,আমি গায়ক,norm_v1,G0-v0.1,আমি গায়ক?,,আমি গায়ক,,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3084,train,আমি মঙ্গলবার অফিসে যাব ,আমি মঙ্গলবার অফিসে যাব,norm_v1,G0-v0.1,আমি মঙ্গলবার? অফিসে? যাব?,,আমি মঙ্গলবার অফিস যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3085,train,আমি মঙ্গলবার অস্ট্রেলিয়া যাব ,আমি মঙ্গলবার অস্ট্রেলিয়া যাব,norm_v1,G0-v0.1,আমি মঙ্গলবার? অস্ট্রেলিয়া? যাব?,,আমি মঙ্গলবার অস্ট্রেলিয়া যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3086,train,আমি মঙ্গলবার আফ্রিকা যাব ,আমি মঙ্গলবার আফ্রিকা যাব,norm_v1,G0-v0.1,আমি মঙ্গলবার? আফ্রিকা? যাব?,,আমি মঙ্গলবার আফ্রিকা যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3090,train,আমি মঙ্গলবার বিদেশ যাব ,আমি মঙ্গলবার বিদেশ যাব,norm_v1,G0-v0.1,আমি মঙ্গলবার? বিদেশ? যাব?,,আমি মঙ্গলবার বিদেশ যাওয়া,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3091,test,আমি মঙ্গলবার স্কুল এ যাই,আমি মঙ্গলবার স্কুল এ যাই,norm_v1,G0-v0.1,আমি মঙ্গলবার? স্কুল? এ? যাই?,,আমি মঙ্গলবার স্কুল যাওয়া,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3217,train,আমি সৈনিক,আমি সৈনিক,norm_v1,G0-v0.1,আমি সৈনিক?,,আমি সৈনিক,,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3225,train,আমি সোমবার স্কুল এ যাই,আমি সোমবার স্কুল এ যাই,norm_v1,G0-v0.1,আমি সোমবার? স্কুল? এ? যাই?,,আমি সোমবার স্কুল যাওয়া,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3246,test,আমি স্কুল যাই,আমি স্কুল যাই,norm_v1,G0-v0.1,আমি স্কুল? যাই?,,আমি স্কুল যাওয়া,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3323,test,তোমার বাবা কি করে,তোমার বাবা কি করে,norm_v1,G0-v0.1,তোমার বাবা? কি করে?,q?,তোমার বাবা কি করা,q-wh,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3344,train,তোমার মামী ভালো মানুষ ,তোমার মামী ভালো মানুষ,norm_v1,G0-v0.1,তোমার মামী? ভালো? মানুষ?,,তোমার মামী ভালো মানুষ,,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3345,test,তোমার মামীর নাম কি ,তোমার মামীর নাম কি,norm_v1,G0-v0.1,তোমার মামী~ নাম? কি,q?,তোমার মামী নাম কি,q-wh,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3436,val,আপনি কি কাজ করেন,আপনি কি কাজ করেন,norm_v1,G0-v0.1,আপনি কি কাজ? করেন?,q?,আপনি কি কাজ করা,q-wh,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3437,train,আপনি কোথায় পড়াশোনা করেছেন,আপনি কোথায় পড়াশোনা করেছেন,norm_v1,G0-v0.1,আপনি কোথায় পড়াশোনা? করেছেন?,q-wh,আপনি কোথায় পড়াশোনা করা,q-wh,past,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3441,train,আমরা সব সময় আল্লাহর কাছে পাৰ্থনা চাই,আমরা সব সময় আল্লাহর কাছে পাৰ্থনা চাই,norm_v1,G0-v0.1,আমরা সব? সময়? আল্লাহর? কাছে? পাৰ্থনা? চাই?,,আমরা সব সময় আল্লাহ কাছে প্রার্থনা চাওয়া,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3469,train,আমার বাসায় ভালো লাগে না,আমার বাসায় ভালো লাগে না,norm_v1,G0-v0.1,আমার বাসায়? ভালো? লাগে? NOT,neg,আমার বাসা ভালো লাগা NOT,neg,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3481,val,আমি অফিসে যাই,আমি অফিসে যাই,norm_v1,G0-v0.1,আমি অফিসে? যাই?,,আমি অফিস যাওয়া,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3553,train,গ্রামে রোদে যাবেন না,গ্রামে রোদে যাবেন না,norm_v1,G0-v0.1,গ্রামে? রোদে? যাবেন? NOT,neg,গ্রাম রোদ যাওয়া NOT,neg,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3640,train,"রাতে তুমি আলু ভর্তা, ডাল রান্না করবে",রাতে তুমি আলু ভর্তা ডাল রান্না করবে,norm_v1,G0-v0.1,রাতে? তুমি আলু? ভর্তা? ডাল? রান্না? করবে?,,রাত তুমি আলুভর্তা ডাল রান্না করা,,future,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3662,train,সারা রাত খুব বেশি বৃস্টি হয়েছে,সারা রাত খুব বেশি বৃস্টি হয়েছে,norm_v1,G0-v0.1,সারা? রাত? খুব? বেশি? বৃস্টি? হয়েছে?,,সারা রাত খুব বেশি বৃষ্টি হওয়া,,past,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3671,train,৩টায় ঘুমাই,৩টায় ঘুমাই,norm_v1,G0-v0.1,NUM(৩টায়)? ঘুমাই?,,NUM(৩টায়) ঘুমানো,,present,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified; confirm NUM form (o'clock) in video",true
+3802,train,তৃতীয়টি C,তৃতীয়টি C,norm_v1,G0-v0.1,তৃতীয়টি? FS(C)?,,তৃতীয় FS(C),,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3804,train,তোমার প্রিয় রং কি ,তোমার প্রিয় রং কি,norm_v1,G0-v0.1,তোমার প্রিয়? রং? কি,q?,তোমার প্রিয় রং কি,q-wh,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
+3848,train,হ্যাপি বার্থডে ,হ্যাপি বার্থডে,norm_v1,G0-v0.1,হ্যাপি? বার্থডে?,,হ্যাপি বার্থডে,,,team_reviewed,auto:G0-v0.1,T1,2026-10-22,low,"TEST DATA: glosses derived from sentence text, not video-verified",true
