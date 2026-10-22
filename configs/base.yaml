@@ -1,0 +1,95 @@
+# Base configuration. Layers, later ones win:
+#   base.yaml <- env/<local|kaggle|colab>.yaml <- data/<pilot50|full>.yaml <- env vars
+# Env vars: BDSL_ENV picks the env layer; BDSL_DATA_ROOT / BDSL_WORK_DIR replace the two roots.
+# Paths may use ${project_root} or ${dotted.key}. No machine-specific absolute paths here.
+
+project:
+  name: bdsl
+  seed: 42
+
+paths:
+  data_root: ${project_root}/dataset/initial_dataset   # source data, read-only
+  work_dir: ${project_root}/work                       # every generated output (gitignored)
+  models_dir: ${paths.work_dir}/models                 # downloaded pretrained models
+  reports_dir: ${paths.work_dir}/reports
+  manifests_dir: ${paths.work_dir}/manifests
+  splits_dir: ${paths.work_dir}/splits
+  pilot_work_dir: ${paths.work_dir}/pilot              # pilot selection before copying
+  pilot_dest_dir: ${project_root}/dataset/pilot50_v1   # pilot copies + their manifest (ADR-0017)
+  features_dir: ${paths.work_dir}/features             # <feat_ver>/<Index>.npz + qc.csv
+  annotations_dir: ${project_root}/annotations         # tracked in git: a commit publishes it (ADR-0017)
+
+data:
+  sheet: FinalSheet2.xlsx
+  sheet_name: Sheet1
+  sample_dir: ${paths.data_root}/videos   # sample50: the 50 committed clips
+
+mediapipe:
+  version: "0.10.35"
+  model_file: holistic_landmarker.task
+  model_url: https://storage.googleapis.com/mediapipe-models/holistic_landmarker/holistic_landmarker/float16/latest/holistic_landmarker.task
+  # Downloaded 2026-10-22; identical to the earlier project's copies. The URL says "latest", so the
+  # env check fails if a future download differs.
+  model_sha256: e2dab61191e2dcd0a15f943d8e3ed1dce13c82dfa597b9dd39f562975a50c3f8
+
+text:
+  norm_ver: norm_v1   # NFC + `। . ? ! ,` → space + collapsed whitespace; spelling never changed
+
+manifest:
+  version: v1
+  workers: 6          # processes for hashing + header probing
+
+split:                # ADR-0018
+  name: S1
+  version: v0         # v1 after the full shared-segment scan (open_questions G2)
+  salt: S1-v0
+  ratios: {train: 80, val: 10, test: 10}
+  # Clips that share recorded segments, joined into one leakage group (colour cluster, ADR-0018).
+  known_shared_segment_links: [[3456, 3457, 3458]]
+
+pilot:                # design doc 04 §F-6
+  name: pilot50_v1
+  seed: 20261022
+  counts: {train: 40, val: 5, test: 5}
+  core: {families: 6, train_per_family: 4}   # each family also gives 1 held-out clip (val/test alternate)
+  diversity_heldout: [[val, question], [val, negation], [test, question], [test, negation]]
+  # Held-out clips are chosen after the 40 train clips, preferring sentences whose words all occur in
+  # pilot train (owner, 2026-10-22); otherwise the unseen words are listed per clip.
+  heldout_prefer_in_vocab: true
+  # A core held-out sibling with unseen words is swapped for a same-split sentence made only of
+  # pilot-train words, when one exists (owner chose option B, 2026-10-22).
+  heldout_fallback_pool: true
+  diversity_train: {question: 2, negation: 2, number_time: 3, long: 3, short: 2, other: 4}
+  quotas: {landscape_min: 7, low_res_min: 3, all_duration_quartiles: true}
+  low_res_short_side: 500
+  long_min_tokens: 7
+  short_max_tokens: 2
+
+features:            # Day 2 Step 1; design doc 04 §F-8/§F-9, ADR-0019 (no raw face mesh stored)
+  layout: feat_layout_v1
+  fps: 15             # resampling grid (nearest source timestamp)
+  workers: 5          # one process per clip
+  # HolisticLandmarker thresholds — the documented defaults.
+  landmarker:
+    min_face_detection_confidence: 0.5
+    min_face_suppression_threshold: 0.3
+    min_face_landmarks_confidence: 0.5
+    min_pose_detection_confidence: 0.5
+    min_pose_suppression_threshold: 0.3
+    min_pose_landmarks_confidence: 0.5
+    min_hand_landmarks_confidence: 0.5
+
+annotations:         # Day 2 Step 2; ADR-0015, annotations/GLOSS_CONVENTION_v0.1.md
+  g0_ver: G0-v0.1
+  pilot_file: pilot50_v1_gloss_v01.csv
+  reviewers_file: REVIEWERS.csv   # owner-maintained reviewer codes (no names)
+
+env_check:
+  report_file: env_report.json
+  expected_python: "3.12"
+  # Rotation test clips in data.sample_dir: 0.mp4 carries a 270° flag, 2.mp4 none (test_log 2026-10-22).
+  rotation_clips: ["0.mp4", "2.mp4"]
+  benchmark:
+    matmul_size: 512
+    matmul_repeats: 20
+    mediapipe_frames: 5

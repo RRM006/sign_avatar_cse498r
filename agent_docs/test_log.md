@@ -15,13 +15,261 @@
 ---
 
 ## What we care about (per area)
-**(TBD — decide with owner.)** The evaluation method is not chosen yet (ADR-0002). Options found in the
-literature are listed in `open_questions.md` C5. They are candidates, not decisions.
+Evaluation protocol: ADR-0020 (metric set accepted in principle). Pilot results are "pipeline tests";
+reported numbers need the S1 test set, 3 seeds and confidence intervals.
 
 ## Planned test cases
-None yet. There is no system to test. Add test cases once the design is chosen.
+Acceptance tests per step are listed in `milestone_log.md` (milestones 5–10) and `current_task.md`.
+Results are logged here only after they are actually run.
 
 ---
+
+## 2026-10-22 — Notebooks — structural check at the end of Session 3 (not executed)
+- Setup: new thin notebooks `notebooks/01_manifest.ipynb`, `02_extract.ipynb`, `03_gloss.ipynb`
+  (call `bdsl.cli.main` and package functions; paths from config only), plus the existing
+  `00_env_check.ipynb`. Checked with nbformat 5.11.1 and Python `ast` in `.venv`; no cell was run, so
+  no data was read.
+- Metric(s) / checks: valid nbformat; no outputs and no execution counts; every code cell parses;
+  imports come from `bdsl`; no absolute machine paths; the CLI commands they call exist; the config keys
+  and functions they use exist.
+- Result: all 4 notebooks pass.
+  - `00_env_check`: 5 cells (3 code).
+  - `01_manifest`: 8 cells (6 code): manifest, split, pilot-select; `pilot-copy --confirm` is
+    commented out behind the approval note.
+  - `02_extract`: 4 cells (3 code): extract (pilot50, VIDEO mode).
+  - `03_gloss`: 5 cells (4 code): gloss-draft, gloss-validate.
+  pytest: 93 passed (unchanged).
+- Notes: running 01–03 would re-read data. The manifest resumes from its hash cache, extraction skips
+  finished clips, and gloss-draft rewrites the identical file or refuses if rows are reviewed. Not done
+  this session.
+
+## 2026-10-22 — Annotations — Day 2 Step 2: gloss convention v0.1 + G0 drafts (Session 3)
+- Setup:
+  - `.venv` as before (no new packages).
+  - Code: `src/bdsl/text/{gloss_rules,annotations}.py`; `bdsl.cli gloss-draft --data pilot50` and
+    `gloss-validate`.
+  - Inputs: FinalSheet2.xlsx (sentence text only, for the R5 word list) and
+    dataset/pilot50_v1/pilot50_manifest.csv. No video opened.
+  - Config hash 1563eb579556.
+- Metric(s) / checks: rows and statuses; determinism (re-run SHA-256); validation of the real file;
+  validator and overwrite-guard unit tests; input SHA-256 before/after; pytest.
+- Result:
+  - **Drafts:** `annotations/pilot50_v1_gloss_v01.csv` has 50 rows, all `auto_draft` (annotator
+    `auto:G0-v0.1`, is_mock=false, reviewer fields empty). A re-run is byte-identical (SHA-256
+    bdacd8355c4a…).
+  - **G0 v0.1 over the 219 pilot tokens:**
+    - R0 pronoun 46; R1 negation 4; R2 wh-word 1; R2b কি/কী 4;
+    - R3 number 1; R4 Latin 1;
+    - R5 genitive stem (`~`) 5;
+    - R6 no rule (`?`) 157.
+  - **gloss-validate:** 0 problems; 0 rows usable for training (no reviewed rows; REVIEWERS.csv is
+    header only).
+  - **Unit tests:** invalid rows are rejected:
+    - a reviewed row with an unregistered reviewer;
+    - an expert status from a team-role reviewer;
+    - a missing gloss_reviewed; a future review date;
+    - a mock row; a wrong sentence_norm; a bad status;
+    - reviewer fields on a draft; an unknown index;
+    - a rejected row without a note; the reviewer code "MOCK".
+    The `gloss-draft` command refuses to overwrite a file with a reviewed row (the file stays
+    byte-identical).
+  - **Inputs unchanged:** FinalSheet2.xlsx and pilot50_manifest.csv SHA-256 identical before and after.
+  - **pytest:** 93 passed (26 new).
+- Notes:
+  - One bug in my own tests (expected outputs were passed through norm_v1, which strips `?`); fixed
+    before the real run.
+  - G0 output is a pseudo-gloss. 157 of 219 tokens are left to the reviewer.
+
+## 2026-10-22 — Features — Day 2 Step 1: MediaPipe extraction + QC on pilot50_v1 (Session 3)
+- Setup:
+  - `.venv` as before (no new packages).
+  - Code: `src/bdsl/features/{layout,extract,qc}.py`; `bdsl.cli extract --data pilot50 --mode both`.
+  - Inputs: the 50 pilot copies (`dataset/pilot50_v1/videos/`). Originals not opened.
+  - Process: OpenCV decode with rotation; nearest-timestamp resampling to 15 fps; a fresh
+    HolisticLandmarker per clip; blendshapes on; documented default thresholds; 5 worker processes.
+  - Config hash f382a31af899.
+- Metric(s) / checks: per-clip QC; VIDEO vs IMAGE comparison; privacy check of every .npz;
+  kill-and-resume; pilot-copy SHA-256 and original size + mtime; pytest.
+- Result:
+  - **Extraction:** VIDEO feat_ver `fa89892d4908` and IMAGE feat_ver `395e878f9861`: 50/50 clips
+    each, 0 failures. 4,806 grid frames per mode (from 9,613 source frames).
+  - **Run time:** VIDEO 138.8 s, IMAGE 129.2 s; 4 min 33 s in total. Median 84 ms per detection with
+    5 processes in parallel (25 ms single-process in the smoke test). About 7.4 MB per mode.
+  - **QC, VIDEO mode, mean over clips:**
+    - Coverage: pose 99.95%, face 99.4%, left hand 69.7%, right hand 35.7%, both hands 25.9%,
+      any hand 79.5%.
+    - Longest hand gap: left median 0.67 s (max 4.9 s); right median 1.7 s (max 11.9 s, clip 792).
+    - Forearm-length coefficient of variation ≈ 0.15.
+    - Wrist jitter: left 15.8 m/s², right 19.0 m/s².
+    - ts_cv: max 0.064 (median 0).
+    - Hand-side agreement with body wrists: median 0.90, minimum 0.49.
+    - Median head |yaw|: 2.4°.
+  - **By recording type** (VIDEO, mean coverage left / right / both; median agreement):
+    - portrait (38): 0.760 / 0.251 / 0.229; 0.771
+    - landscape (9): 0.586 / 0.725 / 0.404; 1.000
+    - low-res (3): 0.230 / 0.602 / 0.208; 0.985
+    - Left > right in 40 of 50 clips.
+  - **VIDEO vs IMAGE** (`compare_pilot50.json`):
+    - any hand +0.24 points for VIDEO (18 clips higher, 17 lower, 15 equal); both hands −0.18 points;
+    - wrist jitter VIDEO 15.8 / 19.0 vs IMAGE 19.6 / 24.8 m/s² (left / right).
+    - Owner chose VIDEO mode (ADR-0023).
+  - **Privacy:** 150 .npz files checked (both modes and the resume test). No unexpected keys, no
+    478-point face mesh, no image arrays.
+  - **Kill-and-resume (VIDEO):** killed with 10 clips done and 0 temp files. The resume extracted 40;
+    all 50 clips are array-identical to the uninterrupted run, so the extraction is deterministic.
+    No leftover processes.
+  - **Data unchanged:** the 50 pilot copies still match `pilot50_manifest.csv` (SHA-256); the 50
+    originals' size + mtime are unchanged.
+  - **pytest:** 67 passed (13 new: resampling, ts_cv, head rotation, QC maths, privacy check,
+    feat_ver, read_meta).
+- Notes:
+  - QC values are reported without thresholds (open_questions G9).
+  - Which real hand MediaPipe calls "left" is unknown (mirroring; open_questions G8).
+  - Head rotation is an approximation from 4 face points; signs follow the code's convention.
+  - Full-set estimate from the pilot rate (≈ 35 grid frames/s with 5 processes; ≈ 533k grid
+    frames): about 4–4.5 h per mode. An estimate, not measured.
+
+## 2026-10-22 — Dataset — Day 1 Step 2: manifest v1, split S1 v0, pilot50_v1 (Session 3)
+- Setup:
+  - `.venv` as in Day 1 Step 1, plus pandas 3.0.3 and openpyxl 3.1.5 (owner-approved; `uv.lock` now
+    91 packages).
+  - Code: `src/bdsl/{text,data}/`, `src/bdsl/cli.py`.
+  - Commands: `uv run python -m bdsl.cli manifest --data full | split | pilot-select |
+    pilot-copy --confirm`.
+  - 6 worker processes. All 5,010 videos and the sheet were read-only.
+- Metric(s) / checks:
+  - ID set vs sheet; decodability; source size + mtime of all 5,010 videos and the sheet SHA-256,
+    before and after;
+  - exact duplicates; leakage groups; leakage checks on the real split; balance;
+  - determinism (re-run hashes); pilot quotas; SHA-256 of the 50 copies; pytest.
+- Result:
+  - **Manifest v1** (2026-10-22T07:05Z; CSV SHA-256 2ff133cf6bb2…; config hash f7aa5765c6a6):
+    - Time: 2 min 23 s wall (probe 138 s).
+    - Files: 5,010 rows; ID set equals the sheet; 0 missing, 0 extra, 0 decode failures.
+    - Duplicates: 3,456 unique SHA-256 (= representatives).
+    - Sentences: 3,378 unique `norm_v1` sentences (NFC + `। . ? ! ,` → space + collapsed whitespace;
+      990 rows change under NFC).
+    - Leakage groups: 3,376 (size histogram 1:1915, 2:1380, 3:35, 4:30, 5:3, 6:7, 7:2, 8:1, 9:1,
+      11:2). 0 label conflicts.
+    - Video properties: portrait 4,302 / landscape 708; rotation 0°:3,142, 270°:1,838, 90°:18,
+      180°:12; codec h264 2,819, hevc 2,181, VP90 10; 71,206,505,652 B; 1,059,409 declared frames;
+      Σ(n_frames/fps) = 35,527 s (9.87 h).
+    - Spot checks: 0.mp4 and 2.mp4 stored/display sizes agree with Day 1 Step 1.
+  - **Sources unchanged:** size + mtime identical for all 5,010 videos, and the sheet SHA-256
+    identical — before the run, after it, and after copying the pilot.
+  - **Split S1 v0** (salt S1-v0, 80/10/10 by sha256(salt|group_id); CSV SHA-256 40481a5faedc…):
+    - Groups 2,700 / 357 / 319 (80.0 / 10.6 / 9.4%).
+    - Representative clips 2,759 / 368 / 329.
+    - Leakage problems: none. No group, SHA-256, sentence or known link crosses splits.
+    - The colour cluster (group g3456, 6 clips) is entirely in train.
+  - **Balance, train / val / test (representatives):**
+    - tokens 1–2: 112/13/5; 3–4: 1,619/221/191; 5–6: 953/126/123; 7+: 75/8/10
+    - question (indicative): 171/20/15; negation (indicative): 165/25/18
+    - landscape: 288/35/31
+    - resolution 1080: 2,127/298/268; 720: 484/59/45; low (<500 px): 148/11/16
+  - **pilot50_v1** (selection SHA-256 8affc876aace…; config hash 08230f0a1b63):
+    - Counts and quotas: 40/5/5 from a pool of 3,378; quotas met (landscape 9, low-res 3, all
+      duration quartiles: q1 15, q2 21, q3 6, q4 8); hard share 0.24.
+    - Composition: 6 minimal-pair families × 4 train clips, plus 16 diversity train clips.
+    - Held-out: chosen after the train clips. Option B (owner, ADR-0022): 6 of 10 held-out clips
+      use only pilot-train words; 4 keep unseen words, listed per clip.
+    - Copies: 50/50 SHA-256 identical to the manifest and the sources (723 MB).
+  - **Determinism:** split and selection re-runs gave byte-identical CSVs.
+  - **pytest:** 54 passed.
+- Notes:
+  - The 2026-10-22 count of 3,379 unique sentences (Phase 1 checks) used no NFC; with NFC it is
+    3,378, matching 2026-10-21.
+  - Indicative tags are word lists, not annotation: e.g. "সব সময়" ("always") counts as a time
+    word. The sheet contains no `?`.
+  - Before the first real run, my own code had three bugs, found by the tests or a manual review:
+    - a pandas `index` column clashed with the row-tuple method;
+    - synthetic test data used Latin digits;
+    - stale wording in the generated protocol.
+    All are fixed.
+  - The first pilot list (option A, family siblings only) gave 1/10 held-out clips with seen words
+    only. It was never copied.
+  - The manifest meta records an earlier config hash than the pilot: only the `pilot` section
+    changed afterwards, and that section is not used by the manifest or the split.
+  - Timestamp irregularity (ts_cv) is measured during Day-2 extraction.
+
+## 2026-10-22 — Environment + config — Day 1 Step 1 (Session 3)
+- Setup:
+  - Machine: desktop DESKTOP-4NDR99B, Windows 11 Pro.
+  - Project `.venv` created with uv 0.10.8: CPython 3.12.13. Packages from `uv.lock` (88 resolved):
+    mediapipe 0.10.35, opencv-contrib-python 5.0.0.93 (opencv-python absent), numpy 2.4.6,
+    PyYAML 6.0.3, torch 2.14.1+cpu, matplotlib 3.11.2, pytest 9.1.1, ipykernel 7.4.0,
+    nbclient 0.11.0, nbformat 5.11.1.
+  - Model `work/models/holistic_landmarker.task`, downloaded from the official float16/latest URL:
+    13,683,609 B, SHA-256 e2dab61191e2dcd0a15f943d8e3ed1dce13c82dfa597b9dd39f562975a50c3f8 —
+    identical to both copies in the earlier project. The hash is pinned in `configs/base.yaml`.
+  - `notebooks/00_env_check.ipynb` executed headless (nbclient) → `work/reports/env_report.json`
+    (gitignored).
+  - Git at 1809048 plus uncommitted changes.
+- Metric(s) / checks: pytest; the 8 env-check checks; an alternate BDSL_WORK_DIR; SHA-256 of the 2
+  rotation clips before and after; git diff under dataset/.
+- Result:
+  - **pytest:** 30 passed.
+  - **Env report:** overall pass, 8/8 checks (final run 06:50:41Z, config hash 0f64a5248617):
+    - python: 3.12.13 inside `.venv`.
+    - packages: all pins match; no OpenCV clash.
+    - opencv_rotation:
+      - 0.mp4: flag 270°; raw frame 1080×1920 (h×w) → auto-rotated 1920×1080 (portrait), one quarter
+        turn, pixel-exact.
+      - 2.mp4: flag 0°; frame unchanged at 1080×1920 (landscape).
+    - mediapipe_holistic:
+      - HolisticLandmarker present; created in 0.15 s.
+      - Result fields: face_landmarks, pose_landmarks, pose_world_landmarks, left_hand_landmarks,
+        left_hand_world_landmarks, right_hand_landmarks, right_hand_world_landmarks,
+        face_blendshapes, segmentation_mask.
+      - On 0.mp4 frame 96: 33 pose, 21 + 21 hand (image and world), 478 face, 52 blendshapes.
+      - VIDEO mode works.
+    - torch_devices: 2.14.1+cpu, 6 threads; CUDA no; MPS no; DirectML not installed.
+    - write_permission: pass; no temp files left over.
+    - cpu_benchmark:
+      - 6 logical CPUs.
+      - numpy 512×512 matmul ×20: 0.0187 s ≈ 287.7 GFLOPS (second run: 328.6).
+      - MediaPipe IMAGE mode on 1920×1080: 33.4 ms/frame over 5 frames (first 38.3 ms, rest 32.1);
+        second run: 36.6 ms/frame. Single-process smoke test only, not a full-dataset estimate.
+  - **BDSL_WORK_DIR** pointed outside the project: every derived path moved, the config hash was
+    unchanged, and the write test passed.
+  - **Clip SHA-256** identical before and after: 0.mp4 ed3713970f46…1bb6, 2.mp4 111ece319ea3…1569.
+    No git diff under dataset/.
+- Notes:
+  - The first notebook run failed `torch_devices` because of a bug in the check, not in torch: the
+    expected sum of x @ x.T was hard-coded as 70 (correct: 83). The check now compares with numpy;
+    the two later runs passed.
+  - Windows-only warnings (zmq Proactor event loop; kernel over TCP) do not affect results.
+  - Kaggle and Colab environments are not checked yet; the same notebook will report them.
+
+## 2026-10-22 — Repository + dataset + environment — Phase 1 read-only checks (Session 3)
+- Setup: Desktop DESKTOP-4NDR99B, system Python 3.14.4, OpenCV 5.0.0.93, pandas 3.0.3. Scripts in
+  the session scratchpad only; nothing written to the project or dataset. Web: PyPI, npm registry,
+  MediaPipe docs, GitHub API (unauthenticated).
+- Metric(s) / checks: repo visibility; contents of SIGN_LANGUAGE_DATA/; sheet copy identity; Python
+  installs; colour-cluster hashes and frame differences; token statistics; sample-clip headers.
+- Result:
+  - **Repo:** public (`visibility: public`); 50 sample videos in `origin/main`; no LICENSE file.
+  - **SIGN_LANGUAGE_DATA/:** 5,012 entries = 5,010 MP4 + SESSION_LOG.md + FinalSheet2.xlsx; the
+    copy's SHA-256 equals `initial_dataset/FinalSheet2.xlsx` (prefix 15348b36e11ea8f0); 71.2 GB in
+    total.
+  - **Python:** 3.14.4 (system) and 3.14.3 (uv); no 3.12; uv present; both opencv-python and
+    opencv-contrib-python installed in system Python.
+  - **Colour cluster:** 3456=5096, 3457=5100, 3458=5102 by SHA-256; all 1298×720, 30 fps, 181–183
+    frames. Mean grey difference at 20 normalised positions:
+    - 3456 vs 3458: 0.0 over the first 15 positions, 10.6–13.0 over the last 5;
+    - 3456 vs 3457: 0.0–1.9, then 11.1–15.1;
+    - 3457 vs 3458: 0.0–1.9, then 9.1–10.7;
+    - within-clip reference ≈ 7.1–7.4.
+  - **Sheet** (normaliser: `। . ? ! ,` → space, whitespace collapsed): 3,379 unique sentences;
+    1,417 tokens; 646 in one sentence only; 2,872 sentences with all tokens seen elsewhere;
+    2,588 in 1,086 one-word-difference families (largest 31).
+  - **Sample headers:** 0.mp4 rotation 270°, 1.mp4 180°, 2.mp4 0°; fps 23.1–30.2.
+- Notes:
+  - The 3,379 vs 3,378 difference (2026-10-21) comes from different normalisers; the project
+    normaliser will be versioned.
+  - The cluster interpretation ("one recording edited onto three endings") is a proposal, not a
+    verified fact.
+
 
 ## 2026-10-21 — Dataset + repository + environment — Read-only re-audit (Session 2)
 - Setup:

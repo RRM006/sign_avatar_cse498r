@@ -14,6 +14,72 @@
 
 ---
 
+## Session 4 — 2026-10-22 — Publish the approved Day 1–2 work
+- Did: Ran `uv run pytest` (93 passed). Committed and pushed the implementation, pilot metadata,
+  annotations, design/docs and session memory authorized by the owner.
+- Decided: The owner authorized committing and pushing the current work.
+- Broke / problem: None during validation or publication.
+- Deferred: Day 3 and all other work remain subject to the owner's next-step decision in
+  `current_task.md`.
+- Next: Owner decision on how Day 3 proceeds (current_task.md: review first, swap Day 3/4, or a
+  labelled auto-draft pipeline test), then the matching "go".
+
+## Session 3 — 2026-10-22 — Phase 1 design review; docs recorded; Days 1–2 done
+- Did: Read-only review of all agent_docs, ADRs, plan 03, the dataset READMEs and the work log.
+  Re-checked:
+  - git and the GitHub visibility (public);
+  - `SIGN_LANGUAGE_DATA/` (5,010 MP4 + SESSION_LOG.md + a byte-identical copy of FinalSheet2.xlsx);
+  - the Python setup (3.14 only; no 3.12);
+  - the colour cluster (SHA-256 + frame-difference profile);
+  - sentence/token statistics;
+  - the 50 sample-clip headers;
+  - the earlier project's model files and notes.
+  Web-checked mediapipe 0.10.35 wheels, the Holistic API outputs, three-vrm, Kalidokit, VRoid CC0
+  models, BanglaT5 and (secondary sources only) Kaggle limits. Wrote design review 04 and the
+  documentation change set; the owner approved both, and the doc edits were applied.
+  Day 1 Step 1 (on the owner's go and install approval):
+  - installed CPython 3.12.13 and the pinned packages into `.venv` (uv, `uv.lock`);
+  - downloaded the official `holistic_landmarker.task` (SHA-256 pinned);
+  - added `pyproject.toml`, `configs/`, `src/bdsl/{config,paths,io,env}.py`, `tests/` (30 tests),
+    `notebooks/00_env_check.ipynb`, and 5 `.gitignore` entries.
+  Env check: 8/8 pass (`test_log.md`).
+  Day 1 Step 2 (on the owner's go, plan and install approval):
+  - added pandas/openpyxl, `src/bdsl/{text,data}/` and `src/bdsl/cli.py` (54 tests);
+  - built manifest v1 (5,010 rows, 3,456 unique files, 3,378 sentences, 3,376 groups, 0 conflicts);
+  - built split S1 v0 (no leakage found);
+  - selected pilot50_v1 (option B) and copied it (50/50 SHA-256 OK) to `dataset/pilot50_v1/`.
+  Sources unchanged.
+  Day 2 Step 1 (on the owner's go and plan approval; no new packages):
+  - added `src/bdsl/features/` and `bdsl.cli extract` (67 tests);
+  - extracted MediaPipe features for the 50 pilot copies in VIDEO and IMAGE mode (50/50 each,
+    0 failures; no face mesh or image data stored);
+  - wrote the QC and the mode comparison; the kill-and-resume test passed (array-identical).
+  Day 2 Step 2 (on the owner's go and plan approval, with R5; no new packages):
+  - added `src/bdsl/text/{gloss_rules,annotations}.py`, `bdsl.cli gloss-draft | gloss-validate`
+    and `annotations/` (convention v0.1, review guide, empty reviewer register);
+  - wrote 50 G0 auto-drafts (deterministic, validation clean, 93 tests).
+  End of session: added thin notebooks `01_manifest`, `02_extract`, `03_gloss` (the same `bdsl` code
+  as the CLI; saved without outputs; structurally checked, not executed).
+- Decided: ADR-0014–0021. Owner bullets Accepted; technical specifics Accepted in principle. The
+  public repo is intentional, with permission to make the dataset public (ADR-0017). G4 answered:
+  Python 3.12 + mediapipe 0.10.35 works. ADR-0022: pilot held-out rule, option B. ADR-0023: VIDEO
+  mode for extraction (feat_ver fa89892d4908). ADR-0024: G0 v0.1 with R5; annotations in `annotations/`.
+- Broke / problem:
+  - The first env-check run failed `torch_devices` because of a wrong constant in the check (fixed;
+    torch was fine).
+  - Step 2: three bugs in my own code, caught by tests or review before the real run (fixed).
+  - Day 2 Step 2: one bug in my own tests (fixed).
+  - The first pilot rule gave 1/10 held-out clips with seen words only (superseded by option B).
+  - Found: edited "shared-segment" clips are a leakage risk; Kalidokit is deprecated; hands are
+    often missing (right hand 35.7% of frames); MediaPipe's left/right may be mirrored (G8).
+- Deferred: Day 3 and later, until the owner's go. The team review of the 50 drafts (G10, owner).
+  Commit/push (owner decides): all work since commit 1809048 is uncommitted, including `annotations/`
+  (a push publishes it). Reuse licence (G1), deadline (G6), hand sides (G8) and QC thresholds
+  (G9) need owner input. Kaggle/Colab environment checks. Full shared-segment scan (G2, Week 2).
+  Full-set extraction.
+- Next: Owner decides how Day 3 proceeds (current_task.md: review first, swap Day 3/4, or a labelled
+  auto-draft pipeline test), then the matching "go".
+
 ## Session 2 — 2026-10-21 — Read-only audit + Stage-1 research design plan
 - Did: Read all agent_docs, ADRs, analyses 01 and 07, design proposal 02, the dataset logs, and the
   earlier project `D:\CSE498R\Sign_Language\CSE498R_v2\` (found this session; sign→voice scope). Re-measured

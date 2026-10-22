@@ -1,0 +1,6 @@
+# 50-video pilot (pilot50_v1), drawn from split S1 in Day 1 Step 2 — the folder does not exist yet.
+# Not the same set as the committed sample50 in data.sample_dir.
+data:
+  name: pilot50
+  subset: pilot50_v1
+  video_root: ${paths.pilot_dest_dir}/videos

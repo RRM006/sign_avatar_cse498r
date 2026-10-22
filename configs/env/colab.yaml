@@ -1,0 +1,9 @@
+# Google Colab (fallback training, ADR-0016). Features are copied from Drive to local disk first.
+env:
+  name: colab
+  device: cuda
+  num_workers: 2
+
+paths:
+  data_root: /content/data
+  work_dir: /content/work

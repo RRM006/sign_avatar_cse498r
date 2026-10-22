@@ -1,0 +1,5 @@
+# Full dataset: all 5,010 videos (gitignored folder, desktop only).
+data:
+  name: full
+  subset: all
+  video_root: ${paths.data_root}/SIGN_LANGUAGE_DATA

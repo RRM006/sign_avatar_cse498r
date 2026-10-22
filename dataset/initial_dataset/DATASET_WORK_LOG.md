@@ -34,3 +34,98 @@
 - Errors/warnings: PyAV 17.1 segfaulted in a long in-process demux loop (no data affected); PyAV does
   not report the rotation flag, OpenCV does.
 - Next step: Pilot selection/copying only after the owner's go (`agent_docs/open_questions.md` F3).
+
+## 2026-10-22
+
+- Computer: Desktop (`DESKTOP-4NDR99B`)
+- Task: Read-only checks for the Phase 1 design review (Session 3).
+- Files/folders inspected:
+  - `FinalSheet2.xlsx` (sentence/token statistics);
+  - `SIGN_LANGUAGE_DATA/` (listing, byte total, SHA-256 of its `FinalSheet2.xlsx` copy);
+  - `SIGN_LANGUAGE_DATA/{3456,3457,3458,5096,5100,5102}.mp4` (SHA-256; every frame decoded read-only
+    for a difference profile; one 3×8 contact sheet written to the session scratchpad, outside the
+    repo);
+  - `videos/*.mp4` (header metadata only).
+- Action performed: Read-only, with temporary scripts in the session scratchpad. No dataset file was
+  opened for writing.
+- Files changed: This log entry only.
+- Dataset files changed: None.
+- Result: see `agent_docs/test_log.md` (2026-10-22). In short:
+  - the sheet copy inside `SIGN_LANGUAGE_DATA/` is identical;
+  - the colour-cluster clips are 3 exact pairs, and the 3 unique clips share their first ~70% of
+    frames;
+  - 3,379 unique sentences with the session normaliser.
+- Errors/warnings: None.
+- Next step: Day 1 Step 1 (environment + config) on the owner's go; no dataset files are touched in
+  that step except reading 2 sample clips for the rotation test.
+
+## 2026-10-22 (Day 1 Step 1)
+
+- Computer: Desktop (`DESKTOP-4NDR99B`)
+- Task: Environment check — OpenCV rotation test and MediaPipe smoke test.
+- Files/folders inspected: `videos/0.mp4` and `videos/2.mp4` (frames decoded read-only; `0.mp4`
+  also used for the MediaPipe check and benchmark).
+- Action performed: Read-only, via `notebooks/00_env_check.ipynb` (`src/bdsl/env.py`).
+- Files changed: This log entry only.
+- Dataset files changed: None. SHA-256 before = after (0.mp4 ed3713970f46…1bb6; 2.mp4
+  111ece319ea3…1569).
+- Result: rotation handled correctly (0.mp4 270° → portrait; 2.mp4 unchanged). See
+  `agent_docs/test_log.md` (Day 1 Step 1).
+- Errors/warnings: None.
+- Next step: Day 1 Step 2 (manifest, split S1 v0, pilot50_v1) on the owner's go.
+
+## 2026-10-22 (Day 1 Step 2)
+
+- Computer: Desktop (`DESKTOP-4NDR99B`)
+- Task: Manifest v1, leakage groups, split S1 v0, pilot50_v1 selection and copy (owner-approved plan;
+  pilot list option B approved by the owner).
+- Files/folders inspected: `FinalSheet2.xlsx`; all 5,010 `SIGN_LANGUAGE_DATA/*.mp4` (full SHA-256,
+  OpenCV header + first frame, read-only).
+- Action performed: `uv run python -m bdsl.cli manifest | split | pilot-select | pilot-copy --confirm`.
+  50 clips **copied** (temp file + rename) to `dataset/pilot50_v1/videos/` (gitignored, ADR-0017).
+- Files changed: new `dataset/pilot50_v1/{videos/ (50 copies), pilot50_manifest.csv,
+  SELECTION_PROTOCOL.md, README.md}`; this log entry. Outputs in `work/` (gitignored).
+- Dataset files changed: None. Size + mtime of all 5,010 videos and the sheet SHA-256 identical
+  before, after the manifest run, and after copying.
+- Result: 5,010 rows, 0 decode failures, 3,456 unique SHA-256, 3,378 unique `norm_v1` sentences,
+  3,376 leakage groups, 0 label conflicts; S1 v0 2,700/357/319 groups, no leakage found; pilot 40/5/5,
+  50/50 copies SHA-256 identical to the sources. Details: `agent_docs/test_log.md` (2026-10-22, Day 1 Step 2) and
+  `dataset/pilot50_v1/SELECTION_PROTOCOL.md`.
+- Errors/warnings: None.
+- Next step: Owner reviews Step 2; doc updates for the results; then Day 2 on the owner's go.
+
+## 2026-10-22 (Day 2 Step 1)
+
+- Computer: Desktop (`DESKTOP-4NDR99B`)
+- Task: MediaPipe Holistic feature extraction + QC on pilot50_v1 (owner-approved plan).
+- Files/folders inspected: the 50 pilot **copies** in `dataset/pilot50_v1/videos/` (decoded read-only,
+  three times: VIDEO run, IMAGE run, kill-and-resume test). The originals in `SIGN_LANGUAGE_DATA/` were
+  not opened. One copy (3671) was also decoded for a smoke test before the run.
+- Action performed: `uv run python -m bdsl.cli extract --data pilot50 --mode both`; kill-and-resume test
+  (VIDEO mode) into `work/features_resume_test/`. Features written to `work/features/` (gitignored); no
+  raw face mesh and no image data stored (checked on all 150 .npz files).
+- Files changed: This log entry only.
+- Dataset files changed: None. The 50 copies still match `pilot50_manifest.csv` (SHA-256); the 50
+  originals' size + mtime are unchanged.
+- Result: 50/50 clips per mode, 0 failures; feat_ver VIDEO `fa89892d4908`, IMAGE `395e878f9861`.
+  Details in `work/features/*/qc.csv` and `work/features/compare_pilot50.json`.
+- Errors/warnings: None.
+- Next step: Owner chose VIDEO mode (ADR-0023). How hand sides map to the signer (mirroring) is
+  open (agent_docs/open_questions.md G8). Then Day 2 Step 2 on the owner's go.
+
+## 2026-10-22 (Day 2 Step 2)
+
+- Computer: Desktop (`DESKTOP-4NDR99B`)
+- Task: Gloss convention v0.1 + G0 auto-drafts for pilot50_v1 (owner-approved plan, with rule R5).
+- Files/folders inspected: `FinalSheet2.xlsx` (sentence text only, for the R5 word list) and
+  `dataset/pilot50_v1/pilot50_manifest.csv`. No video was opened.
+- Action performed: `uv run python -m bdsl.cli gloss-draft --data pilot50` (twice, byte-identical) and
+  `gloss-validate`.
+- Files changed: new `annotations/{GLOSS_CONVENTION_v0.1.md, REVIEW_GUIDE.md, REVIEWERS.csv,
+  pilot50_v1_gloss_v01.csv}`; this log entry.
+- Dataset files changed: None (sheet and pilot manifest SHA-256 identical before and after).
+- Result: 50/50 rows `auto_draft`, 0 validation problems, 0 rows usable for training until a
+  registered team member reviews them.
+- Errors/warnings: None.
+- Next step: Owner registers reviewer code(s) in `annotations/REVIEWERS.csv` and arranges the team
+  review (`annotations/REVIEW_GUIDE.md`) before Day 3.

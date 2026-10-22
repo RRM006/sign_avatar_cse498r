@@ -2,7 +2,7 @@
 
 CSE498R research project (NSU). A Bangla text sentence goes in; the BdSL translation is performed by a 3D avatar.
 
-**Status (2026-09-27):** The literature review is closed. The next phase is end-to-end pipeline/system design. This repository does not yet contain any code, trained models or experimental results.
+**Status (2026-10-22):** The literature review is closed. The research design was approved in principle on 2026-10-22 (`agent_docs/decisions.md`, ADR-0014–0024). The 5-day prototype is in progress: Day 1 (environment, configuration, dataset manifest, split S1 v0, 50-video pilot) and Day 2 (pilot feature extraction; provisional gloss convention and automatic gloss drafts awaiting team review) are done. There are no trained models or experimental results yet.
 
 ## Scope (confirmed)
 
@@ -15,29 +15,29 @@ CSE498R research project (NSU). A Bangla text sentence goes in; the BdSL transla
 
 | Path | Contents |
 |---|---|
-| `dataset/` | Team dataset: current and superseded spreadsheets, 50-clip video sample. See `dataset/README.md`. |
+| `dataset/` | Team dataset: current and superseded spreadsheets, 50-clip video sample (the full video set is local and gitignored). See `dataset/README.md`. |
+| `dataset/pilot50_v1/` | The 50-video pilot set: selection protocol and manifest (videos are local copies, gitignored). |
+| `configs/`, `src/bdsl/`, `tests/`, `notebooks/` | Pipeline code (Python package `bdsl`), layered configs, tests and notebooks. Setup and commands: `CLAUDE.md`. |
+| `annotations/` | Provisional gloss convention, review guide, reviewer register (codes only) and pilot gloss annotations (`auto_draft` until reviewed). |
 | `research/papers/` | The six source PDFs (see the notice in its README: use the analyses instead of reading the PDFs). |
 | `research/paper_analyses/` | `01`–`06`: one analysis per paper. `07`–`08`: cross-paper comparisons. |
-| `research/design_proposals/` | Research/design **proposals**, not decisions. `02` is newer and corrects parts of `01`. |
+| `research/design_proposals/` | Research/design documents. `01`–`03` are proposals; `04` is the design review approved in principle on 2026-10-22. |
 | `research/paper_reading_template.md` | The form used to write the paper analyses. |
-| `new_project_intake/` | Inbox for new material that has not been sorted yet. |
+| `agent_docs/` | Project memory: current task, decisions (ADRs), open questions, logs. |
 
-## Confirmed decisions
+## Design (approved in principle, 2026-10-22)
 
-- **Dataset:** team-owned, with full permissions secured. `FinalSheet2.xlsx` is current and `FinalSheet.xlsx` is superseded. There is one signer per clip. The spelling in the dataset is intentional. A held-out evaluation split must be reserved.
-- **Landmark extraction (interim):** MediaPipe Holistic is the current, interim approach. It does not fix the rest of the architecture.
-- **Evaluation:** should eventually include both automatic metrics and human/expert evaluation. The protocol is not fixed yet.
-- **Compute:** Colab for major training; the desktop for full-dataset storage and preprocessing; the laptop for code editing and small-sample experiments.
+- **Pipeline:** Bangla sentence → gloss sequence (Model A) → generated motion on MediaPipe-derived features (Model B) → retargeted 3D VRM avatar. A direct text → motion model is a comparison; learned models are compared with simple baselines.
+- **Annotations:** gloss statuses `auto_draft`, `team_reviewed`, `expert_validated`, `rejected`. Automatic pseudo-glosses are never presented as BdSL annotations.
+- **Evaluation:** text → gloss, gloss → motion and the avatar are evaluated separately, plus human/expert evaluation when available. Results are signer-dependent (signer identities are unknown).
+- **Compute:** local CPU (desktop) for data work and feature extraction; Kaggle for training; Colab as fallback.
 
-## Open (TBD)
+Details and approval status of each item: `agent_docs/decisions.md`.
 
-- ML / NLP architecture and the final translation pipeline
-- Sign representation
-- Sign-source strategy
-- Avatar / rendering technology
-- Training architecture
-- Final evaluation protocol and metrics
-- Total number of distinct signers (unverified)
-- Definition of the train / validation / held-out evaluation split
+## Dataset
 
-The documents in `research/design_proposals/` discuss options for these open items. They are proposals only.
+Team-owned, with permissions secured; the owner has permission to make it publicly available. Terms for reuse by others: not yet stated (`agent_docs/open_questions.md` G1). `FinalSheet2.xlsx` is current. There is one signer per clip. The spelling in the dataset is intentional.
+
+## Open
+
+See `agent_docs/open_questions.md` §G (reuse licence, deadline, and measurements still to be made).

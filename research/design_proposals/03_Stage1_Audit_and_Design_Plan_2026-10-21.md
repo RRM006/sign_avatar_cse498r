@@ -5,6 +5,10 @@
 > Measured numbers are logged in `agent_docs/test_log.md` (2026-10-21). Labels used: **verified**
 > (measured this session), **reported** (old logs, not re-measured), **proposed**, **future**.
 > The blocking questions are F1–F6 in `agent_docs/open_questions.md`.
+>
+> **2026-10-22 update:** The owner approved the revised design in
+> `04_Phase1_Design_Review_2026-10-22.md` in principle (ADR-0014–0021). Where 03 and 04 differ (Model B
+> primary architecture, Kalidokit, pilot selection from split S1, Kaggle code route), 04 applies.
 
 ---
 

@@ -13,7 +13,7 @@ initial_dataset/
 |-- README.md
 |-- DATASET_WORK_LOG.md
 |-- SIGN_LANGUAGE_DATA/
-|   `-- SESSION_LOG.md plus 5,010 MP4 files
+|   `-- SESSION_LOG.md, a byte-identical copy of FinalSheet2.xlsx, and 5,010 MP4 files
 |-- superseded/
 |   `-- FinalSheet.xlsx
 `-- videos/
@@ -24,7 +24,7 @@ initial_dataset/
 - `FinalSheet2.xlsx` is the current text/annotation file. Its `Sheet1` has `Names` and `Index` columns, 5,010 data rows, and 5,010 unique nonblank `Index` values. `Names` contains the Bangla sentence text. The observed `Index` range is 0 through 5460; IDs are not contiguous.
 - `FinalSheet_DuplicateGroups.xlsx` contains `Duplicate Groups` (`Group No`, `Sentence`, `Original Index`) and `Summary` (`Metric`, `Value`) worksheets.
 - `superseded/FinalSheet.xlsx` is the superseded spreadsheet. Its `Sheet1` has `Names` and `Index` columns and 3,491 data rows.
-- `SIGN_LANGUAGE_DATA/` is the full/raw video set. It contains 5,010 numeric-ID MP4 files and `SESSION_LOG.md`. No subdirectories were present when inspected. The exact filename-ID set matches the 5,010 unique `Index` values in `FinalSheet2.xlsx`.
+- `SIGN_LANGUAGE_DATA/` is the full/raw video set. It contains 5,010 numeric-ID MP4 files, `SESSION_LOG.md` and a copy of `FinalSheet2.xlsx` (SHA-256 identical to the one in this directory, verified 2026-10-22). No subdirectories were present when inspected. The exact filename-ID set matches the 5,010 unique `Index` values in `FinalSheet2.xlsx`.
 - The full set is protected by the repository ignore rule `dataset/initial_dataset/SIGN_LANGUAGE_DATA/`.
 
 ## Video-to-Text IDs
@@ -44,9 +44,9 @@ The video filename stem is the numeric `Index` value in `FinalSheet2.xlsx` (for 
 - Whenever you need to work with this dataset, read this `README.md` first.
 - Inspect the relevant files before making claims. Do not assume the dataset structure, filenames, formats, or metadata.
 - Do not rename, move, delete, overwrite, or modify dataset files unless the owner explicitly requests it.
-- If sample videos are needed, use the samples already in `videos/`.
+- If sample videos are needed for quick checks, use the samples already in `videos/` (`sample50`). The pilot set `pilot50_v1` (selected from split S1 on 2026-10-22) is in `dataset/pilot50_v1/videos/` as copies (ADR-0017); originals are never moved or changed.
 - If text/annotation data is needed, use `FinalSheet2.xlsx` as the current file and inspect the actual workbook.
-- Do not copy or upload dataset files outside the project/team without explicit permission.
+- Do not copy or upload dataset files outside the project/team without explicit permission. Approved so far (ADR-0017): pilot copies inside the project; derived features (no videos, no raw face mesh) to a private Kaggle dataset. The repository is public by the owner's choice; any new channel needs the owner's OK.
 - Do not add `SIGN_LANGUAGE_DATA/` or any of its files to Git. Do not force-add it.
 - Do not commit dataset files unless they are explicitly intended to be tracked.
 - If actual contents contradict this README, report the difference. Update this README only after verifying the actual information.

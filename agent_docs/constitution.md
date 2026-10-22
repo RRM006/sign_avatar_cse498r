@@ -11,7 +11,8 @@ The project **"Bangla Text-to-Bangla Sign Language (BdSL) Translation Using a 3D
 how Bangla text can be converted into Bangla Sign Language and shown through a 3D avatar. It is an
 initial, research-based project by a beginner ML/NLP team. The deliverable is a report, a literature
 review, a trained model and results, aimed at a publishable research paper (ADR-0007). The literature
-review is complete; the current phase is pipeline/system design (ADR-0012). Who the end users are is
+review is complete (ADR-0012); the research design was approved in principle on 2026-10-22
+(ADR-0014–0021), and the current phase is the 5-day prototype, run one owner-approved step at a time. Who the end users are is
 **(TBD — decide with owner)**.
 The project must always stay grounded in evidence and owner decisions. It must never present guesses,
 proposals or future plans as facts or completed work.
@@ -33,10 +34,12 @@ proposals or future plans as facts or completed work.
 6. **Uncertain file operations need the owner's go.** No moving, renaming or deleting files when the
    reason is uncertain.
 7. **Never commit secrets or credentials.** *(Conservative default — kept by owner, ADR-0013.)*
-8. **Dataset videos stay inside the repo/team** until origin, licence and consent are confirmed.
-   *(Conservative default — kept unchanged by owner, ADR-0013; see `open_questions.md` E4.)* *Why:*
-   the clips show real, identifiable people. (Origin/permissions: team-owned, permissions in place —
-   ADR-0008.)
+8. **Dataset sharing follows ADR-0017.** The repository is public by the owner's choice and the owner
+   has permission to make the dataset public (2026-10-22). Each *new* channel or form of
+   redistribution (e.g. a public Kaggle dataset, a paper supplement) still needs the owner's explicit
+   OK; consent, privacy, licence and attribution requirements are kept; uploads of derived features
+   follow ADR-0017's minimisation rules. *Why:* the clips show real, identifiable people, and
+   permission for one use does not cover every use.
 
 ## 3. Scope & major pieces (how it fits together)
 
@@ -46,28 +49,31 @@ proposals or future plans as facts or completed work.
 - **Translation:** sentence-level, handling BdSL grammar/word order — not word-by-word lookup.
 - **Data role (ADR-0008):** the team's videos are primarily training data; extracted pose/landmarks feed
   the sign-generation model; a held-out evaluation split is reserved.
-- **Interim step (ADR-0010):** MediaPipe Holistic for landmark extraction only.
+- **Extraction step (ADR-0010, ADR-0019):** MediaPipe Holistic.
 
-**Everything else in between is (TBD — decide with owner):** sign representation, text → sign
-mapping, sign lexicon, avatar technology, model and training, and the build order (ADR-0010). Options
-are listed in `open_questions.md` and `research/design_proposals/`; none has been chosen.
+**Approved in principle on 2026-10-22 (ADR-0014–0021):** Bangla → gloss (Model A) → motion
+(Model B) → retargeted VRM avatar; annotation layers; split policy; evaluation protocol; compute
+roles. Technical specifics may be revised from evidence, only with the owner's OK. Still open:
+`open_questions.md` §G.
 
 **What exists today (evidence):**
 - A completed literature base: 6 papers, 6 per-paper analyses and 2 comparisons (`research/`), plus
-  2 design proposals (`research/design_proposals/`, proposals only).
-- A team-owned dataset (ADR-0008): Bangla sentence sheets plus a 50-clip video sample in
-  `dataset/initial_dataset/`. The full video set is on the desktop / Drive (ADR-0009).
+  4 design documents (`research/design_proposals/`; `01`–`03` proposals, `04` approved in principle).
+- A team-owned dataset (ADR-0008): Bangla sentence sheets, the full 5,010-video set inside this
+  project folder at `dataset/initial_dataset/SIGN_LANGUAGE_DATA/` (desktop, gitignored), and a
+  committed 50-clip sample in `dataset/initial_dataset/videos/` (ADR-0017).
 
-**Build order:** (TBD — defined after the design is chosen).
+**Build order:** the 5-day prototype in `milestone_log.md`, then the one-month plan in
+`research/design_proposals/04_…` §G.
 
 ## 4. Hard constraints (the box we build inside)
 
 - **Zero budget.** Free tools, data and services only. *(Owner-confirmed 2026-09-27; reason not
   stated.)*
-- **Compute:** Google Colab (T4 GPU, ~15 GB VRAM, ~12 h session limit) and a local machine (24 GB RAM,
-  AMD Radeon RX 570). *(Owner-confirmed 2026-09-27.)* Roles (ADR-0009): Colab for training, desktop
-  for full-dataset work, laptop for code and small samples. Which machine has the RX 570: (TBD —
-  confirm with owner).
+- **Compute (ADR-0016):** the desktop (Ryzen 5 3500X, ~24 GB RAM, AMD Radeon RX 570) holds the full
+  dataset and runs data work and MediaPipe extraction on CPU; Kaggle is the primary training
+  platform; Google Colab (T4 GPU, ~15 GB VRAM, ~12 h session limit) is the fallback; the laptop is
+  for code and small samples.
   - *Unverified notes from the paper analyses (not facts yet):* Colab has no display, so desktop GUI
     tools cannot render there, and the RX 570 may have poor GPU-compute (ROCm) support. Verify these
     before relying on them.

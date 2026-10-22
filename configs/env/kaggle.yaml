@@ -1,0 +1,9 @@
+# Kaggle notebook (primary training, ADR-0016). Only derived features are attached, never videos.
+env:
+  name: kaggle
+  device: cuda
+  num_workers: 2
+
+paths:
+  data_root: /kaggle/input/bdsl-features   # (TBD) slug of the private features dataset, set on Day 3
+  work_dir: /kaggle/working/work           # saved with "Save Version"

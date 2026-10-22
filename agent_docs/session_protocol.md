@@ -40,6 +40,7 @@ End of session. Please update our memory files now:
 5. open_questions.md — mark answered questions (with the ADR id) and add any new ones.
 6. test_log.md — if we tested or verified anything, add the result (with numbers/evidence).
 7. codebase_map.md — if we added or moved files, update the map.
+8. dataset/initial_dataset/DATASET_WORK_LOG.md — if any dataset file was inspected, copied or changed.
 Show me a short summary of what changed in each file before saving.
 ```
 
@@ -53,8 +54,7 @@ re-explaining everything next time.
 - If the AI starts deciding the design on its own: `Stop. List the options with trade-offs and a
   recommendation, then wait for my decision.`
 - If the AI starts coding without being asked: `Stop. Show me the plan first, then wait for my go.`
-- New ideas or requirements from you: drop them in `new_project_intake/` or say them in chat, and ask
-  the AI to record them.
+- New ideas or requirements from you: say them in chat and ask the AI to record them in `agent_docs/`.
 - Keep the main thread focused on the current task; park side questions in `open_questions.md`.
 - If context feels full or the AI seems to forget recent things, reset the session and re-paste the
   START-OF-SESSION prompt (CLAUDE.md reloads automatically).

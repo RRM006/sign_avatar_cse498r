@@ -1,1 +1,8 @@
 dataset/initial_dataset/SIGN_LANGUAGE_DATA/
+
+# Day 1 Step 1 (ADR-0017: the repo is public, so generated data and environments stay out of git)
+work/
+dataset/pilot50_v1/videos/
+.venv/
+__pycache__/
+.ipynb_checkpoints/

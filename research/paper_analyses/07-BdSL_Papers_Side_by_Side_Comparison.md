@@ -18,7 +18,6 @@
 | Sign vocabulary | 3,823 signs, 36 categories | 50 signs / 324 words | 90 classes (13 numeral + 36 letter + 41 word) |
 | Code released | No | No | **Yes** — GitLab (Laravel/PHP) |
 | Dataset released | Unsure — not confirmed, must request | No | **Yes** — Zenodo DOI, ~45 KB SiGML, verified live |
-| Medical-domain signs | 84 ("Disease & Treatment") | 0 | 0 |
 | Has a translation *model*? | No — lemma lookup only | No — word lookup only | No — rule-based lookup + reordering |
 | Overall relevance (per analysis) | **High** | Medium | **High** |
 
@@ -77,7 +76,6 @@
 |---|---|---|---|
 | Size | 3,823 signs | 50 signs / 78 sentences / 324 words | 90 classes |
 | Public? | Not confirmed — email required | No | **Yes, verified live** |
-| Medical coverage | 84 signs | 0 | 0 |
 | Usable for us? | Partial, pending author response | Not really — wrong sign language/language | Partial — seed + format template |
 
 ---

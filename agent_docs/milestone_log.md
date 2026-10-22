@@ -4,11 +4,9 @@
 
 **Status keys:** ⬜ Not started · 🟨 In progress · 🟦 Blocked · ✅ Done · ⛔ Retired
 
-**Last updated:** 2026-10-21
-**Current phase:** Phase 2 — Design & pipeline decision. Scope and dataset are settled
-(ADR-0007–0009). A full design plan is **proposed** (Session 2,
-`research/design_proposals/03_…`) and waits for the owner's answers to `open_questions.md` F1–F6.
-The design itself is still open (ADR-0002, ADR-0010).
+**Last updated:** 2026-10-22
+**Current phase:** Phase 3 — 5-day prototype, in progress (milestones 5–7 done 2026-10-22; team review of the pilot drafts pending). The design was approved in principle on
+2026-10-22 (ADR-0014–0021). Each step starts only on the owner's explicit go.
 
 ---
 
@@ -24,8 +22,14 @@ lead to: report + literature review + trained model + results, aimed at a publis
 | 2 | Scope questions answered | ✅ | A1–A3 answered and recorded (ADR-0007), 2026-09-27 |
 | 3 | Initial dataset understood | ✅ | B1–B6 answered and recorded (ADR-0008, ADR-0009), 2026-09-27. Left open: signer count (B7), split definition (B8) |
 | 3b | Read-only repo + dataset re-audit | ✅ | Done 2026-10-21. Measurements in `test_log.md` (2026-10-21); contradictions listed in `research/design_proposals/03_…` §B |
-| 4 | Design / pipeline chosen | 🟨 | Plan **proposed** 2026-10-21 (`research/design_proposals/03_…`). Done when the owner answers F1–F6 and C1–C5 are recorded as ADRs |
-| … | Implementation / evaluation milestones | ⬜ | **Proposed, not adopted:** 5-day prototype Days 1–5 (see `current_task.md`), then weeks 2–4 scale-up. Adopted only after milestone 4 |
+| 4 | Design / pipeline chosen | ✅ | Approved in principle 2026-10-22; recorded as ADR-0014–0021 (owner bullets Accepted, specifics Accepted in principle) |
+| 5 | Day 1 — Step 1: env check + config | ✅ | env_report.json with real values; tests pass or failures documented; only authorised files changed. Done 2026-10-22: 8/8 checks pass, 30 tests pass (`test_log.md`) |
+| 6 | Day 1 — Step 2: manifest + S1 v0 + pilot50_v1 | ✅ | 5,010 manifest rows; leakage tests pass; 50/50 copies SHA-256 identical; sources unchanged. Done 2026-10-22: all met; S1 v0 2,700/357/319 groups; pilot 40/5/5, option B (ADR-0022) (`test_log.md`) |
+| 7 | Day 2 — Step 1: pilot extraction + QC; Step 2: gloss convention v0.1 + G0 drafts (+ team review) | ✅ | 50/50 extracted or failures logged; timestamp irregularity measured per clip; kill-and-resume test passes; 50/50 annotation rows with a status (no row marked reviewed without a real review). Step 1 done 2026-10-22: 50/50 per mode, resume test passed, VIDEO mode chosen (ADR-0023). Step 2 done 2026-10-22: 50/50 rows auto_draft, validation clean (ADR-0024). The team review itself is pending (open_questions G10) (`test_log.md`) |
+| 8 | Day 3 — Model A pilot | ⬜ | G0 vs GRU curves + per-item table ("pipeline test") on team-reviewed rows — or, only if the owner decides, a clearly labelled auto-draft pipeline test; resume test passes. Needs G10 (team review) |
+| 9 | Day 4 — Model B + text ablation + B0/B1 | ⬜ | masked-loss unit test; overfit 1 → 40; table vs B0/B1 ("pipeline test") |
+| 10 | Day 5 — retarget + viewer + end-to-end demo | ⬜ | one sentence → video with versioned log; skeleton fallback; limitations written |
+| 11 | Weeks 2–4 — full data, model comparison, evaluation, report | ⬜ | per design doc 04 §G; deadline (TBD — G6) |
 
 ---
 
@@ -40,14 +44,16 @@ lead to: report + literature review + trained model + results, aimed at a publis
 the scope and dataset questions.
 **Move on when:** Done ✅ (2026-09-27 — ADR-0007, ADR-0008, ADR-0009, ADR-0012).
 
-### Phase 2 — Design & pipeline decision (current)
-**Goal:** Research and then choose, with the owner, the end-to-end pipeline: sign representation, text →
-sign mapping, sign lexicon, avatar technology, model/training and evaluation details.
-**Move on when:** The owner approves the design (F1–F6 answered, ADRs recorded).
+### Phase 2 — Design & pipeline decision
+**Goal:** Choose, with the owner, the end-to-end pipeline.
+**Move on when:** Done ✅ (2026-10-22 — design approved in principle, ADR-0014–0021).
 
-### Later phases
-**Proposed (not adopted):** Phase 3 — 5-day end-to-end prototype on a 50-video pilot. Phase 4 —
-full-dataset experiments, evaluation and report (to about 2026-11-20). Defined once the design is chosen.
+### Phase 3 — 5-day prototype (current, in progress)
+**Goal:** An end-to-end pipeline test on the 50-video pilot (milestones 5–10).
+**Move on when:** Milestone 10 is done or the owner decides.
+
+### Phase 4 — Full-dataset experiments, evaluation and report
+**Goal:** Milestone 11. Deadline: (TBD — confirm with owner, G6).
 
 ---
 
@@ -55,3 +61,6 @@ full-dataset experiments, evaluation and report (to about 2026-11-20). Defined o
 - Nothing is "done" until its testable definition above is met **and** the result is recorded
   (in `test_log.md` where measurement applies).
 - Don't start a later milestone early without the owner's go.
+- 2026-10-22: notebooks `01_manifest`, `02_extract`, `03_gloss` were added as thin wrappers of the
+  Day 1–2 CLI steps (not executed); `00_env_check` ran on Day 1. All work since commit 1809048 is
+  uncommitted.

@@ -1,0 +1,5 @@
+# Local desktop / laptop (ADR-0016): CPU work, paths relative to the project root (base.yaml).
+env:
+  name: local
+  device: cpu
+  num_workers: 4
