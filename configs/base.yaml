@@ -18,6 +18,7 @@ paths:
   pilot_dest_dir: ${project_root}/dataset/pilot50_v1   # pilot copies + their manifest (ADR-0017)
   features_dir: ${paths.work_dir}/features             # <feat_ver>/<Index>.npz + qc.csv
   annotations_dir: ${project_root}/annotations         # tracked in git: a commit publishes it (ADR-0017)
+  runs_dir: ${paths.work_dir}/runs                     # training runs: logs, metrics, checkpoints
 
 data:
   sheet: FinalSheet2.xlsx
@@ -83,6 +84,25 @@ annotations:         # Day 2 Step 2; ADR-0015, annotations/GLOSS_CONVENTION_v0.1
   g0_ver: G0-v0.1
   pilot_file: pilot50_v1_gloss_v01.csv
   reviewers_file: REVIEWERS.csv   # owner-maintained reviewer codes (no names)
+
+text2gloss:          # Day 3 Step 1, Model A; design doc 04 §F-10 (A-GRU), ADR-0020 (metrics)
+  model:
+    emb: 128
+    enc_hidden: 256   # per direction (BiGRU)
+    dec_hidden: 256
+    attn: 256         # Bahdanau attention size
+    dropout: 0.2
+  train:
+    lr: 0.001         # Adam
+    batch_size: 8
+    max_epochs: 300
+    patience: 30      # early stopping on val gloss WER (greedy decoding)
+    clip: 1.0
+    label_smoothing: 0.1
+  beam: 4             # final evaluation
+  max_len: 20         # decoding limit in target tokens
+  seeds: [42, 43, 44]
+  tag_prefix: true    # reviewed tags become target tokens before the gloss, e.g. "<q-wh> তোমার বাবা কি করা"
 
 env_check:
   report_file: env_report.json
