@@ -9,6 +9,13 @@
     uv run python -m bdsl.cli train-text2gloss [--allow-test-data] [--overfit N] [--resume RUN_DIR]
     uv run python -m bdsl.cli train-gloss2motion [--input gloss|text] [--overfit N] [--resume RUN_DIR]
     uv run python -m bdsl.cli demo --sentence "…" [--model-run RUN] [--seed N]
+
+kaggle400 (the 400-video Kaggle experiment, folder kaggle/, 2026-10-23):
+    python -m bdsl.cli train-gloss2motion --data kaggle400 [--input gloss|text] [--max-steps N]
+           [--stop-after-epochs N] [--set key=value ...] [--device cuda|cpu|auto] [--not-for-paper]
+    python -m bdsl.cli train-text2gloss --data kaggle400 --reference g0 [same options]
+    python -m bdsl.cli list-runs | freeze [--replace] | evaluate --split val | evaluate --final
+Training reads only train + val rows; `evaluate --final` reads the test split once and writes a lock.
 """
 
 from __future__ import annotations
@@ -294,6 +301,11 @@ def cmd_train_text2gloss(args) -> int:
     from .models.train_text2gloss import ResumeMismatch, run
     from .text.annotations import read_csv, usable_for_training
 
+    if args.data == "kaggle400":
+        return _k400_train_a(args)
+    if args.max_steps or args.set or args.not_for_paper or args.reference != "reviewed":
+        print("--max-steps / --set / --not-for-paper / --reference g0 are kaggle400 options.")
+        return 2
     if args.data != "pilot50":
         print("Only --data pilot50 is authorised so far.")
         return 2
@@ -366,6 +378,11 @@ def check_model_b_inputs(cfg) -> tuple[pd.DataFrame, list[str], str]:
 def cmd_train_gloss2motion(args) -> int:
     from .models.train_gloss2motion import ResumeMismatch, run
 
+    if args.data == "kaggle400":
+        return _k400_train_b(args)
+    if args.max_steps or args.set or args.not_for_paper:
+        print("--max-steps / --set / --not-for-paper are kaggle400 options.")
+        return 2
     if args.data != "pilot50":
         print("Only --data pilot50 is authorised so far.")
         return 2
@@ -388,6 +405,203 @@ def cmd_train_gloss2motion(args) -> int:
     return 0
 
 
+LABEL_K400_B = {
+    "gloss": "kaggle400 Model B, G0 pseudo-gloss input (320/40 train/val clips; small-scale, signer-dependent)",
+    "text": "kaggle400 Model B, Bangla word input = ablation T (320/40 train/val clips; small-scale, signer-dependent)",
+}
+
+
+def _k400_setup(args):
+    """Config, split lock, code provenance and device for a kaggle400 training command (None = refused)."""
+    from .config import parse_set_overrides
+    from .data import kaggle400 as k4
+    from .device import resolve_device
+    from .provenance import DirtyCodeError, code_provenance, result_run_policy
+
+    overrides = parse_set_overrides(args.set)
+    cfg = load_config(env=args.env, data="kaggle400", overrides=overrides)
+    try:
+        lock = k4.check_split_lock(cfg)
+    except k4.SplitLockError as e:
+        print(str(e))
+        return None
+    prov = code_provenance(cfg["_meta"]["project_root"])
+    dry = bool(args.max_steps)
+    try:
+        for_paper, prefix = result_run_policy(prov, bool(args.not_for_paper) or dry)
+    except DirtyCodeError as e:
+        print(str(e))
+        return None
+    if dry:
+        for_paper, prefix = False, "DRYRUN_"
+    if args.resume:
+        old = json.loads((Path(args.resume) / "run.json").read_text(encoding="utf-8"))
+        old_commit = (old.get("code") or {}).get("commit")
+        if old_commit and old_commit != prov.get("commit") and not args.not_for_paper:
+            print(f"Refusing to resume: the run started at commit {old_commit}, the code is now {prov.get('commit')}. "
+                  "Use the same code, or add --not-for-paper.")
+            return None
+        for_paper = for_paper and bool(old.get("for_paper", False))
+    device, note = resolve_device(args.device or cfg.get("env", {}).get("device"))
+    print(f"device: {device} ({note})")
+    return {"cfg": cfg, "lock": lock, "prov": prov, "for_paper": for_paper, "prefix": prefix, "device": device,
+            "device_note": note, "overrides": overrides}
+
+
+def _k400_finish(s: dict, result: dict, model: str, inp: str, seconds: float, annotation_sha: str) -> None:
+    """env.json in the run folder + one registry line."""
+    from .data import kaggle400 as k4
+    from .device import device_info
+    from .provenance import append_registry, env_record, write_env_json
+
+    cfg, run_dir = s["cfg"], Path(result["run_dir"])
+    info = device_info(s["device"])
+    meta = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+    write_env_json(run_dir, env_record(info, s["prov"], {
+        "split_lock_sha256": s["lock"]["lock_sha256"], "feat_ver": cfg["gloss2motion"]["feat_ver"],
+        "annotation_sha256": annotation_sha, "config_hash": cfg["_meta"]["config_hash"], "overrides": s["overrides"]}))
+    status = "dry_run" if meta.get("max_steps") else ("finished" if result.get("finished") else "stopped (resumable)")
+    append_registry(k4.paths(cfg)["registry"], {
+        "run_id": run_dir.name, "model": model, "input": inp, "data": "kaggle400", "seeds": " ".join(map(str, meta["seeds"])),
+        "status": status, "for_paper": meta.get("for_paper", False), "label": meta.get("label"),
+        "device": str(s["device"]), "gpu": "; ".join(info["gpu_names"]) or "none",
+        "split_lock_sha256": s["lock"]["lock_sha256"], "feat_ver": cfg["gloss2motion"]["feat_ver"],
+        "annotation_sha256": annotation_sha, "code_source": s["prov"]["source"], "git_commit": s["prov"].get("commit"),
+        "dirty": s["prov"]["dirty"], "started_utc": meta.get("created_utc"),
+        "finished_utc": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"), "seconds": round(seconds, 1),
+        "run_dir": run_dir.as_posix()})
+
+
+def _k400_train_b(args) -> int:
+    import time
+
+    from .data import kaggle400 as k4
+    from .models.train_gloss2motion import ResumeMismatch, run
+
+    s = _k400_setup(args)
+    if s is None:
+        return 2
+    cfg = s["cfg"]
+    df, problems, inputs_sha = k4.model_inputs(cfg, k4.TRAINING_SPLITS, cfg["gloss2motion"]["feat_ver"])
+    if problems:
+        print(json.dumps({"problems": problems[:20], "n_problems": len(problems)}, indent=1, ensure_ascii=False))
+        print("Refusing to train: kaggle400 Model B inputs failed the checks.")
+        return 2
+    g0_sha = k4.glosses_sha256(cfg, k4.TRAINING_SPLITS)
+    extra = {"for_paper": s["for_paper"], "split_lock_sha256": s["lock"]["lock_sha256"], "g0_files_sha256": g0_sha,
+             "code": {k: s["prov"].get(k) for k in ("source", "commit", "dirty")}, "device_note": s["device_note"],
+             "overrides": s["overrides"]}
+    t0 = time.perf_counter()
+    try:
+        result = run(cfg, df, mode=args.input, features_dir=None, pilot_manifest_sha256=s["lock"]["lock_sha256"],
+                     inputs_sha256=inputs_sha, run_dir=Path(args.resume) if args.resume else None,
+                     runs_root=k4.paths(cfg)["runs"], seeds=args.seeds, overfit=args.overfit,
+                     stop_after=args.stop_after_epochs, device=s["device"], splits=k4.TRAINING_SPLITS,
+                     max_steps=args.max_steps, data_name="kaggle400", name_prefix=s["prefix"],
+                     label=LABEL_K400_B[args.input], extra_meta=extra)
+    except ResumeMismatch as e:
+        print(f"Refusing to resume: {e}")
+        return 2
+    _k400_finish(s, result, "model_b", args.input, time.perf_counter() - t0, g0_sha)
+    print(json.dumps({k: result[k] for k in ("run_dir", "finished")} | ({"dry_run": result["dry_run"]} if "dry_run" in result else {}),
+                     indent=1))
+    return 0
+
+
+def _k400_train_a(args) -> int:
+    import time
+
+    from .data import kaggle400 as k4
+    from .models.train_text2gloss import ResumeMismatch, run
+
+    if args.reference != "g0":
+        print("kaggle400 has no human-reviewed glosses: use --reference g0 (results = agreement with the rule "
+              "glosser G0, not BdSL correctness).")
+        return 2
+    if args.allow_test_data:
+        print("--allow-test-data is not used with kaggle400.")
+        return 2
+    s = _k400_setup(args)
+    if s is None:
+        return 2
+    cfg = s["cfg"]
+    df, problems, _ = k4.model_inputs(cfg, k4.TRAINING_SPLITS, cfg["gloss2motion"]["feat_ver"], require_features=False)
+    if problems:
+        print(json.dumps({"problems": problems[:20], "n_problems": len(problems)}, indent=1, ensure_ascii=False))
+        print("Refusing to train: kaggle400 G0 files failed the checks.")
+        return 2
+    g0_sha = k4.glosses_sha256(cfg, k4.TRAINING_SPLITS)
+    check = {"problems": [], "file": "gloss_g0_train.csv + gloss_g0_val.csv", "file_sha256": g0_sha}
+    extra = {"for_paper": s["for_paper"], "split_lock_sha256": s["lock"]["lock_sha256"], "g0_files_sha256": g0_sha,
+             "code": {k: s["prov"].get(k) for k in ("source", "commit", "dirty")}, "device_note": s["device_note"],
+             "overrides": s["overrides"]}
+    t0 = time.perf_counter()
+    try:
+        result = run(cfg, df, check, allow_test_data=False, pilot_manifest_sha256=s["lock"]["lock_sha256"],
+                     run_dir=Path(args.resume) if args.resume else None, runs_root=k4.paths(cfg)["runs"],
+                     seeds=args.seeds, overfit=args.overfit, stop_after=args.stop_after_epochs, reference="g0",
+                     device=s["device"], splits=k4.TRAINING_SPLITS, max_steps=args.max_steps, data_name="kaggle400",
+                     name_prefix=s["prefix"], extra_meta=extra)
+    except ResumeMismatch as e:
+        print(f"Refusing to resume: {e}")
+        return 2
+    _k400_finish(s, result, "model_a", "g0", time.perf_counter() - t0, g0_sha)
+    print(json.dumps({k: result[k] for k in ("run_dir", "finished")} | ({"dry_run": result["dry_run"]} if "dry_run" in result else {}),
+                     indent=1))
+    return 0
+
+
+def cmd_list_runs(args) -> int:
+    from .eval.kaggle400_eval import latest_result_runs, list_runs
+
+    cfg = load_config(env=args.env, data="kaggle400")
+    runs = list_runs(cfg)
+    print(runs.to_string(index=False) if len(runs) else "no runs yet")
+    print("latest result runs per role:", json.dumps(latest_result_runs(cfg), indent=1))
+    return 0
+
+
+def cmd_freeze(args) -> int:
+    from .eval.kaggle400_eval import FreezeError, freeze, latest_result_runs
+
+    cfg = load_config(env=args.env, data="kaggle400")
+    chosen = latest_result_runs(cfg)
+    for role in ("model_b_gloss", "model_b_text", "model_a"):
+        if getattr(args, role):
+            chosen[role] = getattr(args, role)
+    try:
+        frozen = freeze(cfg, chosen, not_for_paper=args.not_for_paper, replace=args.replace)
+    except FreezeError as e:
+        print(f"Refusing to freeze: {e}")
+        return 2
+    print(json.dumps({"frozen": {r: v["run_id"] for r, v in frozen["runs"].items()}, "for_paper": frozen["for_paper"],
+                      "split_lock_sha256": frozen["split_lock_sha256"]}, indent=1))
+    return 0
+
+
+def cmd_evaluate(args) -> int:
+    from .data import kaggle400 as k4
+    from .device import resolve_device
+    from .eval.kaggle400_eval import FinalLockError, FreezeError, evaluate
+
+    cfg = load_config(env=args.env, data="kaggle400")
+    split = "test" if args.final else args.split
+    device, note = resolve_device(args.device or cfg.get("env", {}).get("device"))
+    print(f"device: {device} ({note})")
+    try:
+        res = evaluate(cfg, split, final=args.final, override_reason=args.override_reason, device=device)
+    except (FinalLockError, FreezeError, k4.TestSplitLocked, k4.SplitLockError) as e:
+        print(f"Refusing to evaluate: {e}")
+        return 2
+    m = res["metrics"]
+    b, a = m["model_b_and_baselines"]["methods"], m["model_a"]
+    print(json.dumps({"out_dir": res["out_dir"], "split": split, "final": args.final,
+                      "body_mpjpe": {k: (v["mean_sd_over_seeds"]["mpjpe_body"]["mean"] if "mean_sd_over_seeds" in v
+                                         else v["summary"]["mpjpe_body"]) for k, v in b.items()},
+                      "model_a_wer_vs_G0": a["mean_sd_over_seeds"]["wer"], "lock_written": "lock" in res}, indent=1))
+    return 0
+
+
 def cmd_demo(args) -> int:
     from .avatar.demo import run_demo
 
@@ -401,6 +615,15 @@ def cmd_demo(args) -> int:
                       "b1": {k: log["b1"][k] for k in ("index", "sentence_norm", "frames")},
                       "roundtrip_pilot50_deg": log["roundtrip_pilot50_deg"]}, indent=1, ensure_ascii=False))
     return 0
+
+
+def _k400_options(p) -> None:
+    p.add_argument("--max-steps", type=int, default=None, help="dry run: stop after N optimiser steps (never a result)")
+    p.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
+                   help="config override, e.g. --set gloss2motion.train.max_epochs=6 (recorded in run.json)")
+    p.add_argument("--device", default=None, help="cuda, cpu or auto (default: config env.device)")
+    p.add_argument("--not-for-paper", action="store_true",
+                   help="run even if the code is not a clean commit; the run is named NFP_ and never used in the paper")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -430,22 +653,39 @@ def main(argv: list[str] | None = None) -> int:
                    help="TEST RUN ONLY: accept mock / not-video-verified rows (off by default)")
     v.set_defaults(func=cmd_gloss_validate)
     t = sub.add_parser("train-text2gloss", help="Model A pilot: G0 vs A-GRU (refuses unless gloss-validate is clean)")
-    t.add_argument("--data", default="pilot50")
+    t.add_argument("--data", default="pilot50", choices=["pilot50", "kaggle400"])
+    t.add_argument("--reference", choices=["reviewed", "g0"], default="reviewed",
+                   help="kaggle400: g0 = train on G0 pseudo-glosses (agreement with the rule glosser only)")
     t.add_argument("--allow-test-data", action="store_true",
                    help="TEST RUN ONLY: train on mock / not-video-verified rows; outputs are named TEST_")
     t.add_argument("--seeds", type=int, nargs="+", default=None, help="default: text2gloss.seeds")
     t.add_argument("--overfit", type=int, default=None, help="overfit check: train and score on the first N train rows")
     t.add_argument("--resume", default=None, help="run folder to continue from its last checkpoints")
     t.add_argument("--stop-after-epochs", type=int, default=None, help="stop each seed after N epochs (resume test)")
+    _k400_options(t)
     t.set_defaults(func=cmd_train_text2gloss)
     b = sub.add_parser("train-gloss2motion", help="Model B pilot: G0 gloss (or text) → motion vs B0/B1")
-    b.add_argument("--data", default="pilot50")
+    b.add_argument("--data", default="pilot50", choices=["pilot50", "kaggle400"])
     b.add_argument("--input", choices=["gloss", "text"], default="gloss", help="text = ablation T")
     b.add_argument("--seeds", type=int, nargs="+", default=None, help="default: gloss2motion.seeds")
     b.add_argument("--overfit", type=int, default=None, help="overfit check: train and score on the first N train clips")
     b.add_argument("--resume", default=None, help="run folder to continue from its last checkpoints")
     b.add_argument("--stop-after-epochs", type=int, default=None, help="stop each seed after N epochs (resume test)")
+    _k400_options(b)
     b.set_defaults(func=cmd_train_gloss2motion)
+    sub.add_parser("list-runs", help="kaggle400: list run folders").set_defaults(func=cmd_list_runs)
+    f = sub.add_parser("freeze", help="kaggle400: freeze the runs used for the single final test evaluation")
+    for role in ("model_b_gloss", "model_b_text", "model_a"):
+        f.add_argument(f"--{role.replace('_', '-')}", dest=role, default=None, help="run id (default: newest result run)")
+    f.add_argument("--replace", action="store_true", help="re-freeze (only before the final evaluation)")
+    f.add_argument("--not-for-paper", action="store_true", help="allow NOT FOR PAPER runs (the result is marked so)")
+    f.set_defaults(func=cmd_freeze)
+    ev = sub.add_parser("evaluate", help="kaggle400: --split val, or --final (test, once, writes a lock)")
+    ev.add_argument("--split", choices=["val"], default="val")
+    ev.add_argument("--final", action="store_true", help="evaluate the locked test split ONCE (frozen config needed)")
+    ev.add_argument("--override-reason", default=None, help="owner's written reason for a second final run")
+    ev.add_argument("--device", default=None, help="cuda, cpu or auto (default: config env.device)")
+    ev.set_defaults(func=cmd_evaluate)
     d = sub.add_parser("demo", help="Day 5: one sentence → Model B + B1 motion JSON, skeleton video, log")
     d.add_argument("--sentence", required=True)
     d.add_argument("--model-run", default=None, help="default: avatar.demo_model_run")

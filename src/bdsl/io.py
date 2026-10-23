@@ -46,3 +46,19 @@ def sha256_file(path: str | os.PathLike, chunk_size: int = 1 << 20) -> str:
         for block in iter(lambda: f.read(chunk_size), b""):
             h.update(block)
     return h.hexdigest()
+
+
+def canonical_text_bytes(data: bytes) -> bytes:
+    """Text bytes with the UTF-8 BOM removed and every line ending turned into LF.
+
+    Used for lock files (kaggle400 SPLIT_LOCK.json): Git's `core.autocrlf` may rewrite line endings
+    on checkout (open question G12), and Excel adds a BOM; neither changes the content, so neither may
+    change the hash."""
+    if data.startswith(b"\xef\xbb\xbf"):
+        data = data[3:]
+    return data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+
+
+def sha256_text_canonical(path: str | os.PathLike) -> str:
+    """SHA-256 of a text file after `canonical_text_bytes` (line-ending and BOM independent)."""
+    return hashlib.sha256(canonical_text_bytes(Path(path).read_bytes())).hexdigest()

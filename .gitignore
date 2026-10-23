@@ -6,3 +6,18 @@ dataset/pilot50_v1/videos/
 .venv/
 __pycache__/
 .ipynb_checkpoints/
+
+# kaggle400 experiment (owner, 2026-10-23): never commit videos, features, checkpoints, large outputs or
+# credentials. The small split files in kaggle/data/ are added explicitly by kaggle/tools/run_local_steps.ps1.
+kaggle/data/
+kaggle/processed/features/
+kaggle/outputs/checkpoints/
+kaggle/outputs/runs/**/*.pt
+kaggle/outputs/runs/**/predictions/
+kaggle/outputs/predictions/*_motion/
+kaggle/outputs/**/*.npz
+kaggle/outputs/**/*.mp4
+kaggle/outputs/**/*.zip
+kaggle/work/
+kaggle.json
+.kaggle/

@@ -24,6 +24,87 @@ Results are logged here only after they are actually run.
 
 ---
 
+## 2026-10-23 — kaggle400 Step B, desktop run 2 of `run_local_steps.ps1` (owner's desktop, measured)
+- Run by the owner 12:26 (UTC+6); log `kaggle/work/run_local_steps_20261023_122606.log`; 1.3 min; 77.9 GB free.
+- Steps 1–4 PASS again: re-selection identical; copy step re-hashed all copies (copied now 0, already
+  present 400, 400/400 byte-identical, sources unchanged 400/400); `verify_split --require-videos` 10/10 PASS.
+- Step 5: **208 passed, 1 failed** (41.2 s). Last run's Windows-path failure is gone. New failure:
+  `tests/test_text2gloss.py::test_stop_and_resume_gives_identical_weights` (a pre-Session-8 test).
+  Weights and epochs were identical; the metrics differed only in `train_seconds` (0.2 vs 0.1).
+  Cause: Session 8 added wall-clock `train_seconds` inside the per-seed quality metrics (`agru`,
+  `model_b`), and the older resume tests compare those dicts exactly, so they passed only when the
+  rounded times happened to match (also true of `test_gloss2motion.py:163`). Steps 6–7 did not run.
+- Fix (workspace): both trainers keep time in `metrics["train_seconds"][seed]`, outside the quality
+  metrics; readers updated (report table T3, notebooks 04/05 one line each; cell ids unchanged). The old
+  tests were left unchanged. New assertions in `test_k400_training.py`: resumed and straight Model B
+  metrics identical; no timing key in any per-seed quality dict; T3 training time filled. Check: both old
+  resume tests passed 3 times with a fake clock jumping up to 50 s per reading. Workspace suite:
+  **209 passed**.
+
+## 2026-10-23 — kaggle400 Step B, desktop run 1 of `run_local_steps.ps1` (owner's desktop, measured)
+- Setup: DESKTOP-4NDR99B, `D:\sign_avatar_cse498r`, git 2.52.0.windows.1, uv 0.10.8, branch main at
+  `acb711c`; 83.4 GB free on D:. Run by the owner 2026-10-23 12:07 (UTC+6); log
+  `kaggle/work/run_local_steps_20261023_120715.log` (gitignored); total 1.7 min.
+- Results:
+  - Step 1 pre-checks PASS. Step 2 re-selection on the desktop **identical** (same 400 clips, 3 split
+    manifests, subset_manifest without `sha256_copy`, G0 corpus); OOV numbers identical to the workspace.
+  - Step 3 copy: **400/400 copies byte-identical** (SHA-256 source = copy = manifest_v1), 400 copied now,
+    sources unchanged (size + mtime) 400/400, **5.94 GB**, 21 s; SPLIT_LOCK.json written (videos digest
+    `ec1f61a2…`). Checked in the workspace afterwards: lock paths use `/`, files are LF, and the lock
+    written on Windows also passes check 10 on Linux.
+  - Step 4 `verify_split.py --require-videos`: **10/10 PASS**.
+  - Step 5 tests: **208 passed, 1 failed** (52.7 s). Failure:
+    `test_setup_restores_earlier_outputs_without_overwriting` — `restore()` reported conflicts with the
+    Windows separator (`outputs\x.json`); a real portability bug (report text differed per OS), not a test
+    flake. Steps 6–7 (commit, package) did not run; nothing committed, nothing pushed.
+- Fix (workspace, same day): `restore()` reports `rel.as_posix()`; a re-run of the copy step now replaces its
+  own SPLIT_REPORT section (no duplicate) and adds a dated "Re-check" line to the DATASET_WORK_LOG entry
+  (first run kept). Test extended. Workspace suite: **209 passed**. Desktop re-run pending.
+
+## 2026-10-23 — kaggle400 Step A — workspace checks (AI cloud workspace, NOT the desktop)
+- Setup: the AI's Linux workspace (Python 3.12.3; numpy 2.4.6, pandas 3.0.3, PyYAML 6.0.3, mediapipe
+  0.10.35, opencv-contrib 5.0.0.93, torch 2.14.1+cu130 on CPU — no GPU, sacrebleu 2.6.0, pytest 9.1.1).
+  Read-only copies of the code, configs, tests, `manifest_v1.csv`, `S1_v0.csv`, the pilot selection and the
+  50 pilot feature files (derived data) were staged from the desktop. **No video was copied.** The desktop
+  had no shell this session, so nothing here ran on the desktop or on Kaggle.
+- Metric(s) / checks and results:
+  - Existing suite before any change: 140 passed (workspace).
+  - After Session 8: **209 passed** (26 s; incl. 69 new kaggle400 tests). Also 209 passed with
+    pandas 2.2.3 + numpy 2.1.3 (older versions a Kaggle image may have); pins restored afterwards.
+  - Input hashes: manifest_v1 `2ff133cf…`, S1_v0 `40481a5f…` = their meta files.
+  - Selection (seed 20261023): train/val/test **320/40/40** clips, 318/40/40 leakage groups (398 total);
+    10 + 10 minimal-pair held-out clips, 20 train siblings, 14 vocabulary-support clips; 4 clips also in
+    pilot50; total source size 5.94 GB; longest clip 22.1 s. Shares per split within ≈1.5 percentage points
+    of the pool for every stratum (SPLIT_REPORT.md §5).
+  - OOV vs the train vocabulary (416 word types): val 35/169 tokens = **20.7%** (22/40 sentences with an
+    OOV word), test 21/173 = **12.1%** (16/40).
+  - verify_split checks 1–7 PASS (8–10 need the copies + lock: desktop step).
+  - G0 corpus file (1,398 words from all 5,010 sheet sentences) reproduces all 50 pilot G0 drafts
+    exactly; G0 files: train `aa36b9a4…`, val `a77cf8bd…`, test `9960a5b8…` (canonical SHA-256).
+  - mediapipe 0.10.35 (py3-none-manylinux_2_28_x86_64) and opencv-contrib 5.0.0.93 (cp37-abi3) wheels exist
+    for Python 3.10–3.14 on Linux (pip download check) — the Python version should not block the main route.
+  - Smoke test of the notebooks on a simulated Kaggle filesystem (/kaggle/input, /kaggle/working,
+    KAGGLE_KERNEL_RUN_TYPE set; package built from a scratch git commit; tiny epochs via K400_EXTRA_SETS):
+    - chain B (6 synthetic videos, one with a 270° rotation flag): 00 and 02 ran; MediaPipe probe OK on a
+      real decode; extraction 6/6, feat_ver **fa89892d4908** (= the pilot), privacy OK, rotation OK.
+    - chain A (the 50 pilot clips as a stand-in: dummy video files + the real pilot features in place of
+      02's output): 00, 01, 03–09 all executed without errors; 01: upload check + 10/10 split checks PASS;
+      03: G0 IDENTICAL; 04: resume test PASS; 07: freeze → val → final test → lock; 08: 18 tables + 8
+      figures + RESULTS_SUMMARY.md; 09: 5 skeleton videos. Expected FAILs only: no GPU in the workspace,
+      50 instead of 400 clips.
+    - Consistency: on the 5 pilot test clips the new evaluation code gives the same baseline numbers as the
+      Day 4 pilot report (B0 body MPJPE 0.221, hands 58.2/59.7 mm; B1 0.270, 63.2/75.2 mm, velocity ratio 0.99).
+  - MediaPipe fallback route (uv-made Python 3.12 + desktop pins): probe OK and extraction 3/3 with
+    feat_ver fa89892d4908 after the plot-backend fix below.
+- Notes: bugs found by these tests and fixed before delivery — (1) the training lock check opened the test
+  manifest (now train/val only; final evaluation checks all); (2) two runs started in the same second shared
+  a folder and the second would have resumed the first; (3) `--not-for-paper` did not mark clean-code runs
+  (the resume-test runs could have been frozen); (4) prediction required targets; (5) MediaPipe/TFLite log
+  noise in notebooks; (6) the model download and fallback environment would have been saved as Kaggle
+  output (now /tmp); (7) child Pythons inherited Jupyter's MPLBACKEND and the fallback crashed (now Agg).
+  All smoke-test numbers are pipeline tests, never results. Pending: the desktop run (copy, verify, tests,
+  commit, package) and every Kaggle run.
+
 ## 2026-10-22 — Git publish (Session 7)
 - Setup: Owner explicitly requested commit and push on `main`.
 - Metric(s) / checks: `git diff --check`; confirmed the mock pilot annotation CSV marks rows with

@@ -1,56 +1,53 @@
 # current_task.md — What We Are Doing RIGHT NOW
 
-**Date:** 2026-10-22 (end of Session 7)
-**Phase:** Phase 3 — 5-day prototype done as a pipeline test (milestones 5–7, 9, 10 ✅; milestone 8
-🟨, Day 3 run only in TEST mode on fake review data, ADR-0025). Phase 4 (full dataset) is planned as
-**proposal 05 — not approved**. Implementation runs one owner-approved step at a time.
+**Date:** 2026-10-23 (Session 8, Step B in progress)
+**Phase:** Phase 4 started as one owner-approved experiment: **kaggle400** (400 videos, real training on
+Kaggle), folder `kaggle/`. Proposal 05 as a whole is still not approved.
 
 ## Where we are right now
-- Session 6 was a read-only audit plus two documents (owner-approved):
-  - `research/reports/PILOT_TEST_VERSION_COMPLETE_REPORT.{md,pdf}` — evidence-based record of the pilot.
-  - `research/design_proposals/05_FULL_DATASET_EXECUTION_PLAN.md` + `research/reports/FULL_DATASET_EXECUTION_PLAN.pdf`
-    — step-by-step plan (Phases A–P), a PROPOSAL.
-  - Figures in `research/reports/figures/`; rebuild the PDFs with `python research/reports/build_reports.py`
-    (system Python with markdown-it-py; headless Chrome).
-- Session 7: at the owner's request, committed the reports and Session 6 documentation as `62e719e`
-  and pushed `main` to `origin/main`. This also published the six previously unpublished commits,
-  including the Day 3 TEST run and mock annotation rows. The annotation rows remain explicitly marked
-  `is_mock=true` and "TEST DATA: ... not video-verified".
-- Audit findings needing owner decisions: G12 line endings (`.gitattributes`), G13 GPU device support
-  in the training code, G14 clean-commit rule for result runs; `README.md` status is out of date.
-- Annotations: 50 pilot rows, all fake on purpose (`is_mock=true`); 0 real reviews (G10).
-- 140 tests pass.
-
-## Start of the next session (after the standard start-of-session reading)
-1. `git status` / `git log --oneline -5`: verify `main` is synchronized with `origin/main` and the
-   Session 7 publish record is committed. If not, stop and tell the owner.
-2. `uv run pytest` → expected 140 passed.
+- Step A done in the AI's cloud workspace (no desktop shell this session): `kaggle/` folder, code, notebooks
+  00–09, tests, guide, PowerShell script. Files written into `D:\sign_avatar_cse498r`. Nothing copied,
+  committed, uploaded or run on the desktop or on Kaggle yet.
+- Split chosen (measured from manifest_v1 + S1 v0): 320 / 40 / 40 clips, 398 leakage groups, val OOV 20.7%,
+  test OOV 12.1% of word tokens; leakage checks 1–7 PASS; checks 8–10 need the copies.
+- Workspace test run (Linux, Python 3.12.3): 209 passed. The desktop run happens inside the script.
+- Technical choices are **PROPOSED ADR-0028** (decisions.md) — owner confirmation pending.
+- Desktop run 1 (2026-10-23 12:07): steps 1–4 PASS (selection identical on the desktop, 400/400 copies
+  byte-identical, 5.94 GB, 10/10 split checks); step 5 failed 1 of 209 tests (Windows path separator in
+  `k400.setup.restore`, fixed in the workspace); steps 6–7 not run. Details: test_log.md.
+- Desktop run 2 (12:26): steps 1–4 PASS again (400 copies re-hashed, 10/10); step 5 failed 1 of 209
+  (timing value inside the quality metrics made an exact resume comparison depend on luck; fixed in the
+  workspace, 209 passed); steps 6–7 not run.
 
 ## The one thing we are doing next
-👉 **Owner reviews both published reports and answers the Phase A decision register (proposal 05,
-Appendix C): G6 deadline, G10 reviewers, G3 Kaggle account, push policy, G12 `.gitattributes`, G13
-device support, G14 clean-commit rule.**
+👉 **Step B (re-run) — the owner runs the same command again in PowerShell:**
+`powershell -ExecutionPolicy Bypass -File D:\sign_avatar_cse498r\kaggle\tools\run_local_steps.ps1`
+and pastes the summary. Expected: 7 PASS lines; step 3 now says "already present: 400" (re-hashed, not
+copied again); 209 tests pass; one local commit — not pushed; upload zip ≈ 5.95 GB. Then the AI checks it.
 
-No implementation step is authorised. The 2026-10-22 push was explicitly requested by the owner; it
-does not settle the ongoing push policy.
+## After that
+- Step C: Kaggle account, phone verification, GPU quota (record numbers → G3), private dataset `bdsl-k400`
+  (GUIDE sections 1–4).
+- Step D: notebooks 00 → 09, one at a time, the owner pastes each notebook's PASS/FAIL list.
+- After Step D: download outputs, verify hashes, copy small results into `kaggle/outputs/`, update
+  test_log with the real Kaggle numbers, commit locally (owner decides about push).
 
 ## Evidence rules
-- Pilot numbers are "pipeline test", never "generalisation". All results are signer-dependent.
-- `TEST_…` runs (ADR-0025) are never reported as results.
-- Gloss statuses: auto_draft / team_reviewed / expert_validated / rejected. Only a registered reviewer
-  sets a reviewed status; the AI never does. Mock rows are refused by default.
-- G0 output is a pseudo-gloss, never a BdSL annotation.
-- Proposal 05 is a plan, not a decision; its estimates are labelled [ESTIMATE].
+- kaggle400 results: small-scale, signer-dependent; test used once (FINAL_TEST_LOCK.json); measured vs
+  estimated labels; low coordinate error ≠ correct BdSL; G0 = pseudo-gloss; Model A = agreement with the
+  rule glosser; no human/expert validation.
+- Pilot numbers stay "pipeline test". `TEST_…` runs (ADR-0025) are never results; `NFP_…` and `DRYRUN_…`
+  runs are never results.
 
 ## Locked decisions — do NOT re-open without the owner
 - ADR-0003, 0006, 0007, 0008, 0012; ADR-0004/0005/0009/0010/0011/0013 as amended;
   ADR-0014–0021 (owner bullets Accepted; technical specifics Accepted in principle); ADR-0022–0027.
+- ADR-0028 is only PROPOSED.
 
 ## Important environment / gotchas
-- Run everything through `uv run …` (CLAUDE.md COMMANDS). Notebooks: the `.venv` kernel.
-- Don't read research/papers/*.pdf. Don't add SIGN_LANGUAGE_DATA/, pilot copies or work/ to git.
-- The repo is public: a push is a publication (ADR-0017). Reviewer names never go into git.
-- Line endings: `core.autocrlf=true` changes tracked-CSV byte hashes on checkout (G12).
-- A PDF open in Acrobat Reader blocks the report rebuild; quit Acrobat fully first.
-- On Windows (PowerShell 5.1), pass multi-line git commit messages with `git commit -F <file>`.
-- Log dataset inspections in dataset/initial_dataset/DATASET_WORK_LOG.md.
+- Run everything through `uv run …`. Notebooks for Kaggle are in `kaggle/notebooks/` (import them on Kaggle).
+- No `git push` (owner, 2026-10-23). The repo is public: a push is a publication (ADR-0017).
+- Never `git add` kaggle/data videos, features, checkpoints, `kaggle/work/`, `kaggle.json`.
+- Line endings: `core.autocrlf=true` (G12 open); kaggle400 lock hashes ignore line endings by design.
+- On Windows (PowerShell 5.1), multi-line commit messages: `git commit -F <file>` (the script does this).
+- Notebook 07 must run only once; a new version without the earlier output attached cannot see the lock (G15).

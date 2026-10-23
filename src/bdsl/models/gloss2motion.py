@@ -4,7 +4,8 @@ Token embeddings → 3-layer Transformer encoder (d = 192, 4 heads) → a length
 Decoder: one query per output frame, built from a sinusoidal code of normalised time (0…1), 3 layers
 that attend to each other and to the encoder → linear to the 208 feature values. All frames are
 predicted at once (no frame-by-frame feedback, so no "frozen pose" drift). Training uses the true
-length; inference uses the predicted length.
+length; inference uses the predicted length. Every tensor is created on the input's device, so the
+model runs on CPU or CUDA (2026-10-23, owner-approved GPU support).
 """
 
 from __future__ import annotations
@@ -22,9 +23,10 @@ PAD = 0
 def time_code(n_frames: torch.Tensor, t_max: int, dim: int, max_cycles: float = 128.0) -> torch.Tensor:
     """(B, t_max, dim) sinusoidal code of τ = t/(T−1) for each sequence's own length T, with
     frequencies from 1 to `max_cycles` cycles per clip (enough to tell neighbouring frames apart)."""
-    t = torch.arange(t_max, dtype=torch.float32)[None, :]
+    dev = n_frames.device
+    t = torch.arange(t_max, dtype=torch.float32, device=dev)[None, :]
     tau = t / (n_frames[:, None].float() - 1).clamp(min=1)
-    cycles = torch.exp(torch.linspace(0.0, math.log(max_cycles), dim // 2))
+    cycles = torch.exp(torch.linspace(0.0, math.log(max_cycles), dim // 2, device=dev))
     ang = 2 * math.pi * tau[..., None] * cycles
     return torch.cat([torch.sin(ang), torch.cos(ang)], dim=-1)
 
@@ -46,7 +48,7 @@ class Gloss2Motion(nn.Module):
 
     def encode(self, tokens: torch.Tensor):
         pad = tokens == PAD
-        pos = torch.arange(tokens.size(1))[None]
+        pos = torch.arange(tokens.size(1), device=tokens.device)[None]
         mem = self.encoder(self.tok(tokens) + self.pos(pos), src_key_padding_mask=pad)
         keep = (~pad).unsqueeze(-1).float()
         pooled = (mem * keep).sum(1) / keep.sum(1).clamp(min=1)
@@ -55,7 +57,7 @@ class Gloss2Motion(nn.Module):
     def decode(self, mem, pad, n_frames: torch.Tensor) -> torch.Tensor:
         t_max = int(n_frames.max())
         q = self.query(time_code(n_frames, t_max, self.d))
-        frame_pad = torch.arange(t_max)[None] >= n_frames[:, None]
+        frame_pad = torch.arange(t_max, device=n_frames.device)[None] >= n_frames[:, None]
         h = self.decoder(q, mem, tgt_key_padding_mask=frame_pad, memory_key_padding_mask=pad)
         return self.out(h)
 

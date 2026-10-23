@@ -1,0 +1,23 @@
+kaggle400: 400-video Kaggle experiment (split, code, notebooks, guide)
+
+- kaggle/: 400 clips chosen from manifest_v1 + split S1 v0 (320/40/40,
+  group-disjoint, S1 partition kept, stratified, minimal pairs, seed 20261023);
+  manifests, SPLIT_REPORT.md, SPLIT_SUMMARY.png, SPLIT_LOCK.json and
+  COPY_VERIFICATION.csv (the videos themselves stay gitignored)
+- kaggle/src/k400: selection, SHA-256-verified copy, leakage tests
+  (verify_split.py), G0 pseudo-glosses + train-only vocabularies, MediaPipe
+  0.10.35 install with a pinned fallback, resume-safe extraction with a time
+  budget, private-dataset package with allow-list, report tables/figures,
+  avatar export
+- bdsl: CUDA device support in both training loops, --data kaggle400,
+  --max-steps, --set key=value, --not-for-paper, test-split guard,
+  freeze / evaluate --split val / evaluate --final with a test lock,
+  bootstrap 95% CIs, run registry, env.json, clean-commit rule, B1 never
+  retrieves exact copies or shared-segment partners, Model A on G0
+  references ("agreement with the rule glosser", not BdSL correctness)
+- notebooks 00-09, GUIDE_KAGGLE_STEP_BY_STEP.md, READMEs, tests
+- agent_docs: changelog, current_task, test_log, milestone, proposals
+- Not pushed. No videos, features, checkpoints or credentials committed.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JHtWrrbAiZfyjtaR7H3NJk

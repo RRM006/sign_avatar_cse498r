@@ -14,6 +14,46 @@
 
 ---
 
+## Session 8 — 2026-10-23 — kaggle400: the 400-video Kaggle experiment folder (Step A)
+- Did: Built `kaggle/` (README, beginner Kaggle guide, pinned requirements, data/processed/notebooks/
+  src/tools/outputs with READMEs) and the code behind it, in the AI's cloud workspace (no shell on the
+  desktop this session; files were written into the project folder):
+  - 400-clip selection from manifest_v1 + S1 v0 (seed 20261023): 320/40/40, every clip in its S1
+    partition, colour cluster kept together in train, 10 + 10 minimal-pair held-out clips with train
+    siblings, stratified fill; manifests with a reason per clip, SPLIT_REPORT.md, SPLIT_SUMMARY.png.
+  - `kaggle/src/verify_split.py` (10 PASS/FAIL checks), SHA-256-verified copy step, line-ending-
+    independent SPLIT_LOCK.json, private-dataset package (git archive of a clean commit + allow-list).
+  - bdsl: CUDA device support in both training loops, `--data kaggle400`, `--max-steps`, `--set`,
+    `--device`, `--not-for-paper`, test-split guard, `freeze` / `evaluate --split val` /
+    `evaluate --final` with FINAL_TEST_LOCK.json, bootstrap 95% CIs, run registry, env.json,
+    clean-code rule, B1 excludes exact copies and shared-segment partners, Model A on G0 references.
+  - Notebooks 00–09 (Kaggle), report (tables CSV/MD/LaTeX, figures, RESULTS_SUMMARY.md), avatar export.
+  - `kaggle/tools/run_local_steps.ps1` for the owner: selection check → copy 400 videos → verify →
+    tests → one local commit (no push) → upload zip.
+- Decided: Owner instructions in chat (2026-10-23), recorded as stated: copy 400 videos into
+  `kaggle/data/`; upload videos + features + metadata + code (`code/` from a clean commit) to a PRIVATE
+  Kaggle dataset, this experiment only; do everything on Kaggle incl. MediaPipe extraction (local
+  extraction only as a backup); GPU support; refuse dirty result runs or mark NOT FOR PAPER; no push;
+  Model A labelled "agreement with the rule glosser (G0 pseudo-gloss)"; notebook 09 only after the test
+  lock; known split limits in SPLIT_REPORT.md; line-ending-independent lock hashes. Technical design
+  choices by the AI are written as **PROPOSED ADR-0028** in decisions.md (not accepted yet).
+- Broke / problem: found and fixed while testing — the training lock check opened the test manifest;
+  two runs started in the same second shared a folder (the second would have resumed the first);
+  `--not-for-paper` did not mark runs from clean code; prediction needed targets; MediaPipe log noise;
+  big scratch files would have been saved as Kaggle output. Not possible this session: any run on the
+  desktop (no shell) or on Kaggle (owner's account).
+- Step B, desktop run 1 (owner, 12:07): selection identical on the desktop, 400/400 copies verified
+  (5.94 GB), 10/10 split checks PASS; 1 of 209 tests failed on Windows (`restore()` reported `\` paths) →
+  fixed (`as_posix`), plus copy-step re-runs no longer duplicate the SPLIT_REPORT section and keep the
+  first DATASET_WORK_LOG entry with a re-check line. Commit and package not yet made; re-run pending.
+- Step B, desktop run 2 (12:26): steps 1–4 PASS; 1 of 209 tests failed — Session 8 had put wall-clock
+  `train_seconds` inside the per-seed quality metrics, so the older exact resume comparisons depended on
+  timing. Moved to `metrics["train_seconds"]` (both trainers, report T3, notebooks 04/05); old tests unchanged;
+  new regression assertions. Re-run pending.
+- Deferred: Kaggle runs (owner), real gloss review (G10), shared-segment scan (G2), Colab.
+- Next: Owner runs `kaggle/tools/run_local_steps.ps1` and pastes the output (Step B); then Kaggle
+  account / GPU quota / private dataset (Step C); then notebooks 00 → 09 (Step D).
+
 ## Session 7 — 2026-10-22 — Publish audit reports and prototype work
 - Did: At the owner's request, committed the Session 6 reports and documentation as `62e719e`, then
   pushed `main` to `origin/main` (`edadec9..62e719e`). This also published the six commits already

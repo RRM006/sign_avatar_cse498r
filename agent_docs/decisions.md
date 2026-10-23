@@ -400,3 +400,41 @@
 - Why: Owner's go for Day 5 with the AI's defaults (2026-10-22); design doc 04 §F-12; ADR-0019.
 - Rejected: Kalidokit (deprecated); committing the VRM file.
 - Status: Accepted (owner bullets); Accepted in principle (retargeter, smoothing, expression mapping).
+
+## ADR-0028 — 2026-10-23 — kaggle400: 400-video Kaggle experiment — **PROPOSED (not accepted)**
+> Written as a proposal at the owner's request ("decisions as PROPOSALS only"). The **(owner)** bullets
+> repeat instructions the owner gave in chat on 2026-10-23; the **(proposed)** bullets are the AI's
+> technical choices and stay open until the owner confirms them.
+- Decision (owner, chat 2026-10-23):
+  - Create `kaggle/` with train/val/test folders of 400 videos copied from the full set (originals
+    read-only, SHA-256 of every copy checked); target ≈ 320/40/40, group-disjoint, S1 partition kept,
+    colour cluster in one split, stratified, minimal-pair families, fixed seed, reason per clip.
+  - Upload the 400 videos, features, metadata and the code (`code/` from a clean commit via
+    `git archive`) to a PRIVATE Kaggle dataset, team collaborators only, this experiment only — this
+    overrides the "features only" rule (ADR-0017 / CLAUDE.md rule 7) for this experiment only.
+  - Everything runs on Kaggle, including MediaPipe extraction (notebook 02 on Kaggle CPU; local
+    extraction only as a backup).
+  - Add GPU (cuda) support; `--max-steps`, `--data kaggle400`, `--stop-after-epochs`, `--set key=value`;
+    3 seeds; bootstrap 95% CIs (1,000 resamples over test items); run registry + env.json; refuse a
+    result run from a dirty tree or mark it NOT FOR PAPER (answers G13, G14).
+  - Train uses train only; val for early stopping/choices; test locked, used once by `evaluate --final`
+    with a frozen config and a lock file; notebook 09 only after the lock.
+  - Model A on G0 references is reported only as "agreement with the rule glosser (G0 pseudo-gloss)".
+  - No `git push`; videos, features, checkpoints, large outputs and credentials are never committed.
+- Proposed (AI, needs owner confirmation):
+  - Selection details: pool = one representative clip per normalised sentence; 10 val + 10 test
+    minimal-pair held-out clips plus their train siblings and "vocabulary support" train clips; greedy
+    distribution matching on length bucket, question/negation word lists, orientation, resolution
+    bucket and duration quartile; seed 20261023; val/test sentences of the colour-cluster family excluded.
+  - Model B config unchanged from the pilot (ADR-0026) except `max_frames` 360 (longest clip 22.1 s).
+  - B1 never retrieves an exact copy (same SHA-256) or a known shared-segment partner of the query.
+  - Freeze picks the newest finished for-paper run per role with the default configuration; NFP_ /
+    DRYRUN_ / overfit runs can never be frozen.
+  - The MediaPipe model is downloaded on Kaggle from the pinned URL and checked against its SHA-256
+    (nothing from `work/` is uploaded); fallback = a uv Python 3.12 environment with the desktop pins.
+  - Split-lock hashes ignore BOM and line endings (owner accepted the line-ending-independent hash).
+- Why: owner request for a real, paper-grade Kaggle experiment (2026-10-23); proposal 05 Phases D, H, J,
+  L, O (subset version).
+- Rejected: moving clips across S1 partitions; uploading `work/`; tuning on test.
+- Status: **Proposed** — owner bullets stated in chat; AI bullets await confirmation.
+

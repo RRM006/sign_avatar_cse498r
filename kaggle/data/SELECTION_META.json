@@ -1,0 +1,131 @@
+{
+  "code": "kaggle/src/k400/select.py",
+  "counts": {
+    "test": 40,
+    "train": 320,
+    "val": 40
+  },
+  "generated_utc": "2026-10-23T05:25:17+00:00",
+  "inputs": {
+    "manifest_csv_sha256": "2ff133cf6bb2ec33f544133cd424594465b531a83ab8554cd498d099a0588d82",
+    "pilot50_selection_found": true,
+    "s1_csv_path": "/home/claude/proj/work/splits/S1_v0.csv",
+    "split_csv_sha256": "40481a5faedc962a0ad92d5f7ec515c36aa34a46bf6d6127db77d81009c76cc0"
+  },
+  "kaggle400_config": {
+    "avatar_test_sentences": 5,
+    "bootstrap": {
+      "ci": 95,
+      "resamples": 1000,
+      "seed": 20261023
+    },
+    "extraction": {
+      "max_minutes": 300
+    },
+    "low_res_short_side": 500,
+    "minimal_pair_heldout": {
+      "test": 10,
+      "val": 10
+    },
+    "seed": 20261023,
+    "source": {
+      "manifest": "manifest_v1",
+      "manifest_csv_sha256": "2ff133cf6bb2ec33f544133cd424594465b531a83ab8554cd498d099a0588d82",
+      "split": "S1_v0",
+      "split_csv_sha256": "40481a5faedc962a0ad92d5f7ec515c36aa34a46bf6d6127db77d81009c76cc0"
+    },
+    "strata": [
+      "length_bucket",
+      "question",
+      "negation",
+      "orientation",
+      "resolution_bucket",
+      "duration_quartile"
+    ],
+    "targets": {
+      "test": 40,
+      "train": 320,
+      "val": 40
+    },
+    "version": "v1"
+  },
+  "known_shared_segment_links": [
+    [
+      3456,
+      3457,
+      3458
+    ]
+  ],
+  "manifest_sha256": {
+    "test_manifest.csv": "e820656defcdd6cff50f6e40e7dbeedae1ab4641ed92318af75f129865ba15f8",
+    "train_manifest.csv": "9f75d51f24c0dcebfe5c5d002983d06653e2ed9f64e2b5d41a8a3be4a98b1bb7",
+    "val_manifest.csv": "51710ca9d432ae792845ec7be2a20e1b875a854f0d61ec42024f17103429cef4"
+  },
+  "oov": {
+    "test": {
+      "oov_token_rate": 0.1214,
+      "oov_tokens": 21,
+      "oov_types": 21,
+      "sentences": 40,
+      "sentences_all_words_seen": 24,
+      "sentences_with_oov": 16,
+      "tokens": 173,
+      "types": 99
+    },
+    "train_vocabulary_size": 416,
+    "val": {
+      "oov_token_rate": 0.2071,
+      "oov_tokens": 35,
+      "oov_types": 35,
+      "sentences": 40,
+      "sentences_all_words_seen": 18,
+      "sentences_with_oov": 22,
+      "tokens": 169,
+      "types": 111
+    }
+  },
+  "report": {
+    "counts": {
+      "test": 40,
+      "train": 320,
+      "val": 40
+    },
+    "excluded_heldout_colour_family": [],
+    "minimal_pair_families_used": [
+      "3|_ জামাটা সুন্দর",
+      "3|আমি _ খাবো",
+      "3|আমি _ দেখেছি",
+      "4|_ ভূমিকম্প ভয় করে",
+      "4|আমার _ অনেক ভালো",
+      "4|আমার _ বিমানে যাবে",
+      "4|আমার _ ভারত যাবে",
+      "4|আমার মা একজন _",
+      "4|আমার মামা _ যাবে",
+      "4|আমি _ ঘুরতে যাই",
+      "4|আমি _ দেখি নাই",
+      "4|আমি _ শ্রীলংকা যাব",
+      "4|আমি শনিবারে _ যাব",
+      "4|তোমার _ অনেক সুন্দর",
+      "4|১২ _ আমার জন্মদিন",
+      "5|আমার চাচাতো _ নেপাল যাবে",
+      "5|আমার মা বৃহস্পতিবার _ খায়",
+      "5|আমার স্বামী _ মাংস খায়",
+      "5|আমি _ সৌদি আরব যাব",
+      "7|আমার মা অনেক গুলো _ দেখে নাই"
+    ],
+    "pool_per_s1": {
+      "test": 319,
+      "train": 2702,
+      "val": 357
+    },
+    "pool_size": 3378,
+    "targets": {
+      "test": 40,
+      "train": 320,
+      "val": 40
+    },
+    "unsupported_words": []
+  },
+  "seed": 20261023,
+  "selection": "kaggle400_v1"
+}

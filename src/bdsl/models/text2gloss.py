@@ -16,6 +16,9 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 PAD, BOS, EOS, UNK = 0, 1, 2, 3
 SPECIALS = ["<pad>", "<s>", "</s>", "<unk>"]
 TAGS = ("neg", "q-wh", "q-yn")
+# G0's own tag set: "q?" = a question word was found but G0 cannot tell wh from yes/no. Used only when
+# the references are G0 pseudo-glosses (kaggle400 Model A, "agreement with the rule glosser").
+G0_TAGS = TAGS + ("q?",)
 
 
 def tag_token(tag: str) -> str:
@@ -23,8 +26,9 @@ def tag_token(tag: str) -> str:
 
 
 def split_tags(tokens: list[str]) -> tuple[set[str], list[str]]:
-    """Separate tag tokens (anywhere in the output) from gloss tokens."""
-    tag_toks = {tag_token(t): t for t in TAGS}
+    """Separate tag tokens (anywhere in the output) from gloss tokens. `<q?>` only appears when a model
+    was trained on G0 references; a model trained on reviewed tags never produces it."""
+    tag_toks = {tag_token(t): t for t in G0_TAGS}
     return {tag_toks[t] for t in tokens if t in tag_toks}, [t for t in tokens if t not in tag_toks]
 
 
@@ -104,7 +108,7 @@ def count_params(model: nn.Module) -> int:
 def greedy_decode(model: Seq2Seq, src, src_len, max_len: int) -> list[list[int]]:
     model.eval()
     enc_out, enc_proj, mask, h = model.encode(src, src_len)
-    y = torch.full((src.size(0),), BOS, dtype=torch.long)
+    y = torch.full((src.size(0),), BOS, dtype=torch.long, device=src.device)
     steps = []
     for _ in range(max_len):
         lg, h = model.step(y, h, enc_out, enc_proj, mask)
@@ -117,14 +121,15 @@ def greedy_decode(model: Seq2Seq, src, src_len, max_len: int) -> list[list[int]]
 def beam_decode(model: Seq2Seq, src_ids: list[int], beam: int, max_len: int) -> list[int]:
     """Beam search for one sentence; finished hypotheses are ranked by mean log-probability."""
     model.eval()
-    src = torch.tensor([src_ids])
+    dev = next(model.parameters()).device
+    src = torch.tensor([src_ids], device=dev)
     enc_out, enc_proj, mask, h = model.encode(src, torch.tensor([len(src_ids)]))
     live = [(0.0, [BOS], h)]
     done = []
     for _ in range(max_len):
         cands = []
         for lp, seq, hs in live:
-            lg, h2 = model.step(torch.tensor([seq[-1]]), hs, enc_out, enc_proj, mask)
+            lg, h2 = model.step(torch.tensor([seq[-1]], device=dev), hs, enc_out, enc_proj, mask)
             top = torch.log_softmax(lg, -1)[0].topk(beam)
             for v, i in zip(top.values.tolist(), top.indices.tolist()):
                 cands.append((lp + v, seq + [i], h2))

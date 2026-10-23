@@ -43,7 +43,9 @@ Remaining medical/dialect mentions there are genuine paper findings.
    permission to make the dataset public. Any *new* channel or use (e.g. a public Kaggle dataset, a
    paper supplement, another platform) needs the owner's explicit OK; keep consent, privacy, licence
    and attribution requirements. Only derived features (no videos, no raw face mesh) go to the
-   private Kaggle dataset.
+   private Kaggle dataset. **Exception (owner, chat 2026-10-23), for the kaggle400 experiment only:**
+   the 400 videos in `kaggle/data/`, their features, metadata and the code may go to a PRIVATE Kaggle
+   dataset, team collaborators only (`kaggle/README.md`). Never public.
 
 ## HOW I WANT YOU (THE AI) TO WORK WITH ME
 
@@ -104,7 +106,11 @@ Run from the project root. The environment is the uv-managed `.venv` (Python 3.1
   `http://127.0.0.1:8765/web/avatar_viewer/?demo=/work/demo/<demo folder>/` (needs
   `work/models/vrm/Base_Female.vrm` and internet access for the pinned jsDelivr libraries).
 - Choose the platform layer with `BDSL_ENV` (local / kaggle / colab); move outputs with `BDSL_WORK_DIR`.
-- Never `git add` work/, .venv/ or videos (CLAUDE.md rules 6–7, ADR-0017).
+- kaggle400 (Session 8): `kaggle/tools/run_local_steps.ps1` (desktop steps), notebooks in
+  `kaggle/notebooks/` (run on Kaggle), guide `kaggle/GUIDE_KAGGLE_STEP_BY_STEP.md`; training/eval with
+  `python -m bdsl.cli … --data kaggle400`, `freeze`, `evaluate --split val`, `evaluate --final` (once).
+- Never `git add` work/, .venv/ or videos (CLAUDE.md rules 6–7, ADR-0017); never `kaggle/data/` videos,
+  features, checkpoints, `kaggle/work/` or `kaggle.json`.
 
 ## CONVENTIONS
 

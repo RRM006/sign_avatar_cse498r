@@ -1,0 +1,18 @@
+# kaggle400 - packages the notebooks install on Kaggle (pinned; installing needs Internet On).
+# Versions match the desktop .venv (pyproject.toml / uv.lock).
+
+# Notebooks 00 and 02 - MediaPipe Holistic extraction (main route, into Kaggle's Python):
+mediapipe==0.10.35
+opencv-contrib-python==5.0.0.93
+
+# Notebooks 06 and 07 - Model A metrics (BLEU-4, chrF):
+sacrebleu==2.6.0
+
+# Fallback for notebook 02 only (installed automatically if the main route fails): a separate Python 3.12
+# made with uv, containing the two MediaPipe pins above plus the desktop's
+#   numpy==2.4.6  pyyaml==6.0.3  pandas==3.0.3
+#
+# Taken from Kaggle's own image and NOT reinstalled (reinstalling them can break the image):
+#   torch (CUDA build), numpy, pandas, PyYAML, matplotlib
+# Their exact versions are recorded for every run in outputs/runs/<run>/env.json (full package list)
+# and in outputs/env/env_report.json (notebook 00).

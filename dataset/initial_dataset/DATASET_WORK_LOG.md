@@ -146,3 +146,38 @@
 - Errors/warnings: None.
 - Next step: Owner reviews `research/reports/` and proposal 05; any dataset processing follows its
   approval gates.
+
+## 2026-10-23 (kaggle400 selection, Session 8)
+
+- Computer: Desktop files read by the AI through the desktop app link; work done in the AI's cloud workspace.
+- Task: choose 400 clips for the kaggle400 experiment (owner request, chat 2026-10-23).
+- Files/folders inspected: copies of `work/manifests/manifest_v1.csv` (SHA-256 `2ff133cf…`, = meta),
+  `work/splits/S1_v0.csv` (`40481a5f…`, = meta), `work/pilot/pilot50_v1_selection.csv` and the 50 pilot
+  feature files (`work/features/fa89892d4908/*.npz`, derived data) were copied read-only into the AI
+  workspace. **No video file was opened, copied or uploaded in this step.**
+- Action performed: `kaggle/src/k400_run.py select` → `kaggle/data/` manifests, SPLIT_REPORT.md,
+  SPLIT_SUMMARY.png, SELECTION_META.json; `gloss` → `kaggle/processed/glosses/`.
+- Files changed: the files above (new); this log entry.
+- Dataset files changed: None.
+- Result: 320 / 40 / 40 clips (5.94 GB of source videos per manifest_v1); leakage checks 1–7 PASS.
+- Errors/warnings: None.
+- Next step: the owner runs `kaggle/tools/run_local_steps.ps1`; its copy step adds its own entry below.
+
+## 2026-10-23 (kaggle400: 400-video copy for the Kaggle experiment) <!-- k400-copy-log -->
+
+- Computer: DESKTOP-4NDR99B
+- Task: copy the 400 clips chosen for kaggle400 (owner permission in chat, 2026-10-23) into
+  `kaggle/data/{train,val,test}/videos/`.
+- Files/folders inspected: `SIGN_LANGUAGE_DATA/<Index>.mp4` for the 400 Index values in
+  `kaggle/data/subset_manifest.csv` (read-only: SHA-256, size, modification time).
+- Action performed: `kaggle/src/k400_run.py copy-videos --confirm` (temp file + rename; SHA-256 of
+  source, copy and manifest_v1 compared; size and modification time of every source compared before/after).
+- Files changed: `kaggle/data/` (gitignored copies, COPY_VERIFICATION.csv, subset_manifest.csv
+  `sha256_copy`, SPLIT_LOCK.json, SPLIT_REPORT.md section 9); this log entry.
+- Dataset files changed: None (sources unchanged: 400/400).
+- Result: 400/400 copies byte-identical; 5.94 GB; videos digest
+  `ec1f61a231048286…`; leakage tests PASS.
+- Errors/warnings: None.
+- Next step: upload the package (private Kaggle dataset) on the owner's own action.
+- Re-check 2026-10-23T06:26:35+00:00 (DESKTOP-4NDR99B): copied in this run 0, already present 400; 400/400 byte-identical; sources unchanged 400/400; leakage tests PASS.
+- Re-check 2026-10-23T06:35:16+00:00 (DESKTOP-4NDR99B): copied in this run 0, already present 400; 400/400 byte-identical; sources unchanged 400/400; leakage tests PASS.

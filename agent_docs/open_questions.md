@@ -266,13 +266,30 @@ is report + literature review + trained model + results, aimed at a publishable 
 ### G13. GPU device support in the training code
 - Found in the 2026-10-22 audit: `src/bdsl/models/` never moves models or tensors to a GPU, so
   `configs/env/kaggle.yaml` `device: cuda` has no effect and Kaggle runs would be CPU-only. Proposal
-  05 Appendix A lists the change. (TBD — decide with owner). **Status:** Open (owner input).
+  05 Appendix A lists the change. **Status:** Answered 2026-10-23 — owner approved GPU (cuda) support
+  in chat; implemented in Session 8 (`src/bdsl/device.py`, both training loops; device recorded in
+  run.json). Recorded in proposed ADR-0028.
 
 ### G14. Clean-commit rule for result runs
 - Found in the 2026-10-22 audit: every `run.json` records `dirty=True` (uncommitted code at run
   time), so the exact code of a run cannot be recovered from its commit. Proposal 05 Step B4
-  suggests refusing result runs on a dirty tree. (TBD — decide with owner). **Status:** Open
-  (owner input).
+  suggests refusing result runs on a dirty tree. **Status:** Answered 2026-10-23 for kaggle400 —
+  owner: refuse a result run when the tree is dirty, or clearly mark it NOT FOR PAPER; implemented
+  (`src/bdsl/provenance.py`, `--not-for-paper` → `NFP_` runs). Pilot commands unchanged.
+
+### G15. The Kaggle test lock across notebook versions
+- `FINAL_TEST_LOCK.json` is written in notebook 07's output. A NEW version of notebook 07 that does not
+  have the earlier output attached cannot see the lock and would run the test again. Proposal: never
+  re-run 07 after a successful version (GUIDE section 12); download the lock and commit it; if 07 must
+  be re-run, attach its previous output (then the second run is refused). **Status:** Open (owner).
+
+### G16. Confirm proposed ADR-0028 (kaggle400 technical choices)
+- Selection details, B1 exclusions, freeze rule, MediaPipe model download, `max_frames` 360.
+  **Status:** Open (owner).
+
+### G17. Does Kaggle unpack the uploaded zip?
+- Unknown until the upload. The notebooks work either way (they unpack a kept zip into `/tmp`).
+  **Status:** Open (measurement at upload).
 
 ---
 
@@ -332,3 +349,7 @@ is report + literature review + trained model + results, aimed at a publishable 
 - **2026-10-22** — F10 Data-location wording → corrected (ADR-0017).
 - **2026-10-22** — F11 `misc/pdf/` → left alone (ADR-0021).
 - **2026-10-22** — G4 Python 3.12 + mediapipe 0.10.35 → works (Day 1 Step 1; `test_log.md`).
+- **2026-10-23** — G13 GPU device support → yes (owner, chat; implemented Session 8; proposed ADR-0028).
+- **2026-10-23** — G14 clean-commit rule → refuse dirty result runs or mark NOT FOR PAPER (owner, chat;
+  kaggle400; proposed ADR-0028).
+- **2026-10-23** — Push policy for the kaggle400 task → no push (owner, chat). General policy still open.

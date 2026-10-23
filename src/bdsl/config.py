@@ -26,7 +26,10 @@ import yaml
 from .paths import find_project_root
 
 ENV_NAMES = ("local", "kaggle", "colab")
-ENV_VAR_ROOTS = {"BDSL_DATA_ROOT": "data_root", "BDSL_WORK_DIR": "work_dir"}
+ENV_VAR_ROOTS = {"BDSL_DATA_ROOT": "data_root", "BDSL_WORK_DIR": "work_dir",
+                 # kaggle400 experiment (configs/data/kaggle400.yaml): where data/ lives, and where
+                 # processed/ + outputs/ are written (on Kaggle: the dataset input and /kaggle/working).
+                 "K400_DATA_ROOT": "k400_data_root", "K400_STATE_ROOT": "k400_state_root"}
 _REF = re.compile(r"\$\{([^}]+)\}")
 
 
@@ -115,6 +118,26 @@ def config_hash(cfg: dict) -> str:
     """SHA-256 of the machine-independent part of a resolved config (see module docstring)."""
     canonical = json.dumps(_hashable_view(cfg), sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def parse_set_overrides(items: list[str] | None) -> dict:
+    """`--set a.b.c=value` options → a nested override dict. Values are parsed as YAML, so
+    `--set gloss2motion.train.max_epochs=6` gives the integer 6 and `x=[1, 2]` a list."""
+    out: dict = {}
+    for item in items or []:
+        if "=" not in item:
+            raise ValueError(f"--set needs key=value, got {item!r}")
+        key, raw = item.split("=", 1)
+        parts = [p for p in key.strip().split(".") if p]
+        if not parts:
+            raise ValueError(f"--set has an empty key: {item!r}")
+        node = out
+        for p in parts[:-1]:
+            node = node.setdefault(p, {})
+            if not isinstance(node, dict):
+                raise ValueError(f"--set {item!r} conflicts with another --set")
+        node[parts[-1]] = yaml.safe_load(raw)
+    return out
 
 
 def load_config(

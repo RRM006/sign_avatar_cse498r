@@ -1,0 +1,21 @@
+{
+  "copied_on": "DESKTOP-4NDR99B",
+  "copy_verification": "data/COPY_VERIFICATION.csv",
+  "counts": {
+    "test": 40,
+    "train": 320,
+    "val": 40
+  },
+  "created_utc": "2026-10-23T06:35:10+00:00",
+  "files": {
+    "data/subset_manifest.csv": "1acc5cc7a61aaf912f963364beac98f1aefdfbc5bd57610cf4d4eed7dbfad780",
+    "data/test/test_manifest.csv": "828004defb11b11a1ffe033b3234bdf4e57e8eeed7b53db266901aa2d354e3e9",
+    "data/train/train_manifest.csv": "f46d8f075c6879f3141712bf7b99245bdf2a0dd582f9058af1b97394460758a1",
+    "data/val/val_manifest.csv": "a0fbd27af3c833eb1ac86456bbe9b23feba463482e55e788ad09490cbb3cf5b7"
+  },
+  "hash_method": "SHA-256 of the UTF-8 text with the BOM removed and CRLF/CR turned into LF",
+  "lock_version": 1,
+  "rule": "training refuses to run if any of these hashes changes; never edit a locked manifest",
+  "source": "dataset/initial_dataset/SIGN_LANGUAGE_DATA (read-only)",
+  "videos_digest": "ec1f61a231048286d07aad42eeff83827cdc88513633dddf5642de00db0d385c"
+}

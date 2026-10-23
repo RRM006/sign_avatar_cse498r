@@ -1,0 +1,34 @@
+# kaggle400 — the 400-video Kaggle experiment (owner-approved 2026-10-23; everything lives in kaggle/).
+# Selection: kaggle/src/k400/select.py; split usage rules: kaggle/README.md. Not the pilot (pilot50.yaml).
+data:
+  name: kaggle400
+  subset: kaggle400_v1
+  video_root: ${paths.data_root}/SIGN_LANGUAGE_DATA   # where the copies come from (desktop only, read-only)
+
+paths:
+  # Roots end with _root, so they never change the config hash. Kaggle notebooks set them with the
+  # env vars K400_DATA_ROOT (the uploaded dataset) and K400_STATE_ROOT (/kaggle/working/k400).
+  k400_data_root: ${project_root}/kaggle    # holds data/{train,val,test}/ and SPLIT_LOCK.json
+  k400_state_root: ${project_root}/kaggle   # holds processed/ and outputs/
+
+kaggle400:
+  version: v1
+  seed: 20261023
+  source:
+    manifest: manifest_v1
+    manifest_csv_sha256: 2ff133cf6bb2ec33f544133cd424594465b531a83ab8554cd498d099a0588d82
+    split: S1_v0
+    split_csv_sha256: 40481a5faedc962a0ad92d5f7ec515c36aa34a46bf6d6127db77d81009c76cc0
+  targets: {train: 320, val: 40, test: 40}
+  # Held-out clips chosen as minimal-pair siblings of train clips (one word different), so that
+  # "unseen combination of seen words" can be measured on val/test (owner request).
+  minimal_pair_heldout: {val: 10, test: 10}
+  strata: [length_bucket, question, negation, orientation, resolution_bucket, duration_quartile]
+  low_res_short_side: 500
+  bootstrap: {resamples: 1000, ci: 95, seed: 20261023}
+  avatar_test_sentences: 5
+  extraction: {max_minutes: 300}   # notebook 02 stops starting new clips after this; the next version resumes
+
+gloss2motion:
+  # Cap on the predicted length. Longest selected clip: 22.1 s ≈ 333 frames at 15 fps (pilot cap: 300).
+  max_frames: 360

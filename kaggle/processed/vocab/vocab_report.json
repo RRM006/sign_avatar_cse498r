@@ -1,0 +1,28 @@
+{
+  "built_from": "train only",
+  "modelA_source": {
+    "size": 420,
+    "val_oov_rate": 0.2071,
+    "val_oov_tokens": 35,
+    "val_tokens": 169
+  },
+  "modelA_target_G0": {
+    "size": 408,
+    "val_oov_rate": 0.1965,
+    "val_oov_tokens": 34,
+    "val_tokens": 173
+  },
+  "modelB_gloss_input": {
+    "size": 408,
+    "val_oov_rate": 0.1965,
+    "val_oov_tokens": 34,
+    "val_tokens": 173
+  },
+  "modelB_text_input": {
+    "size": 420,
+    "val_oov_rate": 0.2071,
+    "val_oov_tokens": 35,
+    "val_tokens": 169
+  },
+  "note": "val OOV = share of val tokens that become <unk>"
+}
