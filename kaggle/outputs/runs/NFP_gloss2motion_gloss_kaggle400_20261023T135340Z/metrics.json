@@ -1,0 +1,201 @@
+{
+  "B0": {
+    "train": {
+      "diversity_ratio": 0.0,
+      "duration_err_s": 2.322083333333333,
+      "hand_energy_ratio": 0.017185629970772293,
+      "jerk_ratio": 0.027652669015668707,
+      "mpjpe_body": 0.21826241105503957,
+      "mpjpe_face": 0.043190164052139754,
+      "mpjpe_lhand": 53.747660320613356,
+      "mpjpe_rhand": 62.503537066052274,
+      "n": 320,
+      "velocity_ratio": 0.10842796189868342
+    },
+    "val": {
+      "diversity_ratio": 0.0,
+      "dtw_body": 0.20879103794428774,
+      "dtw_face": 0.04144085344287187,
+      "dtw_lhand": 47.25273565420355,
+      "dtw_rhand": 47.57188697200438,
+      "duration_err_s": 2.3549999999999995,
+      "hand_energy_ratio": 0.015283249317077346,
+      "jerk_ratio": 0.02699972486922577,
+      "mpjpe_body": 0.22850334774666284,
+      "mpjpe_face": 0.044522547640951336,
+      "mpjpe_lhand": 56.77543293484037,
+      "mpjpe_rhand": 63.38177591772546,
+      "n": 40,
+      "velocity_ratio": 0.1050456845126377
+    }
+  },
+  "B1": {
+    "train": {
+      "diversity_ratio": 0.9740912267261616,
+      "duration_err_s": 2.3445833333333335,
+      "hand_energy_ratio": 1.1862892814667794,
+      "jerk_ratio": 1.0712398986934912,
+      "mpjpe_body": 0.2569486332687082,
+      "mpjpe_face": 0.0421372677669749,
+      "mpjpe_lhand": 61.73220950052334,
+      "mpjpe_rhand": 67.67650519323027,
+      "n": 320,
+      "velocity_ratio": 1.0479016615403627
+    },
+    "val": {
+      "diversity_ratio": 0.9407246312022103,
+      "dtw_body": 0.2051297935818804,
+      "dtw_face": 0.033327760964567014,
+      "dtw_lhand": 43.55380154180754,
+      "dtw_rhand": 50.42541533874124,
+      "duration_err_s": 2.316666666666667,
+      "hand_energy_ratio": 1.0307609403254558,
+      "jerk_ratio": 1.007475770412844,
+      "mpjpe_body": 0.26489284338764885,
+      "mpjpe_face": 0.03998135532974871,
+      "mpjpe_lhand": 66.1828431247615,
+      "mpjpe_rhand": 67.40234756984995,
+      "n": 40,
+      "velocity_ratio": 0.980507101387753
+    }
+  },
+  "input": "gloss",
+  "label": "kaggle400 Model B, G0 pseudo-gloss input (320/40 train/val clips; small-scale, signer-dependent)",
+  "model_b": {
+    "42": {
+      "best_epoch": 4,
+      "epochs": 4,
+      "train": {
+        "diversity_ratio": 0.00997119966462703,
+        "duration_err_s": 2.2487500000000002,
+        "hand_energy_ratio": 0.008381087815335489,
+        "jerk_ratio": 0.07725587207497431,
+        "mpjpe_body": 0.22637260350597446,
+        "mpjpe_face": 0.039019600533350116,
+        "mpjpe_lhand": 54.22274562478527,
+        "mpjpe_rhand": 64.10528087656695,
+        "n": 320,
+        "velocity_ratio": 0.07242332127219475
+      },
+      "val": {
+        "diversity_ratio": 0.009352950482596302,
+        "dtw_body": 0.22062725414601791,
+        "dtw_face": 0.03890778556585523,
+        "dtw_lhand": 48.44587859683711,
+        "dtw_rhand": 47.80348197290498,
+        "duration_err_s": 2.3483333333333336,
+        "hand_energy_ratio": 0.00761286368965391,
+        "jerk_ratio": 0.07618775319700097,
+        "mpjpe_body": 0.23626615002969853,
+        "mpjpe_face": 0.04111139870573271,
+        "mpjpe_lhand": 56.698445651596366,
+        "mpjpe_rhand": 64.624759354281,
+        "n": 40,
+        "velocity_ratio": 0.07078737057635132
+      }
+    }
+  },
+  "model_b_mean_sd": {
+    "train": {
+      "diversity_ratio": {
+        "mean": 0.00997119966462703,
+        "sd": 0.0
+      },
+      "duration_err_s": {
+        "mean": 2.2487500000000002,
+        "sd": 0.0
+      },
+      "hand_energy_ratio": {
+        "mean": 0.008381087815335489,
+        "sd": 0.0
+      },
+      "jerk_ratio": {
+        "mean": 0.07725587207497431,
+        "sd": 0.0
+      },
+      "mpjpe_body": {
+        "mean": 0.22637260350597446,
+        "sd": 0.0
+      },
+      "mpjpe_face": {
+        "mean": 0.039019600533350116,
+        "sd": 0.0
+      },
+      "mpjpe_lhand": {
+        "mean": 54.22274562478527,
+        "sd": 0.0
+      },
+      "mpjpe_rhand": {
+        "mean": 64.10528087656695,
+        "sd": 0.0
+      },
+      "velocity_ratio": {
+        "mean": 0.07242332127219475,
+        "sd": 0.0
+      }
+    },
+    "val": {
+      "diversity_ratio": {
+        "mean": 0.009352950482596302,
+        "sd": 0.0
+      },
+      "dtw_body": {
+        "mean": 0.22062725414601791,
+        "sd": 0.0
+      },
+      "dtw_face": {
+        "mean": 0.03890778556585523,
+        "sd": 0.0
+      },
+      "dtw_lhand": {
+        "mean": 48.44587859683711,
+        "sd": 0.0
+      },
+      "dtw_rhand": {
+        "mean": 47.80348197290498,
+        "sd": 0.0
+      },
+      "duration_err_s": {
+        "mean": 2.3483333333333336,
+        "sd": 0.0
+      },
+      "hand_energy_ratio": {
+        "mean": 0.00761286368965391,
+        "sd": 0.0
+      },
+      "jerk_ratio": {
+        "mean": 0.07618775319700097,
+        "sd": 0.0
+      },
+      "mpjpe_body": {
+        "mean": 0.23626615002969853,
+        "sd": 0.0
+      },
+      "mpjpe_face": {
+        "mean": 0.04111139870573271,
+        "sd": 0.0
+      },
+      "mpjpe_lhand": {
+        "mean": 56.698445651596366,
+        "sd": 0.0
+      },
+      "mpjpe_rhand": {
+        "mean": 64.624759354281,
+        "sd": 0.0
+      },
+      "velocity_ratio": {
+        "mean": 0.07078737057635132,
+        "sd": 0.0
+      }
+    }
+  },
+  "run": "NFP_gloss2motion_gloss_kaggle400_20261023T135340Z",
+  "splits": [
+    "train",
+    "val"
+  ],
+  "train_seconds": {
+    "42": 4.6
+  },
+  "units": "body: shoulder widths; hands: mm; face: blendshape MAE"
+}

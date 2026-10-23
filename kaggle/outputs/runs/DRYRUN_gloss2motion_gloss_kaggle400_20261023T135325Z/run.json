@@ -1,0 +1,113 @@
+{
+  "code": {
+    "commit": "933e9032ac3a3664e447c4e658a335f0ed621ffa",
+    "dirty": false,
+    "source": "package"
+  },
+  "config_hash": "83e62cae0fe05fcd092bbd50ad93a3d6143b4e82b9d833b172d2d499e5f5d453",
+  "counts": {
+    "train": 320,
+    "val": 40
+  },
+  "created_utc": "20261023T135325Z",
+  "data": "kaggle400",
+  "device": "cuda:0",
+  "device_note": "cuda requested; CUDA available",
+  "devices_used": [
+    "cuda:0"
+  ],
+  "dry_run": {
+    "42": {
+      "finite": true,
+      "monitor_pos_l1": 0.8335381315316731,
+      "seconds": 1.253,
+      "steps": 1,
+      "train_loss": 1.588328242301941
+    },
+    "43": {
+      "finite": true,
+      "monitor_pos_l1": 0.8094021702355604,
+      "seconds": 0.074,
+      "steps": 1,
+      "train_loss": 1.462264895439148
+    },
+    "44": {
+      "finite": true,
+      "monitor_pos_l1": 0.825872232865901,
+      "seconds": 0.073,
+      "steps": 1,
+      "train_loss": 1.5475279092788696
+    }
+  },
+  "feat_ver": "fa89892d4908",
+  "for_paper": false,
+  "fps": 15.0,
+  "g0_files_sha256": "3e3b480d95148c80099017b5b172856cf7199fcbac2b0cb22f0213514b54127c",
+  "git": {
+    "branch": null,
+    "commit": null,
+    "dirty": false
+  },
+  "gloss2motion_config": {
+    "feat_ver": "fa89892d4908",
+    "loss": {
+      "hand_weight": 2.0,
+      "lambda_len": 0.1,
+      "lambda_vel": 0.5
+    },
+    "max_frames": 360,
+    "max_gap": 5,
+    "model": {
+      "d": 192,
+      "dec_layers": 3,
+      "dropout": 0.1,
+      "enc_layers": 3,
+      "ff": 512,
+      "heads": 4
+    },
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "train": {
+      "batch_size": 8,
+      "clip": 1.0,
+      "lr": 0.0005,
+      "max_epochs": 600,
+      "overfit_epochs": 400,
+      "patience": 60,
+      "weight_decay": 0.01
+    }
+  },
+  "gloss2motion_config_sha256": "ff1a699be46495a101ebce1e0061aa1d92bf2670d55ecdea35120a608fd94cd9",
+  "hand_coverage_train": {
+    "lhand": 0.6793512397529814,
+    "rhand": 0.3071569717221458
+  },
+  "input": "gloss",
+  "inputs_sha256": "9c55a396ca0c870c1d9c0bebde1e9502031e1e9bcdaeda7bb1c59024568bfd83",
+  "label": "kaggle400 Model B, G0 pseudo-gloss input (320/40 train/val clips; small-scale, signer-dependent)",
+  "max_steps": 1,
+  "overfit": null,
+  "overrides": {},
+  "params": 2722577,
+  "pilot_manifest_sha256": "529d82c2619f56265f6a1357beb3969e3f1bdae0001274c1a755189a67d79cee",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "split_lock_sha256": "529d82c2619f56265f6a1357beb3969e3f1bdae0001274c1a755189a67d79cee",
+  "splits": [
+    "train",
+    "val"
+  ],
+  "standardizer_sha256": "daa9f214c23e1c19716c02ecc368c92fec43be8ab06fa507a1f8e9db6b665261",
+  "versions": {
+    "numpy": "2.1.3",
+    "torch": "2.11.0+cu128"
+  },
+  "vocab_sha256": "be622e00e6e9dacc52f7f0b729af4b072a8cd883c88570bf17fc819863b7caee",
+  "vocab_size": 408
+}

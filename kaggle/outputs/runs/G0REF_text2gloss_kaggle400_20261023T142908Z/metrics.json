@@ -1,0 +1,124 @@
+{
+  "TEST_RUN": false,
+  "agru": {
+    "42": {
+      "best_epoch": 62,
+      "epochs": 92,
+      "train": {
+        "bleu4": 99.92665933588859,
+        "chrf": 99.9542973754728,
+        "exact_match": 99.6875,
+        "n": 320,
+        "tag_accuracy": 100.0,
+        "wer": 0.07331378299120235
+      },
+      "val": {
+        "bleu4": 44.42728502426284,
+        "chrf": 60.14725195932721,
+        "exact_match": 30.0,
+        "n": 40,
+        "tag_accuracy": 97.5,
+        "wer": 37.27810650887574
+      }
+    },
+    "43": {
+      "best_epoch": 92,
+      "epochs": 122,
+      "train": {
+        "bleu4": 100.00000000000004,
+        "chrf": 100.0,
+        "exact_match": 100.0,
+        "n": 320,
+        "tag_accuracy": 100.0,
+        "wer": 0.0
+      },
+      "val": {
+        "bleu4": 48.06055312150419,
+        "chrf": 61.18197188097704,
+        "exact_match": 30.0,
+        "n": 40,
+        "tag_accuracy": 97.5,
+        "wer": 33.72781065088758
+      }
+    },
+    "44": {
+      "best_epoch": 57,
+      "epochs": 87,
+      "train": {
+        "bleu4": 100.00000000000004,
+        "chrf": 100.0,
+        "exact_match": 100.0,
+        "n": 320,
+        "tag_accuracy": 100.0,
+        "wer": 0.0
+      },
+      "val": {
+        "bleu4": 48.368868994327606,
+        "chrf": 60.57778486127423,
+        "exact_match": 30.0,
+        "n": 40,
+        "tag_accuracy": 97.5,
+        "wer": 32.544378698224854
+      }
+    }
+  },
+  "agru_mean_sd": {
+    "train": {
+      "bleu4": {
+        "mean": 99.9755531119629,
+        "sd": 0.042343252167294794
+      },
+      "chrf": {
+        "mean": 99.98476579182427,
+        "sd": 0.026386422573448285
+      },
+      "exact_match": {
+        "mean": 99.89583333333333,
+        "sd": 0.18042195912175804
+      },
+      "tag_accuracy": {
+        "mean": 100.0,
+        "sd": 0.0
+      },
+      "wer": {
+        "mean": 0.024437927663734118,
+        "sd": 0.042327732345280485
+      }
+    },
+    "val": {
+      "bleu4": {
+        "mean": 46.95223571336488,
+        "sd": 2.1920986875951485
+      },
+      "chrf": {
+        "mean": 60.63566956719283,
+        "sd": 0.5197829435920533
+      },
+      "exact_match": {
+        "mean": 30.0,
+        "sd": 0.0
+      },
+      "tag_accuracy": {
+        "mean": 97.5,
+        "sd": 0.0
+      },
+      "wer": {
+        "mean": 34.51676528599606,
+        "sd": 2.4635100585397995
+      }
+    }
+  },
+  "g0": "not scored: the references ARE the G0 outputs (agreement with itself is 100% by construction)",
+  "label": "agreement with the rule glosser (G0 pseudo-gloss); references are G0 auto_draft outputs, not BdSL annotation; says nothing about BdSL correctness",
+  "reference": "g0",
+  "run": "G0REF_text2gloss_kaggle400_20261023T142908Z",
+  "splits": [
+    "train",
+    "val"
+  ],
+  "train_seconds": {
+    "42": 67.9,
+    "43": 89.3,
+    "44": 63.9
+  }
+}

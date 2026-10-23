@@ -438,3 +438,19 @@
 - Rejected: moving clips across S1 partitions; uploading `work/`; tuning on test.
 - Status: **Proposed** — owner bullets stated in chat; AI bullets await confirmation.
 
+## ADR-0029 — 2026-10-23 — kaggle400 run 1: the final test, its failed first attempt, and what goes into Git
+- Decision (owner, chat 2026-10-23):
+  - Freeze the runs of notebooks 04/05/06 and run the single TEST evaluation now (G19, option a); report
+    Model B as it is, with its damped motion as a measured limitation.
+  - Notebook 07 Version 1 crashed (no Internet → no `sacrebleu`) after the code had read the test split in
+    memory but before any test number was printed or saved; no lock was written. Run notebook 07 once more
+    with the same frozen runs and report the failed attempt openly (option a; the strict alternative — a new
+    test set from the 437 unused S1-test clips — was not chosen). A safety stop was added to notebook 07.
+  - `kaggle/outputs/env/mediapipe_route.json` (contains the owner's Kaggle username) stays out of Git.
+  - One local commit of the run-1 results, the notebook-07 safety stop and the notes; no push.
+- Applied rule (ADR-0017, not a new decision): checkpoints, `.npz` features/motion, videos and
+  `motion_real.json` / `motion_B1.json` (landmarks derived from real people's recordings) stay on the desktop.
+- Why: test results must never influence choices — no test result existed before Version 2, and the frozen
+  configuration did not change; transparency about the failed attempt (`kaggle/outputs/RUN1_NOTES.md`).
+- Status: **Accepted** (owner). ADR-0028 (technical choices) is still PROPOSED (G16).
+

@@ -14,6 +14,60 @@
 
 ---
 
+## Session 9 — 2026-10-23 — kaggle400 on Kaggle: upload, notebooks 00–09, final test, results downloaded
+- Did: Owner did everything on Kaggle, step by step; the AI checked each result and recorded it (test_log):
+  - C1 account + phone verified; C2 limits recorded (G3: T4 x2, 30 GPU h/week, 12 h per run; disk 20.9 GB
+    measured by notebook 00); C3/C4 PRIVATE dataset `bdsl-k400` Version 1 (535 files, 5.94 GB, unzipped — G17).
+  - Notebooks 00–09 all PASS (Python 3.13, MediaPipe main route; 01 upload 532/532 identical + 10/10 split
+    checks; 02 400/400 clips in 56.8 min, feat_ver = pilot; 03 glosses identical; 04–06 trained on T4;
+    07 Version 2 froze 04/05/06 and ran the single TEST evaluation; 08 12 tables + 8 figures; 09 avatar export).
+  - Outputs downloaded through a helper zip notebook, verified (2,447/2,448; STATE.json mismatch explained and
+    proven harmless), small results copied into `kaggle/outputs/` + `kaggle/processed/qc/`, privacy scan
+    (only `env/mediapipe_route.json` holds the Kaggle username → kept out of Git), `RUN1_NOTES.md` written.
+  - Safety stop added to notebook 07 (+ generator + test; 210 tests in the workspace).
+- Decided (owner): freeze and test now (G19); re-run 07 once after the failed first attempt and report it
+  (option a); keep `mediapipe_route.json` out of Git; one local commit, no push → ADR-0029.
+- Results (measured, 40 test clips): Model B beats B0 and B1 on every position/DTW metric (CIs exclude 0;
+  DTW body 0.181 vs 0.199 / 0.198) but its motion is strongly damped (velocity 0.14–0.18, hand energy
+  0.03–0.05 of real) and over-fits early; G0 gloss input = Bangla word input. Model A test WER vs G0 19.7
+  (agreement with the rule glosser only).
+- Broke / problem: notebook 07 Version 1 ran without Internet and reached the test code before crashing (no
+  result); progress logs silent until a step ends; skeleton videos not browser-playable (`mp4v`); STATE.json
+  hashed before its last update; Kaggle has no "download all outputs" button (G18 items 4–8).
+- Deferred: push (owner); G18 fixes (need a new commit + package); G16 (ADR-0028); paper write-up.
+- Next: the owner runs the commit block (tests first, then one local commit, no push) and pastes the output.
+
+## Session 8 (part 2) — 2026-10-23 — kaggle400 Step B: desktop script passes, upload zip ready
+- Did: Wrote the 91 Step A files into `D:\sign_avatar_cse498r`. The owner ran
+  `kaggle/tools/run_local_steps.ps1` three times (logs in `kaggle/work/`, gitignored):
+  - Run 1 (12:07): selection reproduced identically on the desktop; **400/400 copies byte-identical**
+    (5.94 GB, sources unchanged); `verify_split --require-videos` **10/10 PASS**; tests 208/209.
+  - Run 2 (12:26): steps 1–4 PASS again (copies re-hashed, not re-copied); tests 208/209 (another test).
+  - Run 3 (12:34): **all 7 steps PASS** — 209 tests; local commit **`933e903`** (93 files, not pushed);
+    upload zip `kaggle/work/upload/bdsl-k400-933e9032.zip`, 5,938,005,200 bytes (Windows shows 5.53 GB),
+    535 files, re-hashed PASS.
+  - Fixes between runs (all tests pass in the workspace after each): `k400.setup.restore` reports paths with
+    `/` on every OS; a re-run of the copy step replaces its SPLIT_REPORT section and adds a dated
+    "Re-check" line to the DATASET_WORK_LOG entry; training time moved out of the per-seed quality
+    metrics into `metrics["train_seconds"]` (both trainers, report T3, notebooks 04/05 one line each);
+    new regression assertions in `test_k400_split.py` / `test_k400_training.py`; older tests unchanged.
+  - Found the zip's `code/` has CRLF text files (desktop git `core.autocrlf` + `git archive`); a workspace
+    smoke run of all notebooks on a package built the same way gave identical PASS/FAIL lines → harmless.
+  - Started Step C: gave the owner the C1 instructions (Kaggle account + phone verification, GUIDE §1).
+- Decided: Nothing new by the owner. (Running the script, the local commit and the zip were already
+  approved in Step A.) ADR-0028 is still PROPOSED.
+- Broke / problem: Two desktop test failures, both bugs from Session 8, fixed: a Windows path separator in a
+  report message; a wall-clock value inside metrics that the older resume tests compare exactly (they
+  passed only by luck). Also: one file write to the desktop reported success but left the previous
+  content of `test_log.md` and `current_task.md`; found at the end of the session and rewritten, with every
+  saved file read back and compared. The guide still says "about 5.95 GB" (Windows shows 5.53 GB for the same
+  5.94 GB zip) — left as is, so code paths keep matching `933e903` (G18).
+- Deferred: The guide size text and a `core.autocrlf=false` archive for later packages (G18; need a new
+  commit + package); committing the agent_docs / DATASET_WORK_LOG edits made after `933e903` (next local
+  commit, owner's OK); push (owner decides).
+- Next: Step C1 — the owner creates or logs into the Kaggle account and verifies the phone (GUIDE §1), then
+  reports "C1 done"; then C2 (GPU quota numbers → G3), C3 (PRIVATE dataset `bdsl-k400` from the zip), C4.
+
 ## Session 8 — 2026-10-23 — kaggle400: the 400-video Kaggle experiment folder (Step A)
 - Did: Built `kaggle/` (README, beginner Kaggle guide, pinned requirements, data/processed/notebooks/
   src/tools/outputs with READMEs) and the code behind it, in the AI's cloud workspace (no shell on the
@@ -42,14 +96,6 @@
   `--not-for-paper` did not mark runs from clean code; prediction needed targets; MediaPipe log noise;
   big scratch files would have been saved as Kaggle output. Not possible this session: any run on the
   desktop (no shell) or on Kaggle (owner's account).
-- Step B, desktop run 1 (owner, 12:07): selection identical on the desktop, 400/400 copies verified
-  (5.94 GB), 10/10 split checks PASS; 1 of 209 tests failed on Windows (`restore()` reported `\` paths) →
-  fixed (`as_posix`), plus copy-step re-runs no longer duplicate the SPLIT_REPORT section and keep the
-  first DATASET_WORK_LOG entry with a re-check line. Commit and package not yet made; re-run pending.
-- Step B, desktop run 2 (12:26): steps 1–4 PASS; 1 of 209 tests failed — Session 8 had put wall-clock
-  `train_seconds` inside the per-seed quality metrics, so the older exact resume comparisons depended on
-  timing. Moved to `metrics["train_seconds"]` (both trainers, report T3, notebooks 04/05); old tests unchanged;
-  new regression assertions. Re-run pending.
 - Deferred: Kaggle runs (owner), real gloss review (G10), shared-segment scan (G2), Colab.
 - Next: Owner runs `kaggle/tools/run_local_steps.ps1` and pastes the output (Step B); then Kaggle
   account / GPU quota / private dataset (Step C); then notebooks 00 → 09 (Step D).

@@ -1,0 +1,23 @@
+{
+  "code": {
+    "branch": null,
+    "commit": "933e9032ac3a3664e447c4e658a335f0ed621ffa",
+    "dirty": false,
+    "dirty_files": [],
+    "package_created_utc": "2026-10-23T06:36:08+00:00",
+    "source": "package"
+  },
+  "created_utc": "20261023T151119Z",
+  "frozen_config_sha256": "df1f5297417e73eefcbe61f4da25fdbf691981f8174e5de99143c003b5f88fde",
+  "history": [],
+  "label": "the test split has been used once; do not tune anything after this",
+  "override_reason": null,
+  "result_files_sha256": {
+    "error_analysis.csv": "ae874eef67165c571be4ed42f427dc1efa6ac1d9450c6bf6a3665660a397f2da",
+    "metrics.json": "db7bcd3383eef127311814787e110e73b492530e129427a053d5625bf835f071",
+    "per_item_modelA.csv": "bdd6952f7d4cbff2f486bf8146cd5b0d02fd659c6332f0ad612e84e882fd3ae1",
+    "per_item_modelB.csv": "652b95189a7ff3ab37f250015e7ad5146c3e3f236315dd0b087ba6038daf19d6"
+  },
+  "results": "FINAL_test_20261023T151119Z",
+  "test_glosses_sha256": "9960a5b8d2583a8a33fbef2a1cea24f0c9b270270863a67fb9c6362f53316093"
+}

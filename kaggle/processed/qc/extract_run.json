@@ -1,0 +1,35 @@
+{
+  "by_split": {
+    "test": {
+      "expected": 40,
+      "with_features": 40
+    },
+    "train": {
+      "expected": 320,
+      "with_features": 320
+    },
+    "val": {
+      "expected": 40,
+      "with_features": 40
+    }
+  },
+  "clips_expected": 400,
+  "clips_with_features": 400,
+  "complete": true,
+  "extracted_this_run": 400,
+  "failures_or_missing": 0,
+  "feat_ver": "fa89892d4908",
+  "finished_utc": "2026-10-23T13:16:25+00:00",
+  "frames_vs_duration_abs_max": 1,
+  "kaggle": true,
+  "mediapipe": "0.10.35",
+  "model_sha256": "e2dab61191e2dcd0a15f943d8e3ed1dce13c82dfa597b9dd39f562975a50c3f8",
+  "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+  "privacy_ok_all": true,
+  "problems": [],
+  "python": "3.13.15",
+  "rotation_ok_all": true,
+  "seconds_this_run": 3408.1,
+  "stopped_by_time_budget": false,
+  "workers": 4
+}

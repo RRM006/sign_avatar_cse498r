@@ -1,0 +1,11 @@
+{
+  "b1": {
+    "index": 787,
+    "sentence_norm": "অতীতে তুমি কি ভাবছো"
+  },
+  "final_eval": "FINAL_test_20261023T151119Z",
+  "g0_gloss": "তুমি কি সি? পি? কিভাবে",
+  "label": "kaggle400 test sentence export - not checked by a BdSL-competent person",
+  "sentence": "তুমি কি সি পি! কিভাবে",
+  "sentence_norm": "তুমি কি সি পি কিভাবে"
+}

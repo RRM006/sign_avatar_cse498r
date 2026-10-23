@@ -1,0 +1,99 @@
+{
+  "b1_source_index": 3062,
+  "b1_source_sentence": "আমি বৃহস্পতিবার এই ঘুরতে যাব",
+  "final_eval": "FINAL_test_20261023T151119Z",
+  "frames": {
+    "B1": 65,
+    "modelB": 71,
+    "real": 67
+  },
+  "index": 3061,
+  "labels": {
+    "B1": "B1 retrieval: real recording of training clip 3062 (a different sentence)",
+    "modelB": "Model B (kaggle400, G0 gloss input) - model output",
+    "real": "real recording of test clip 3061 (MediaPipe reconstruction)"
+  },
+  "roundtrip_deg": {
+    "B1": {
+      "body": {
+        "max_deg": 1.2074182697257333e-06,
+        "mean_deg": 1.5709169731145852e-07,
+        "n": 325,
+        "p95_deg": 8.537736462515939e-07
+      },
+      "fingers": {
+        "max_deg": 1.2074182697257333e-06,
+        "mean_deg": 1.2551840427028854e-07,
+        "n": 1950,
+        "p95_deg": 8.537736462515939e-07
+      },
+      "hands": {
+        "max_deg": 1.7075472925031877e-06,
+        "mean_deg": 1.9603219494914987e-07,
+        "n": 130,
+        "p95_deg": 1.2074182697257333e-06
+      },
+      "head": {
+        "max_deg": 1.7075472925031877e-06,
+        "mean_deg": 5.253991669240578e-08,
+        "n": 65,
+        "p95_deg": 0.0
+      }
+    },
+    "modelB": {
+      "body": {
+        "max_deg": 1.2074182697257333e-06,
+        "mean_deg": 1.5982605169402409e-07,
+        "n": 355,
+        "p95_deg": 9.598670332938398e-07
+      },
+      "fingers": {
+        "max_deg": 1.4787793334710982e-06,
+        "mean_deg": 1.2650658491947516e-07,
+        "n": 2130,
+        "p95_deg": 8.537736462515939e-07
+      },
+      "hands": {
+        "max_deg": 1.9090959104164224e-06,
+        "mean_deg": 2.1255894472952658e-07,
+        "n": 142,
+        "p95_deg": 1.2074182697257333e-06
+      },
+      "head": {
+        "max_deg": 1.7075472925031877e-06,
+        "mean_deg": 7.214988559872625e-08,
+        "n": 71,
+        "p95_deg": 0.0
+      }
+    },
+    "real": {
+      "body": {
+        "max_deg": 1.2074182697257333e-06,
+        "mean_deg": 1.5731842714584986e-07,
+        "n": 335,
+        "p95_deg": 8.537736462515939e-07
+      },
+      "fingers": {
+        "max_deg": 1.4787793334710982e-06,
+        "mean_deg": 1.1648640664627304e-07,
+        "n": 1050,
+        "p95_deg": 8.537736462515939e-07
+      },
+      "hands": {
+        "max_deg": 1.7075472925031877e-06,
+        "mean_deg": 1.7610658629783522e-07,
+        "n": 70,
+        "p95_deg": 1.356666854785683e-06
+      },
+      "head": {
+        "max_deg": 0.0,
+        "mean_deg": 0.0,
+        "n": 67,
+        "p95_deg": 0.0
+      }
+    }
+  },
+  "sentence_norm": "আমি বৃহস্পতিবার এ কানাডা যাব",
+  "sentence_raw": "আমি বৃহস্পতিবার এ কানাডা যাব ",
+  "video_frames": 71
+}

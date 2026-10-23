@@ -1,4 +1,10 @@
-# kaggle/outputs — results (empty until the Kaggle notebooks run)
+# kaggle/outputs — results of kaggle400 run 1 (2026-10-23)
+
+**Read `RUN1_NOTES.md` first** (provenance, the failed first attempt of notebook 07, main results, limits).
+Only small files are kept here; checkpoints, features, `.npz` motion, videos, `motion_real.json` /
+`motion_B1.json` (derived from real people's recordings) and `env/mediapipe_route.json` stay on the desktop
+in `kaggle/work/downloads/run1/` (gitignored). `OUTPUT_HASHES_run1.csv` lists the SHA-256 of all 2,448 output
+files of the run.
 
 | Path | Written by | Contents |
 |---|---|---|

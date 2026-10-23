@@ -1,0 +1,52 @@
+{
+  "TEST_RUN": false,
+  "agru": {
+    "42": {
+      "best_epoch": 2,
+      "epochs": 2,
+      "train": {
+        "bleu4": 100.00000000000004,
+        "chrf": 100.0,
+        "exact_match": 100.0,
+        "n": 1,
+        "tag_accuracy": 100.0,
+        "wer": 0.0
+      }
+    }
+  },
+  "agru_mean_sd": {
+    "train": {
+      "bleu4": {
+        "mean": 100.00000000000004,
+        "sd": 0.0
+      },
+      "chrf": {
+        "mean": 100.0,
+        "sd": 0.0
+      },
+      "exact_match": {
+        "mean": 100.0,
+        "sd": 0.0
+      },
+      "tag_accuracy": {
+        "mean": 100.0,
+        "sd": 0.0
+      },
+      "wer": {
+        "mean": 0.0,
+        "sd": 0.0
+      }
+    }
+  },
+  "g0": "not scored: the references ARE the G0 outputs (agreement with itself is 100% by construction)",
+  "label": "agreement with the rule glosser (G0 pseudo-gloss); references are G0 auto_draft outputs, not BdSL annotation; says nothing about BdSL correctness",
+  "reference": "g0",
+  "run": "G0REF_text2gloss_overfit1_kaggle400_20261023T142845Z",
+  "splits": [
+    "train",
+    "val"
+  ],
+  "train_seconds": {
+    "42": 0.6
+  }
+}

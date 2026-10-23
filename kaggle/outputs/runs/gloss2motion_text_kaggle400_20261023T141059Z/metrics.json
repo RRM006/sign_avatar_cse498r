@@ -1,0 +1,267 @@
+{
+  "B0": {
+    "train": {
+      "diversity_ratio": 0.0,
+      "duration_err_s": 2.322083333333333,
+      "hand_energy_ratio": 0.017185629970772293,
+      "jerk_ratio": 0.027652669015668707,
+      "mpjpe_body": 0.21826241105503957,
+      "mpjpe_face": 0.043190164052139754,
+      "mpjpe_lhand": 53.747660320613356,
+      "mpjpe_rhand": 62.503537066052274,
+      "n": 320,
+      "velocity_ratio": 0.10842796189868342
+    },
+    "val": {
+      "diversity_ratio": 0.0,
+      "dtw_body": 0.20879103794428774,
+      "dtw_face": 0.04144085344287187,
+      "dtw_lhand": 47.25273565420355,
+      "dtw_rhand": 47.57188697200438,
+      "duration_err_s": 2.3549999999999995,
+      "hand_energy_ratio": 0.015283249317077346,
+      "jerk_ratio": 0.02699972486922577,
+      "mpjpe_body": 0.22850334774666284,
+      "mpjpe_face": 0.044522547640951336,
+      "mpjpe_lhand": 56.77543293484037,
+      "mpjpe_rhand": 63.38177591772546,
+      "n": 40,
+      "velocity_ratio": 0.1050456845126377
+    }
+  },
+  "B1": {
+    "train": {
+      "diversity_ratio": 0.9740912267261616,
+      "duration_err_s": 2.3445833333333335,
+      "hand_energy_ratio": 1.1862892814667794,
+      "jerk_ratio": 1.0712398986934912,
+      "mpjpe_body": 0.2569486332687082,
+      "mpjpe_face": 0.0421372677669749,
+      "mpjpe_lhand": 61.73220950052334,
+      "mpjpe_rhand": 67.67650519323027,
+      "n": 320,
+      "velocity_ratio": 1.0479016615403627
+    },
+    "val": {
+      "diversity_ratio": 0.9407246312022103,
+      "dtw_body": 0.2051297935818804,
+      "dtw_face": 0.033327760964567014,
+      "dtw_lhand": 43.55380154180754,
+      "dtw_rhand": 50.42541533874124,
+      "duration_err_s": 2.316666666666667,
+      "hand_energy_ratio": 1.0307609403254558,
+      "jerk_ratio": 1.007475770412844,
+      "mpjpe_body": 0.26489284338764885,
+      "mpjpe_face": 0.03998135532974871,
+      "mpjpe_lhand": 66.1828431247615,
+      "mpjpe_rhand": 67.40234756984995,
+      "n": 40,
+      "velocity_ratio": 0.980507101387753
+    }
+  },
+  "input": "text",
+  "label": "kaggle400 Model B, Bangla word input = ablation T (320/40 train/val clips; small-scale, signer-dependent)",
+  "model_b": {
+    "42": {
+      "best_epoch": 66,
+      "epochs": 126,
+      "train": {
+        "diversity_ratio": 0.6380162604205823,
+        "duration_err_s": 0.558125,
+        "hand_energy_ratio": 0.057536144574441325,
+        "jerk_ratio": 0.18834118039636444,
+        "mpjpe_body": 0.15289507578468292,
+        "mpjpe_face": 0.023497518452003336,
+        "mpjpe_lhand": 28.987160431584343,
+        "mpjpe_rhand": 33.92032890436901,
+        "n": 320,
+        "velocity_ratio": 0.22135807814548714
+      },
+      "val": {
+        "diversity_ratio": 0.512591753281322,
+        "dtw_body": 0.19319513121629567,
+        "dtw_face": 0.035095562900172995,
+        "dtw_lhand": 40.252412622484044,
+        "dtw_rhand": 45.96783019108751,
+        "duration_err_s": 2.005,
+        "hand_energy_ratio": 0.05959306897911324,
+        "jerk_ratio": 0.20687135132982565,
+        "mpjpe_body": 0.2180339233114717,
+        "mpjpe_face": 0.037929494476462246,
+        "mpjpe_lhand": 52.72646185645018,
+        "mpjpe_rhand": 62.12956802133092,
+        "n": 40,
+        "velocity_ratio": 0.2310427235275639
+      }
+    },
+    "43": {
+      "best_epoch": 34,
+      "epochs": 94,
+      "train": {
+        "diversity_ratio": 0.4812629403513619,
+        "duration_err_s": 0.7966666666666666,
+        "hand_energy_ratio": 0.029950095103579998,
+        "jerk_ratio": 0.10481848490985719,
+        "mpjpe_body": 0.18056346314675648,
+        "mpjpe_face": 0.027779157617114036,
+        "mpjpe_lhand": 39.65102336351626,
+        "mpjpe_rhand": 44.72932622632292,
+        "n": 320,
+        "velocity_ratio": 0.13667385447913716
+      },
+      "val": {
+        "diversity_ratio": 0.4210676879727621,
+        "dtw_body": 0.18929005686802958,
+        "dtw_face": 0.03159626550987845,
+        "dtw_lhand": 39.51722447076175,
+        "dtw_rhand": 43.3378702844816,
+        "duration_err_s": 2.175,
+        "hand_energy_ratio": 0.030288233625339767,
+        "jerk_ratio": 0.11028971213004912,
+        "mpjpe_body": 0.20970768837955375,
+        "mpjpe_face": 0.034501943953673404,
+        "mpjpe_lhand": 51.367105731267586,
+        "mpjpe_rhand": 58.60651724365964,
+        "n": 40,
+        "velocity_ratio": 0.14533063189129325
+      }
+    },
+    "44": {
+      "best_epoch": 38,
+      "epochs": 98,
+      "train": {
+        "diversity_ratio": 0.5435611474216443,
+        "duration_err_s": 0.7537499999999999,
+        "hand_energy_ratio": 0.03948929373924092,
+        "jerk_ratio": 0.12586269836156558,
+        "mpjpe_body": 0.17098890994361032,
+        "mpjpe_face": 0.025956602027242807,
+        "mpjpe_lhand": 35.74617360282901,
+        "mpjpe_rhand": 40.143382787367024,
+        "n": 320,
+        "velocity_ratio": 0.159838684064256
+      },
+      "val": {
+        "diversity_ratio": 0.45946010059217296,
+        "dtw_body": 0.19332346500154612,
+        "dtw_face": 0.03216981741108002,
+        "dtw_lhand": 39.86335257522241,
+        "dtw_rhand": 46.140546079891166,
+        "duration_err_s": 2.445,
+        "hand_energy_ratio": 0.03445470714173836,
+        "jerk_ratio": 0.13070176857105528,
+        "mpjpe_body": 0.21917755064230962,
+        "mpjpe_face": 0.035593108992202915,
+        "mpjpe_lhand": 53.17464952656724,
+        "mpjpe_rhand": 66.05889293133943,
+        "n": 40,
+        "velocity_ratio": 0.15465329912798173
+      }
+    }
+  },
+  "model_b_mean_sd": {
+    "train": {
+      "diversity_ratio": {
+        "mean": 0.5542801160645295,
+        "sd": 0.07892447690517963
+      },
+      "duration_err_s": {
+        "mean": 0.7028472222222222,
+        "sd": 0.12715679798244428
+      },
+      "hand_energy_ratio": {
+        "mean": 0.04232517780575408,
+        "sd": 0.014009968243405462
+      },
+      "jerk_ratio": {
+        "mean": 0.13967412122259573,
+        "sd": 0.043440496272690005
+      },
+      "mpjpe_body": {
+        "mean": 0.16814914962501656,
+        "sd": 0.014051088705318626
+      },
+      "mpjpe_face": {
+        "mean": 0.02574442603212006,
+        "sd": 0.0021486908746332516
+      },
+      "mpjpe_lhand": {
+        "mean": 34.79478579930987,
+        "sd": 5.395215215565698
+      },
+      "mpjpe_rhand": {
+        "mean": 39.59767930601965,
+        "sd": 5.425122117857596
+      },
+      "velocity_ratio": {
+        "mean": 0.17262353889629342,
+        "sd": 0.043765783659158904
+      }
+    },
+    "val": {
+      "diversity_ratio": {
+        "mean": 0.46437318061541905,
+        "sd": 0.045959410343666275
+      },
+      "dtw_body": {
+        "mean": 0.19193621769529046,
+        "sd": 0.002292540672028888
+      },
+      "dtw_face": {
+        "mean": 0.032953881940377155,
+        "sd": 0.001876789398416084
+      },
+      "dtw_lhand": {
+        "mean": 39.87766322282273,
+        "sd": 0.36780293716101237
+      },
+      "dtw_rhand": {
+        "mean": 45.148748851820095,
+        "sd": 1.5706427295205405
+      },
+      "duration_err_s": {
+        "mean": 2.208333333333333,
+        "sd": 0.22188585654190157
+      },
+      "hand_energy_ratio": {
+        "mean": 0.041445336582063785,
+        "sd": 0.01585386447390356
+      },
+      "jerk_ratio": {
+        "mean": 0.14928761067697668,
+        "sd": 0.05090263650066304
+      },
+      "mpjpe_body": {
+        "mean": 0.21563972077777835,
+        "sd": 0.005169016071570066
+      },
+      "mpjpe_face": {
+        "mean": 0.03600818247411285,
+        "sd": 0.0017510682862487534
+      },
+      "mpjpe_lhand": {
+        "mean": 52.422739038095,
+        "sd": 0.9412700493342897
+      },
+      "mpjpe_rhand": {
+        "mean": 62.264992732109995,
+        "sd": 3.7280330922347518
+      },
+      "velocity_ratio": {
+        "mean": 0.17700888484894628,
+        "sd": 0.04702626737113695
+      }
+    }
+  },
+  "run": "gloss2motion_text_kaggle400_20261023T141059Z",
+  "splits": [
+    "train",
+    "val"
+  ],
+  "train_seconds": {
+    "42": 130.5,
+    "43": 96.9,
+    "44": 101.3
+  },
+  "units": "body: shoulder widths; hands: mm; face: blendshape MAE"
+}

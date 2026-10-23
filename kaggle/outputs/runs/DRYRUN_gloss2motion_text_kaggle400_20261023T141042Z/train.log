@@ -1,0 +1,5 @@
+2026-10-23 14:10:42,145 kaggle400 Model B, Bangla word input = ablation T (320/40 train/val clips; small-scale, signer-dependent) | input text | run DRYRUN_gloss2motion_text_kaggle400_20261023T141042Z | {'train': 320, 'val': 40} | vocab 420 | 2,724,881 parameters | seeds [42, 43, 44] | device cuda:0
+2026-10-23 14:10:49,711 seed 42: DRY RUN stopped after 1 optimiser step(s): train loss 1.5888, monitor pos L1 0.8160, device cuda:0
+2026-10-23 14:10:49,849 seed 43: DRY RUN stopped after 1 optimiser step(s): train loss 1.4839, monitor pos L1 0.8218, device cuda:0
+2026-10-23 14:10:49,954 seed 44: DRY RUN stopped after 1 optimiser step(s): train loss 1.5080, monitor pos L1 0.8188, device cuda:0
+2026-10-23 14:10:49,959 dry run finished (no checkpoint, not resumable, never a result)

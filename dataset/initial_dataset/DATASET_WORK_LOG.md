@@ -181,3 +181,56 @@
 - Next step: upload the package (private Kaggle dataset) on the owner's own action.
 - Re-check 2026-10-23T06:26:35+00:00 (DESKTOP-4NDR99B): copied in this run 0, already present 400; 400/400 byte-identical; sources unchanged 400/400; leakage tests PASS.
 - Re-check 2026-10-23T06:35:16+00:00 (DESKTOP-4NDR99B): copied in this run 0, already present 400; 400/400 byte-identical; sources unchanged 400/400; leakage tests PASS.
+
+## 2026-10-23 (kaggle400 upload package, Session 8 Step B)
+
+- Computer: DESKTOP-4NDR99B (run by the owner: `kaggle/tools/run_local_steps.ps1`, run 3, 12:34 UTC+6).
+- Task: build the upload file for the PRIVATE Kaggle dataset (owner permission in chat, 2026-10-23).
+- Files/folders inspected: the 400 copies in `kaggle/data/{train,val,test}/videos/` (SHA-256 checked
+  against `subset_manifest.csv` `sha256_copy` while packing; nothing read from `SIGN_LANGUAGE_DATA/` in
+  this step).
+- Action performed: `kaggle/src/k400_run.py package` from the clean local commit `933e903` (not pushed),
+  then `verify-package` (every entry re-hashed).
+- Files changed: new `kaggle/work/upload/bdsl-k400-933e9032.zip` (gitignored; 5,938,005,200 bytes, 535
+  files: the 400 videos + manifests/report/lock + `code/`); this log entry.
+- Dataset files changed: None.
+- Result: package check PASS (videos: train 320 = 4,742.2 MB, val 40 = 591.3 MB, test 40 = 603.8 MB).
+- Errors/warnings: None. The zip is NOT uploaded yet.
+- Next step: the owner uploads the zip as a PRIVATE Kaggle dataset `bdsl-k400` (GUIDE §3); record the
+  upload date and whether Kaggle unpacked the zip (open question G17) here.
+
+## 2026-10-23 (kaggle400 upload to the PRIVATE Kaggle dataset, Session 8 Step C3)
+
+- Computer: the owner's browser, Kaggle web upload (owner's own action, 2026-10-23, finished before 17:10 UTC+6).
+- Task: upload the package as a PRIVATE Kaggle dataset (owner permission in chat, 2026-10-23; this
+  experiment only; team collaborators only).
+- Files/folders inspected: none on the desktop beyond reading the zip for the upload.
+- Action performed: Kaggle → New Dataset → `kaggle/work/upload/bdsl-k400-933e9032.zip`; title `bdsl-k400`;
+  visibility **Private**.
+- Files changed: new Kaggle dataset `bdsl-k400`, Version 1; this log entry. Nothing changed on the desktop.
+- Dataset files changed: None.
+- Result (owner's observation on the dataset page): **Private**; Kaggle **unzipped** the archive (G17);
+  Data Explorer shows `code/`, `data/` (train/val/test + manifests, report, lock, COPY_VERIFICATION.csv),
+  `PACKAGE_INFO.json`, `README_UPLOAD.md`, `UPLOAD_MANIFEST.csv`; size **5.94 GB, 535 files** (= the
+  package: 535 files, 5,938,005,200 bytes). Sharing with team members: not reported yet.
+- Errors/warnings: None reported.
+- Next step: notebook 01 on Kaggle re-hashes every uploaded file against `UPLOAD_MANIFEST.csv`.
+
+## 2026-10-23 (kaggle400 run-1 outputs downloaded to the desktop, Session 9)
+
+- Computer: DESKTOP-4NDR99B (owner's browser download; AI checks through the desktop link).
+- Task: bring the outputs of the Kaggle run back to the desktop and keep the small results in the project.
+- Files/folders inspected: `kaggle/work/downloads/run1/k400/` (2,448 output files of notebook 09, incl. the
+  400 feature files `processed/features/*/*.npz` — derived data — checkpoints, predicted motion, skeleton
+  videos and `motion_real.json` / `motion_B1.json` for 5 test clips).
+- Action performed: helper notebook `10_pack_outputs` zipped the output of notebook 09 on Kaggle (874.6 MB);
+  the owner downloaded and extracted it into `kaggle/work/downloads/run1/` (gitignored); `verify-download`
+  (2,447/2,448; STATE.json explained); robocopy of the small result files into `kaggle/outputs/` and
+  `kaggle/processed/qc/`, excluding `.pt`, `.npz`, `.mp4`, `motion_real.json`, `motion_B1.json`.
+- Files changed: `kaggle/work/downloads/run1/` (new, gitignored); `kaggle/outputs/` (144 small result files +
+  `OUTPUT_HASHES_run1.csv`); `kaggle/processed/qc/` (4 files); this log entry.
+- Dataset files changed: None (no source video was read or changed in this step).
+- Result: all derived data that comes from real recordings stays on the desktop; `env/mediapipe_route.json`
+  (owner's Kaggle username) is kept out of Git (owner, ADR-0029).
+- Errors/warnings: None.
+- Next step: one local commit of the small results (owner's OK given; no push).

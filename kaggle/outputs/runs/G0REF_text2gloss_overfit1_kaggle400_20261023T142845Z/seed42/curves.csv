@@ -1,0 +1,3 @@
+epoch,train_loss,monitor,monitor_wer,monitor_exact_match,epoch_seconds
+1,2.2293860912323,train,50.0,0.0,0.608
+2,2.075587511062622,train,0.0,100.0,0.029

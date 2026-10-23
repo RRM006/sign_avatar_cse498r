@@ -24,6 +24,284 @@ Results are logged here only after they are actually run.
 
 ---
 
+## 2026-10-23 — kaggle400 run-1 small results copied into the project + privacy scan (measured)
+- robocopy `…/run1/k400/outputs` → `kaggle/outputs` excluding `*.pt *.npz *.mp4 motion_real.json motion_B1.json`:
+  2,031 files seen, **144 copied (4.25 MB)**, 1,887 skipped, 0 failed (6 "extras" = existing README/.gitkeep);
+  `…/processed/qc` → `kaggle/processed/qc`: 4 files (139.8 kB); `OUTPUT_HASHES.csv` → `OUTPUT_HASHES_run1.csv`.
+- AI check of every copied file (listing + content scan of all 141 text files in the workspace): no `.pt`,
+  `.npz`, `.mp4`, `motion_real.json` or `motion_B1.json`; largest file 0.35 MB. Personal markers: only
+  `kaggle/outputs/env/mediapipe_route.json` contains the owner's Kaggle username (one path) → kept out of
+  Git (owner). No e-mail, Windows user path, PC name, API key or password; "token" hits are package names
+  (`tokenizers`, `tiktoken`); `registry.csv` has generic `/kaggle/working/k400/...` paths only.
+- Added by hand: `kaggle/outputs/RUN1_NOTES.md` (provenance, failed first attempt of 07, main results,
+  limitations, what is and is not in Git); `kaggle/outputs/README.md` header updated.
+
+## 2026-10-23 — kaggle400 outputs downloaded to the desktop and checked (measured)
+- Download: Kaggle offers no "download all outputs" button (only Kaggle CLI with an API key, or the .ipynb).
+  A helper notebook `10_pack_outputs` (input = output of 09; copies files into one zip, computes nothing)
+  packed `/kaggle/input/notebooks/<owner>/09-avatar-export/k400`: **2,449 files, 874.6 MB**
+  (`k400_outputs_run1.zip`). The owner downloaded it and extracted it to
+  `kaggle/work/downloads/run1/k400/` (gitignored).
+- `k400_run.py verify-download`: **2,447/2,448 files match `OUTPUT_HASHES.csv`**, MISMATCH `STATE.json` →
+  "DOWNLOAD CHECK: FAIL". Cause (code + file check in the workspace): `Setup.finish()` writes
+  `OUTPUT_HASHES.csv` and then appends a "finished" entry to `STATE.json`. Removing only that last entry
+  ("09_avatar_export finished", 15:33:49 UTC) and writing the JSON the same way reproduces the listed hash
+  exactly (`759f3cbf…`, 2,869 bytes). → **All 2,448 files arrived byte-identical**; the check fails by design
+  flaw for STATE.json in every run (G18 item 8).
+- Owner: the files are there and the skeleton videos play on the desktop. (The AI could not fetch the videos:
+  8 folders deep, the desktop link allows 7.)
+- AI check of the report files (read in the workspace): FINAL_TEST_LOCK created 20261023T151119Z, results
+  `FINAL_test_20261023T151119Z`, override none, history empty, code = package `933e903…`, dirty False;
+  frozen runs = the three runs of notebooks 04/05/06, for_paper true. Figures F2, F4, F5 (test), F6 (test)
+  viewed: rendered correctly, labels and CIs present.
+- TEST numbers not printed by notebook 07 (from T4_modelB_test, mean ± sd over 3 seeds [95% CI]): Model B
+  gloss velocity ratio **0.14** [0.12, 0.16], jerk ratio 0.11, **hand-energy ratio 0.03** [0.02, 0.05],
+  diversity 0.43; Model B text velocity 0.18 [0.16, 0.21], jerk 0.15, hand energy 0.05 [0.04, 0.06],
+  diversity 0.50; B0 velocity 0.11, hand energy 0.02, diversity 0.00; B1 velocity 1.13, hand energy 1.61,
+  diversity 1.00. Duration error (s): gloss 1.92, text 1.66, B0 2.05, B1 1.97.
+- T5 paired (test): Model B (gloss and text) lower than B0 and than B1 on every MPJPE and DTW-MJE metric
+  (body, left hand, right hand; CIs exclude 0; e.g. gloss − B0 MPJPE body −0.013 [−0.019, −0.006]);
+  duration error vs B0/B1 not distinguishable; gloss − text: no position/DTW difference, duration error
+  gloss higher by 0.26 s [0.01, 0.51].
+- T3: Model A best epochs 62 / 92 / 57 (seeds 42 / 43 / 44), val WER at best 31.4 / 32.0 / 31.4.
+  F2 (Model B gloss): train position L1 falls 0.70 → 0.33 while val L1 stays ≈ 0.63–0.66 after
+  ~15–40 epochs → strong over-fitting; little generalisation beyond an average pose per sentence.
+- Hand coverage (MediaPipe detections, all 400 clips): left 63.3%, right 25.3% of frames (RESULTS_SUMMARY).
+
+## 2026-10-23 — kaggle400 Step D, notebook 09 (avatar export, 5 TEST sentences) on Kaggle — PASS, videos not browser-playable
+- Setup: `09_avatar_export` (Save & Run All), inputs = dataset `bdsl-k400` + output of `08_report_figures`
+  ("carried over: 2413 files"), Accelerator None, Internet On; reported by the owner 21:43 UTC+6.
+- Exported (index → B1 source clip): 1255 → 787 ("তুমি কি সি পি কিভাবে"), 2513 → 2492, 1863 → 1663, 3061 → 3062,
+  3232 → 3098; each folder has motion_modelB/B1/real.json, demo_log.json, info.json, LIMITATIONS.md and
+  `skeleton_modelB_B1_real.mp4` (about 1.6 MB). Nothing re-scored.
+- Output: 2,448 files (873.7 MB) with `OUTPUT_HASHES.csv`. Final list: PASS avatar export done · PASS 5 skeleton
+  videos → **NOTEBOOK RESULT: PASS**.
+- Problem (owner): the skeleton video does not play in Kaggle's browser player (stays at 0:00). Cause
+  (workspace check): `src/bdsl/avatar/export.py` writes with OpenCV fourcc `mp4v` = MPEG-4 Part 2 (smoke-test
+  file: codec mpeg4, 1440 × 570, 15 fps, 180 frames), which browsers do not decode. The files are expected to
+  play in a desktop player (e.g. VLC) — to be checked after download → G18 item (7).
+- **Step D complete: notebooks 00–09 all PASS** (07 on its second attempt, see below).
+
+## 2026-10-23 — kaggle400 Step D, notebook 08 (tables, figures, RESULTS_SUMMARY.md) on Kaggle — PASS (measured)
+- Setup: `08_report_figures` (Save & Run All), inputs = dataset `bdsl-k400` + output of `07_baselines_eval`
+  Version 2 ("carried over: 2363 files"), Accelerator None; reported by the owner 21:27 UTC+6.
+- `k400_run.py report`: tables T1_split, T2_feature_coverage, T3_training, T8_train_val_test,
+  T4_modelB_{val,test}, T5_paired_{val,test}, T6_modelA_{val,test}, T7_error_analysis_{val,test} (12);
+  figures F1_split_summary, F2_curves_modelB_gloss, F3_curves_modelB_text, F4_curves_modelA,
+  F5_methods_{val,test}, F6_error_analysis_{val,test} (8); **missing: none**; **185 numbers** in the results
+  ledger; `final_test_done: true`.
+- Output: 2,412 files (863.1 MB) with `OUTPUT_HASHES.csv`. Final list: PASS report built · PASS final test
+  results present → **NOTEBOOK RESULT: PASS**.
+- Not yet checked: the tables' contents (incl. TEST velocity/diversity) and the figures by eye — after the
+  outputs are downloaded to the desktop. `RESULTS_SUMMARY.md` is generated from saved files and does not
+  mention the crashed Version 1 of notebook 07; that note must be added in the write-up.
+
+## 2026-10-23 — kaggle400 Step D, notebook 07 Version 2 (freeze + VAL + the final TEST) — PASS (measured)
+- Setup: `07_baselines_eval` Version 2 ("run 2", Save & Run All) with the updated notebook (cell 2 safety stop),
+  inputs = dataset `bdsl-k400` + output of `06_train_model_a`, Accelerator None (evaluation on CPU), Internet
+  On; reported by the owner 21:15 UTC+6. This is the second attempt; Version 1 crashed before producing any
+  result (entry below) — to be reported openly (owner decision, option a).
+- `pip install sacrebleu==2.6.0`: exit 0 → "sacrebleu OK". `list-runs` → `freeze`: the same three runs as in
+  Version 1 — model_b_gloss `gloss2motion_gloss_kaggle400_20261023T135437Z`, model_b_text
+  `gloss2motion_text_kaggle400_20261023T141059Z`, model_a `G0REF_text2gloss_kaggle400_20261023T142908Z`;
+  for_paper true; split lock sha256 `529d82c2…`. `evaluate --split val`: done (output not copied here).
+- `evaluate --final` (test split, read for the first time to produce a result): results
+  `outputs/eval/FINAL_test_20261023T151119Z/`; **`FINAL_TEST_LOCK.json` written** (created 20261023T151119Z).
+- **TEST results** (40 clips; measured; small-scale, signer-dependent; body in shoulder widths, hands in mm;
+  Model B = mean over seeds 42/43/44):
+  | method | MPJPE body | DTW body | MPJPE left hand | MPJPE right hand |
+  |---|---|---|---|---|
+  | Model B, G0 gloss input | 0.199 | 0.181 | 49.5 | 57.3 |
+  | Model B, Bangla word input (ablation T) | 0.198 | 0.181 | 48.5 | 56.5 |
+  | B0 mean motion | 0.212 | 0.199 | 53.3 | 63.2 |
+  | B1 retrieval | 0.249 | 0.198 | 61.6 | 64.9 |
+  (unrounded body MPJPE: gloss 0.19944, text 0.19817, B0 0.21237, B1 0.24880)
+- Paired differences, DTW body, bootstrap 95% CI over test items (1,000 resamples): gloss − B0 **−0.017
+  [−0.025, −0.009]** (excludes 0); gloss − B1 **−0.017 [−0.032, −0.004]** (excludes 0); text − B0 **−0.017
+  [−0.025, −0.009]** (excludes 0); gloss − text **−0.000 [−0.005, +0.005]** (does not exclude 0).
+- Model A on TEST (agreement with the rule glosser, G0 pseudo-gloss — not BdSL correctness), mean of 3 seeds:
+  WER **19.7** (sd 1.0), exact match 54.2%, tag accuracy 94.2%, BLEU 68.7, chrF 76.8. (Test OOV 12.1% vs
+  val 20.7% of word tokens — notebook 03 / SPLIT_REPORT.)
+- Reading (AI, evidence only): on these 40 test clips both Model B variants have a small but CI-supported
+  lower DTW body error than B0 and B1 (≈ 8% vs B0); gloss input and word input do not differ. Velocity and
+  diversity on TEST are not in this printout (notebook 08 tables); on VAL Model B moved at 13–18% of real
+  speed, which must be reported next to the error numbers. Low coordinate error is not proof of correct BdSL.
+- Output: 2,362 files (861.8 MB) with `OUTPUT_HASHES.csv`. Final list: PASS configuration frozen before the
+  test · PASS VAL evaluation done · PASS final TEST evaluation done once, lock written → **NOTEBOOK RESULT: PASS**.
+- Never re-run notebook 07 (G15).
+
+## 2026-10-23 — kaggle400 Step D, notebook 07 Version 1 (freeze + VAL + final TEST) — ERROR, no result produced
+- Setup: `07_baselines_eval` Version 1 (Save & Run All), inputs = dataset `bdsl-k400` + output of
+  `06_train_model_a` ("carried over: 1949 files"), Accelerator None; full log from the owner, 20:52 UTC+6.
+- `pip install sacrebleu==2.6.0` failed: 5 retries, "Failed to resolve 'pypi.org' (Temporary failure in name
+  resolution)" → no Internet in this version (cause of the missing Internet not yet confirmed). The notebook did
+  not stop there (the pip exit code was not checked — design flaw, G18 item 5).
+- `list-runs` + `freeze`: OK. Frozen (for_paper true; split lock sha256 `529d82c2…`): model_b_gloss
+  `gloss2motion_gloss_kaggle400_20261023T135437Z` (notebook 04), model_b_text
+  `gloss2motion_text_kaggle400_20261023T141059Z` (05), model_a `G0REF_text2gloss_kaggle400_20261023T142908Z` (06).
+  No NFP_, DRYRUN_ or overfit run was frozen.
+- `evaluate --split val`: crashed in `evaluate_text` (`ModuleNotFoundError: sacrebleu`); nothing written.
+- `evaluate --final`: crashed at the same place. **Code check (workspace, `kaggle400_eval.evaluate`):** inside
+  the test-access block the code had already loaded the test split and computed the Model B / B0 / B1 test
+  errors in memory (`evaluate_motion`) and Model A test outputs, then crashed at the first BLEU/chrF call.
+  Nothing is printed or written before that point: **no test number was produced, saved or seen**, and
+  `FINAL_TEST_LOCK.json` was not written. The next cell failed with FileNotFoundError (no lock) → version Error.
+- Owner decision (chat, 20:57 UTC+6): option (a) — run notebook 07 once more with the same frozen runs and
+  report this failed first attempt openly (test log and paper). Safety stop added before the re-run: cell 2 of
+  `kaggle/notebooks/07_baselines_eval.ipynb` (and `kaggle/tools/build_notebooks.py`) now asserts that
+  `sacrebleu` is installed and importable before the freeze and before any test access; new test
+  `test_notebook_07_stops_before_freeze_and_test_when_sacrebleu_is_missing`; workspace suite **210 passed**.
+  The uploaded `code/` (commit `933e903`) is unchanged, so the runs keep their clean-code status.
+
+## 2026-10-23 — kaggle400 Step D, notebook 06 (Model A on G0 references) on Kaggle — PASS (measured)
+- Label (printed by the run): "agreement with the rule glosser (G0 pseudo-gloss); references are G0 auto_draft
+  outputs, not BdSL annotation; says nothing about BdSL correctness".
+- Setup: notebook `06_train_model_a` Version 1 (Save & Run All, GPU T4 x2; `cuda:0`), inputs = dataset
+  `bdsl-k400` + output of `05_train_ablation_text`, Internet On (sacrebleu 2.6.0); reported by the owner
+  20:37 UTC+6. A-GRU 2,082,968 parameters; vocab src 420 / tgt 408; train 320 / val 40.
+- Dry run (`DRYRUN_G0REF_…`): 1 step per seed on `cuda:0`, train loss 6.043 / 6.038 / 6.136, finite.
+- Overfit checks (engineering, never results): 1 sentence → WER 0.0, exact 100% at epoch 2; 40 sentences →
+  WER 0.0, exact 100% at epoch 13 (tags 100%, BLEU 100, chrF 100). The code can learn.
+- Real run (for the paper, clean code; 3 seeds, early stopping on VAL WER vs G0), mean of 3 seeds:
+  train WER 0.0, exact 99.9%, tags 100%, BLEU 100.0, chrF 100.0; **val WER 34.5%, exact match 30.0%,
+  tag accuracy 97.5%, BLEU 47.0, chrF 60.6**. (Per-seed best epochs not copied into this log.)
+- Reading (AI, evidence only): the train/val gap fits the vocabulary limit — 20.7% of val word tokens are
+  unseen in train and become `<unk>` (notebook 03). These scores measure agreement with the G0 rule only.
+- Output: 1,948 files (824.4 MB) with `OUTPUT_HASHES.csv`. Final list: PASS 3 seeds finished · PASS marked
+  for the paper · PASS labelled as agreement with G0, not BdSL → **NOTEBOOK RESULT: PASS**.
+
+## 2026-10-23 — kaggle400 Step D, notebook 05 (ablation T, Bangla words → motion) on Kaggle — PASS (measured)
+- Setup: notebook `05_train_ablation_text` Version 1 (Save & Run All, GPU T4 x2; `cuda:0`), inputs = dataset
+  `bdsl-k400` + output of `04_train_model_b`; reported by the owner 20:21 UTC+6. Same model and settings as
+  notebook 04, input = normalised Bangla words (vocab 420; 2,724,881 parameters).
+- Dry run (`DRYRUN_…`): 1 step per seed on `cuda:0`, train loss 1.589 / 1.484 / 1.508, val pos L1 0.816 /
+  0.822 / 0.819; all finite.
+- Real run (for the paper, clean code): seeds 42 / 43 / 44 → best epoch **66 / 34 / 38**, epochs run 126 / 94 / 98,
+  training time 130.5 / 96.9 / 101.3 s.
+- Measured on **VAL** (40 clips; no CIs here): Model B (text, mean of 3 seeds) MPJPE body **0.216**, left hand
+  **52.4 mm**, right hand **62.3 mm**, velocity ratio **0.177**, diversity ratio **0.464** (B0 and B1 as in
+  notebook 04: 0.229 / 56.8 / 63.4 and 0.265 / 66.2 / 67.4). Train: 0.168 / 34.8 / 39.6 mm, velocity 0.173,
+  diversity 0.554.
+- Reading (AI, evidence only): on VAL, word input ≈ G0-gloss input (notebook 04: 0.218 / 52.1 / 61.6 mm) in
+  position error, with somewhat more motion (velocity 0.18 vs 0.13); G0 glosses show no measurable advantage
+  here. The TEST comparison with 95% CIs and paired differences comes from notebook 07.
+- Output: 1,915 files (670.6 MB) with `OUTPUT_HASHES.csv`. Final list: PASS dry run on cuda · PASS loss
+  finite · PASS 3 seeds finished · PASS marked for the paper → **NOTEBOOK RESULT: PASS**.
+
+## 2026-10-23 — kaggle400 Step D, notebook 04 (Model B, G0 gloss → motion) on Kaggle — PASS (measured)
+- Setup: notebook `04_train_model_b` Version 1 (Save & Run All, GPU T4 x2; training on `cuda:0`), inputs =
+  dataset `bdsl-k400` + output of `03_gloss_g0`; Python 3.13.15; reported by the owner 20:04 UTC+6.
+  Model B 2,722,577 parameters, vocab 408, train 320 / val 40 clips; config = ADR-0026 + `max_frames` 360
+  (proposed ADR-0028).
+- Dry run (`DRYRUN_…`, never a result): 1 optimiser step per seed on `cuda:0`; train loss 1.588 / 1.462 /
+  1.548, val pos L1 0.834 / 0.809 / 0.826 (seeds 42 / 43 / 44); all finite.
+- Resume test (`NFP_…`, not for the paper; seed 42, 4 epochs straight vs 2 + resume 2): identical epoch-4 losses
+  (train 0.8315, val pos L1 0.6855) and **max |weight difference| 0.0** on the GPU.
+- Real run (for the paper, clean code `933e903`): seeds 42 / 43 / 44 → best epoch **38 / 27 / 18**, epochs run
+  98 / 87 / 78 (early stopping on VAL masked position L1, patience 60), training time 98.7 / 87.3 / 77.9 s.
+- Measured on **VAL** (40 clips; model checking only, not the paper's test result; no CIs here):
+  Model B (mean of 3 seeds) MPJPE body **0.218** shoulder widths, left hand **52.1 mm**, right hand **61.6 mm**,
+  velocity ratio **0.130**, diversity ratio **0.376**; B0 (mean motion) 0.229 / 56.8 / 63.4 mm, velocity 0.105,
+  diversity 0.000; B1 (retrieval) 0.265 / 66.2 / 67.4 mm, velocity 0.981, diversity 0.941.
+  Train (same metrics): Model B 0.187 / 42.3 / 47.7 mm, velocity 0.125, diversity 0.443; B0 0.218 / 53.7 / 62.5;
+  B1 0.257 / 61.7 / 67.7.
+- Reading (AI, evidence only): on val Model B has slightly lower position error than B0 and B1, but its motion
+  is strongly damped (13% of the real velocity; diversity 0.38) — the same pattern as the pilot (G11). Whether
+  the difference to B0 holds on TEST, with 95% CIs, is decided in notebook 07.
+- Output: 1,536 files (470.3 MB) with `OUTPUT_HASHES.csv`. Final list: PASS dry run on cuda · PASS dry-run loss
+  finite · PASS 3 seeds finished · PASS marked for the paper (clean code) · PASS resume reproduces the weights →
+  **NOTEBOOK RESULT: PASS**.
+
+## 2026-10-23 — kaggle400 Step D, notebook 03 (G0 pseudo-glosses + vocabularies) on Kaggle — PASS (measured)
+- Setup: notebook `03_gloss_g0` (Save & Run All), inputs = dataset `bdsl-k400` + output of `02_extract_features`
+  Version 1 ("carried over: 410 files from earlier notebooks (1 attached output)"), Accelerator None,
+  Python 3.13.15; reported by the owner 19:45 UTC+6.
+- G0 v0.1 drafts (rule-based pseudo-glosses, status auto_draft — NOT BdSL annotation): train 320 rows
+  (tokens per rule R0 267, R1 20, R2 9, R2b 9, R3 5, R4 2, R5 26, R6 1,026), val 40 (R0 36, R1 2, R2b 2,
+  R3 1, R5 1, R6 127), test 40 (R0 38, R1 2, R2 1, R2b 2, R5 5, R6 125); all `auto_draft`.
+- `compare_with_committed`: **IDENTICAL** for train, val and test. Canonical SHA-256 on Kaggle = the committed
+  desktop files (checked in the workspace): train `aa36b9a4…`, val `a77cf8bd…`, test `9960a5b8…`.
+- Vocabularies (TRAIN only; = the committed `vocab_report.json`): Model B gloss input / Model A target G0
+  408 types, val OOV 34/173 tokens = **19.65%**; Model B text input / Model A source 420 types, val OOV
+  35/169 = **20.71%**.
+- Output: 418 files (65.7 MB) with `OUTPUT_HASHES.csv`. Final list: PASS G0 files identical · PASS
+  320 + 40 + 40 rows, all auto_draft → **NOTEBOOK RESULT: PASS**.
+
+## 2026-10-23 — kaggle400 Step D, notebook 02 (MediaPipe extraction) on Kaggle — PASS (measured)
+- Setup: notebook `02_extract_features` Version 1 (Save & Run All, started 18:18 UTC+6), input = dataset
+  `bdsl-k400` only, Accelerator None (CPU), Internet On; Python 3.13.15; MediaPipe 0.10.35 via the main
+  route into `/usr/bin/python3` (numpy 2.1.3, cv2 5.0.0); model SHA-256 `e2dab611…50c3f8` OK; 4 worker
+  processes; time budget 300 min. Log reported by the owner 19:30 UTC+6. (An extra interactive draft run of the
+  same notebook was also started by mistake and stopped; it is not used.)
+- Result: **400/400 clips with features** (train 320/320, val 40/40, test 40/40); failures or missing **0**;
+  privacy OK True; rotation OK True; max |frames − duration × 15| = 1; **feat_ver `fa89892d4908`** (= the
+  pilot's VIDEO-mode features: same MediaPipe, model and settings).
+- Time: 400 clips in **3,408.1 s (56.8 min)**, 8.5 s per clip with 4 workers on Kaggle CPU; not stopped by the
+  time budget. 2,812 MediaPipe/TFLite log lines hidden by the filter.
+- Output: 409 files (65.5 MB) under `/kaggle/working/k400` with `OUTPUT_HASHES.csv`.
+- Final list: PASS all 400 clips · PASS no failures · PASS privacy · PASS rotation · PASS feat_ver = pilot →
+  **NOTEBOOK RESULT: PASS**. Hand-coverage table not yet copied into this log.
+- Observed: the extraction progress lines (every 20 clips) only appeared in the Kaggle log at the end
+  (3468.7 s), because the child process's output was buffered → G18 item (4).
+
+## 2026-10-23 — kaggle400 Step D, notebook 01 (upload + split check) on Kaggle — PASS (measured)
+- Setup: notebook `01_data_split_check`, input = PRIVATE dataset `bdsl-k400` Version 1, Accelerator None,
+  Save & Run All; reported by the owner 17:51–17:57 UTC+6.
+- Upload check (`k400_run.py verify-upload`): **UPLOAD CHECK: PASS (every file identical to the desktop
+  package)** — 532 files listed in `UPLOAD_MANIFEST.csv` (400 videos, 122 code files, 10 data metadata
+  files), missing 0, different 0 (SHA-256 + size). The 3 files not listed are `UPLOAD_MANIFEST.csv` itself,
+  `PACKAGE_INFO.json` and `README_UPLOAD.md` (written after the manifest; `kaggle/src/k400/package.py`);
+  Kaggle shows 535 files.
+- Split checks on the uploaded files (`k400_run.py verify --require-videos`, exit code 0): **RESULT: PASS
+  (10 passed, 0 failed, 0 skipped)** — 400 rows; train 320 / val 40 / test 40; 398 groups, none crossing;
+  no SHA-256 or normalised sentence crossing or duplicated; 3456/3457/3458 all in train; S1 partition kept
+  (`split == s1_split` for all rows — `S1_v0.csv` is not uploaded); 400 files, names and SHA-256 equal;
+  no file in two folders; SPLIT_LOCK.json: 4 manifests match their locked hashes.
+- Final list: PASS every uploaded file identical · PASS all 10 split checks · PASS counts 320/40/40 →
+  **NOTEBOOK RESULT: PASS**.
+- Reading problem found by the owner: notebook 01 also displays `SPLIT_REPORT.md`, whose section 7 is the
+  selection-time snapshot (7 passed, 3 skipped — written before the videos were copied). The owner first
+  took that block for the live result; the live Step 2 output (above) settles it. Improvement proposed in G18.
+
+## 2026-10-23 — kaggle400 Step D, notebook 00 (environment check) on Kaggle — PASS (measured)
+- Setup: owner's Kaggle account, notebook `00_env_check_kaggle` imported from `kaggle/notebooks/`, input
+  = PRIVATE dataset `bdsl-k400` Version 1, Accelerator GPU T4 x2, Internet On, run with
+  Save Version → Save & Run All (version "run 1"), 2026-10-23 (reported 17:36 UTC+6). Values as reported by the owner.
+- Machine (measured): 2 × Tesla T4 (`gpu_count` 2; training uses `cuda:0`); Python **3.13.15**; PyTorch
+  2.11.0+cu128, CUDA 12.8, cuDNN 91900; 4 CPU cores, 33.7 GB RAM; Linux 6.18.48+ x86_64; free disk
+  **20.9 GB of 21.0 GB** in `/kaggle/working`.
+- Code provenance: commit `933e9032ac3a3664e447c4e658a335f0ed621ffa`, source "package"
+  (CODE_VERSION.json), dirty: false.
+- Dataset location: found automatically at `/kaggle/input/datasets/<owner>/bdsl-k400/` (unzipped
+  folders; the guide assumed `/kaggle/input/bdsl-k400/` — the depth-independent search handled it).
+- MediaPipe: **OK via the main route** (`pip install mediapipe==0.10.35 opencv-contrib-python==5.0.0.93`
+  into `/usr/bin/python3`; no fallback); probe: numpy 2.1.3, cv2 5.0.0, mediapipe 0.10.35; one real
+  dataset frame 1920 × 1080, orientation_meta 0.0, 33 pose points. Model `holistic_landmarker.task`
+  13,683,609 bytes, SHA-256 = `configs/base.yaml` (`e2dab611…50c3f8`).
+- Result: PASS GPU visible · PASS MediaPipe 0.10.35 on a real frame · PASS model SHA-256 →
+  **NOTEBOOK RESULT: PASS**. 3 output files (0.0 MB) + `OUTPUT_HASHES.csv`; "carried over: 0 files" (expected).
+- Note: Kaggle runs Python 3.13 (desktop 3.12, workspace tests 3.12); the remaining notebooks are the
+  first runs of this code on 3.13.
+
+## 2026-10-23 — kaggle400 Step B, desktop run 3 of `run_local_steps.ps1` — ALL 7 STEPS PASS (measured)
+- Run by the owner 12:34 (UTC+6); log `kaggle/work/run_local_steps_20261023_123448.log`; 1.8 min.
+- Steps 1–4 PASS (selection identical; 400/400 copies re-hashed identical; 10/10 split checks).
+- Step 5: **209 passed** (42.4 s) on the desktop (Windows, project `.venv`).
+- Step 6: local commit **`933e903`** (`933e9032ac3a…`), 93 files, no video/feature/checkpoint/zip/credential;
+  code paths clean afterwards; **not pushed**.
+- Step 7: `kaggle/work/upload/bdsl-k400-933e9032.zip`, **5,938,005,200 bytes** (5.94 GB; PowerShell and
+  Windows show 5.53 GB because they count 1 GB = 1024³ bytes), 535 files: code 122 files (1.0 MB),
+  metadata 13 (0.8 MB), videos train 320 (4,742.2 MB), val 40 (591.3 MB), test 40 (603.8 MB).
+  `verify-package` re-hashed every entry: PASS.
+- Found in the log: the desktop's git converts text files to CRLF (`core.autocrlf`), and `git archive`
+  applies that, so `code/` in the zip has CRLF text files; `data/` comes from disk and is LF.
+  Workspace check: the same setting (`core.autocrlf=true`) gives CRLF from `git archive` (110 CRLF text
+  files in a smoke package); smoke chain A (00, 01, 03–09) and chain B (00, 02 with real MediaPipe
+  extraction) on that package gave **identical PASS/FAIL lines** to the earlier LF smoke run, no errors.
+  (Smoke FAILs are the expected ones: 50/6 clips instead of 320/40/40 / 400, no GPU in the workspace.)
+  Conclusion: the CRLF code in this package is harmless. Proposal for a later package (not needed now):
+  `git -c core.autocrlf=false archive` so `code/` is byte-identical to the repository.
+
 ## 2026-10-23 — kaggle400 Step B, desktop run 2 of `run_local_steps.ps1` (owner's desktop, measured)
 - Run by the owner 12:26 (UTC+6); log `kaggle/work/run_local_steps_20261023_122606.log`; 1.3 min; 77.9 GB free.
 - Steps 1–4 PASS again: re-selection identical; copy step re-hashed all copies (copied now 0, already

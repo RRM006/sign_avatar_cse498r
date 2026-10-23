@@ -1,0 +1,11 @@
+{
+  "b1": {
+    "index": 3098,
+    "sentence_norm": "আমি মঙ্গলবারে জাপান যাবো"
+  },
+  "final_eval": "FINAL_test_20261023T151119Z",
+  "g0_gloss": "আমি সোমবারে? জাপান? যাবো?",
+  "label": "kaggle400 test sentence export - not checked by a BdSL-competent person",
+  "sentence": "আমি সোমবারে জাপান যাবো ",
+  "sentence_norm": "আমি সোমবারে জাপান যাবো"
+}

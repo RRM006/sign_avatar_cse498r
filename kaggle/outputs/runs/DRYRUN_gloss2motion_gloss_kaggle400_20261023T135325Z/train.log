@@ -1,0 +1,5 @@
+2026-10-23 13:53:25,155 kaggle400 Model B, G0 pseudo-gloss input (320/40 train/val clips; small-scale, signer-dependent) | input gloss | run DRYRUN_gloss2motion_gloss_kaggle400_20261023T135325Z | {'train': 320, 'val': 40} | vocab 408 | 2,722,577 parameters | seeds [42, 43, 44] | device cuda:0
+2026-10-23 13:53:31,902 seed 42: DRY RUN stopped after 1 optimiser step(s): train loss 1.5883, monitor pos L1 0.8335, device cuda:0
+2026-10-23 13:53:32,015 seed 43: DRY RUN stopped after 1 optimiser step(s): train loss 1.4623, monitor pos L1 0.8094, device cuda:0
+2026-10-23 13:53:32,115 seed 44: DRY RUN stopped after 1 optimiser step(s): train loss 1.5475, monitor pos L1 0.8259, device cuda:0
+2026-10-23 13:53:32,121 dry run finished (no checkpoint, not resumable, never a result)

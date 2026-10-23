@@ -1,0 +1,32 @@
+### TEST: paired differences per item (95% bootstrap CI; measured)
+
+| comparison (first - second) | metric | mean difference | 95% CI | CI excludes 0 | reading | n items |
+|---|---|---|---|---|---|---|
+| model_b_gloss - B0 | MPJPE body (sw) | -0.013 | [-0.019, -0.006] | yes | first lower (better) | 40 |
+| model_b_gloss - B0 | MPJPE L hand (mm) | -3.8 | [-5.6, -2.0] | yes | first lower (better) | 40 |
+| model_b_gloss - B0 | MPJPE R hand (mm) | -5.9 | [-9.3, -2.6] | yes | first lower (better) | 39 |
+| model_b_gloss - B0 | DTW-MJE body (sw) | -0.017 | [-0.025, -0.009] | yes | first lower (better) | 40 |
+| model_b_gloss - B0 | DTW-MJE L hand (mm) | -6.6 | [-8.8, -4.4] | yes | first lower (better) | 40 |
+| model_b_gloss - B0 | DTW-MJE R hand (mm) | -6.9 | [-10.0, -4.2] | yes | first lower (better) | 39 |
+| model_b_gloss - B0 | duration error (s) | -0.13 | [-0.63, 0.35] | no | not distinguishable at this sample size | 40 |
+| model_b_gloss - B1 | MPJPE body (sw) | -0.049 | [-0.061, -0.037] | yes | first lower (better) | 40 |
+| model_b_gloss - B1 | MPJPE L hand (mm) | -12.1 | [-14.9, -9.5] | yes | first lower (better) | 40 |
+| model_b_gloss - B1 | MPJPE R hand (mm) | -7.7 | [-11.5, -4.0] | yes | first lower (better) | 39 |
+| model_b_gloss - B1 | DTW-MJE body (sw) | -0.017 | [-0.032, -0.004] | yes | first lower (better) | 40 |
+| model_b_gloss - B1 | DTW-MJE L hand (mm) | -3.2 | [-6.2, -0.2] | yes | first lower (better) | 40 |
+| model_b_gloss - B1 | DTW-MJE R hand (mm) | -6.7 | [-9.4, -4.0] | yes | first lower (better) | 39 |
+| model_b_gloss - B1 | duration error (s) | -0.05 | [-0.59, 0.51] | no | not distinguishable at this sample size | 40 |
+| model_b_gloss - model_b_text | MPJPE body (sw) | 0.001 | [-0.003, 0.006] | no | not distinguishable at this sample size | 40 |
+| model_b_gloss - model_b_text | MPJPE L hand (mm) | 1.0 | [-0.5, 2.4] | no | not distinguishable at this sample size | 40 |
+| model_b_gloss - model_b_text | MPJPE R hand (mm) | 0.8 | [-2.2, 3.6] | no | not distinguishable at this sample size | 39 |
+| model_b_gloss - model_b_text | DTW-MJE body (sw) | -0.000 | [-0.005, 0.005] | no | not distinguishable at this sample size | 40 |
+| model_b_gloss - model_b_text | DTW-MJE L hand (mm) | 1.3 | [-0.1, 2.9] | no | not distinguishable at this sample size | 40 |
+| model_b_gloss - model_b_text | DTW-MJE R hand (mm) | -1.1 | [-2.9, 0.6] | no | not distinguishable at this sample size | 39 |
+| model_b_gloss - model_b_text | duration error (s) | 0.26 | [0.01, 0.51] | yes | first higher (worse) | 40 |
+| model_b_text - B0 | MPJPE body (sw) | -0.014 | [-0.022, -0.006] | yes | first lower (better) | 40 |
+| model_b_text - B0 | MPJPE L hand (mm) | -4.8 | [-7.7, -2.1] | yes | first lower (better) | 40 |
+| model_b_text - B0 | MPJPE R hand (mm) | -6.7 | [-11.3, -2.4] | yes | first lower (better) | 39 |
+| model_b_text - B0 | DTW-MJE body (sw) | -0.017 | [-0.025, -0.009] | yes | first lower (better) | 40 |
+| model_b_text - B0 | DTW-MJE L hand (mm) | -7.9 | [-10.8, -5.5] | yes | first lower (better) | 40 |
+| model_b_text - B0 | DTW-MJE R hand (mm) | -5.8 | [-9.6, -2.4] | yes | first lower (better) | 39 |
+| model_b_text - B0 | duration error (s) | -0.39 | [-0.83, 0.03] | no | not distinguishable at this sample size | 40 |

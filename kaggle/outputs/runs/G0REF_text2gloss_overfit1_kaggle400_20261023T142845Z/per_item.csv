@@ -1,0 +1,2 @@
+﻿run_label,index,split,sentence_norm,reference,g0,g0_wer,seed42,seed42_wer
+"agreement with the rule glosser (G0 pseudo-gloss); references are G0 auto_draft outputs, not BdSL annotation; says nothing about BdSL correctness",2,train,আমার কাক পছন্দ না,<neg> আমার কাক পছন্দ NOT,আমার কাক পছন্দ NOT,0.0,<neg> আমার কাক পছন্দ NOT,0.0

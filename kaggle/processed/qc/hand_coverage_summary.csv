@@ -1,0 +1,5 @@
+split,clips,cov_pose_mean,cov_pose_median,cov_pose_min,cov_left_hand_mean,cov_left_hand_median,cov_left_hand_min,cov_right_hand_mean,cov_right_hand_median,cov_right_hand_min,cov_both_hands_mean,cov_both_hands_median,cov_both_hands_min,cov_any_hand_mean,cov_any_hand_median,cov_any_hand_min,cov_face_mean,cov_face_median,cov_face_min,longest_gap_left_hand_s_mean,longest_gap_left_hand_s_median,longest_gap_left_hand_s_min,longest_gap_right_hand_s_mean,longest_gap_right_hand_s_median,longest_gap_right_hand_s_min
+test,40,1.0,1.0,1.0,0.6863,0.7063,0.0349,0.2646,0.2294,0.0,0.2042,0.1724,0.0,0.7467,0.7689,0.47,0.9976,1.0,0.9588,1.1133,0.9,0.0,2.7284,2.367,0.067
+train,320,1.0,1.0,0.9938,0.628,0.6699,0.0,0.2524,0.1973,0.0,0.1803,0.1512,0.0,0.7001,0.73,0.1282,0.9979,1.0,0.9583,1.3475,0.933,0.067,2.9291,2.267,0.0
+val,40,1.0,1.0,1.0,0.6247,0.6546,0.0125,0.2428,0.213,0.0,0.1751,0.164,0.0,0.6924,0.6887,0.3645,0.9998,1.0,0.9909,1.315,0.933,0.533,3.14,2.7335,0.067
+all,400,1.0,1.0,0.9938,0.6335,0.6748,0.0,0.2527,0.2068,0.0,0.1821,0.1528,0.0,0.704,0.7321,0.1282,0.9981,1.0,0.9583,1.3208,0.933,0.0,2.9302,2.333,0.0

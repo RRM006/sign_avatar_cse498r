@@ -1,0 +1,79 @@
+{
+  "TEST_RUN": false,
+  "annotation_file": "gloss_g0_train.csv + gloss_g0_val.csv",
+  "annotation_sha256": "3e3b480d95148c80099017b5b172856cf7199fcbac2b0cb22f0213514b54127c",
+  "code": {
+    "commit": "933e9032ac3a3664e447c4e658a335f0ed621ffa",
+    "dirty": false,
+    "source": "package"
+  },
+  "config_hash": "83e62cae0fe05fcd092bbd50ad93a3d6143b4e82b9d833b172d2d499e5f5d453",
+  "counts": {
+    "train": 40
+  },
+  "created_utc": "20261023T142852Z",
+  "data": "kaggle400",
+  "device": "cuda:0",
+  "device_note": "cuda requested; CUDA available",
+  "devices_used": [
+    "cuda:0"
+  ],
+  "for_paper": true,
+  "g0_files_sha256": "3e3b480d95148c80099017b5b172856cf7199fcbac2b0cb22f0213514b54127c",
+  "git": {
+    "branch": null,
+    "commit": null,
+    "dirty": false
+  },
+  "label": "agreement with the rule glosser (G0 pseudo-gloss); references are G0 auto_draft outputs, not BdSL annotation; says nothing about BdSL correctness",
+  "max_steps": null,
+  "overfit": 40,
+  "overrides": {},
+  "params": 1705810,
+  "pilot_manifest_sha256": "529d82c2619f56265f6a1357beb3969e3f1bdae0001274c1a755189a67d79cee",
+  "prefix": "",
+  "reference": "g0",
+  "seeds": [
+    42
+  ],
+  "split_lock_sha256": "529d82c2619f56265f6a1357beb3969e3f1bdae0001274c1a755189a67d79cee",
+  "splits": [
+    "train",
+    "val"
+  ],
+  "text2gloss_config": {
+    "beam": 4,
+    "max_len": 20,
+    "model": {
+      "attn": 256,
+      "dec_hidden": 256,
+      "dropout": 0.2,
+      "emb": 128,
+      "enc_hidden": 256
+    },
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "tag_prefix": true,
+    "train": {
+      "batch_size": 8,
+      "clip": 1.0,
+      "label_smoothing": 0.1,
+      "lr": 0.001,
+      "max_epochs": 300,
+      "patience": 30
+    }
+  },
+  "text2gloss_config_sha256": "8ab42075fec5e57233f7dc97c578d3d7e4097a476ca2f428498be17500023c41",
+  "versions": {
+    "sacrebleu": "2.6.0",
+    "torch": "2.11.0+cu128"
+  },
+  "vocab_sha256": "ace320d7a0ec72e944616d8951fd6d39e2dad4d839aa8428834464169b3b1cd6",
+  "vocab_sizes": {
+    "src": 84,
+    "tgt": 82
+  }
+}

@@ -184,3 +184,39 @@ def test_child_pythons_never_inherit_the_jupyter_plot_backend(monkeypatch):
     monkeypatch.setenv("MPLBACKEND", "module://matplotlib_inline.backend_inline")
     assert clean_env()["MPLBACKEND"] == "Agg"
     assert "MPLBACKEND" in (ROOT / "kaggle" / "src" / "k400_run.py").read_text(encoding="utf-8")
+
+
+def test_notebook_07_stops_before_freeze_and_test_when_sacrebleu_is_missing():
+    """Found on Kaggle (2026-10-23): Version 1 of notebook 07 ran without Internet, sacrebleu was missing, and the
+    notebook went on to the freeze and to the final test (which crashed before any result). The install must be
+    checked first, and a failure must stop the notebook before any bdsl command runs."""
+    import sys
+
+    import nbformat
+
+    nb = nbformat.read(K / "notebooks" / "07_baselines_eval.ipynb", 4)
+    code = [c.source for c in nb.cells if c.cell_type == "code"]
+    guard = next(i for i, s in enumerate(code) if "assert ok" in s and "sacrebleu" in s)
+    freeze = next(i for i, s in enumerate(code) if 'S.bdsl("freeze")' in s)
+    final = next(i for i, s in enumerate(code) if '"--final"' in s)
+    assert guard < freeze < final
+
+    class Stub:
+        def __init__(self, rc):
+            self.rc, self.calls = rc, []
+
+        def pip_install(self, *pins):
+            return self.rc
+
+        def bdsl(self, *args):
+            self.calls.append(args)
+            return 0
+
+    failing = Stub(1)                                    # pip could not install (no Internet)
+    with pytest.raises(AssertionError, match="test split was not touched"):
+        exec(code[guard], {"S": failing, "sys": sys})
+    assert failing.calls == []                           # nothing after the guard ran
+    working = Stub(0)                                    # installed (sacrebleu is importable in the test env)
+    pytest.importorskip("sacrebleu")
+    exec(code[guard], {"S": working, "sys": sys})
+    assert working.calls == [("list-runs",)]

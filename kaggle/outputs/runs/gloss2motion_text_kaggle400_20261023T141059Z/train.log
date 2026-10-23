@@ -1,0 +1,17 @@
+2026-10-23 14:10:59,500 kaggle400 Model B, Bangla word input = ablation T (320/40 train/val clips; small-scale, signer-dependent) | input text | run gloss2motion_text_kaggle400_20261023T141059Z | {'train': 320, 'val': 40} | vocab 420 | 2,724,881 parameters | seeds [42, 43, 44] | device cuda:0
+2026-10-23 14:11:31,055 seed 42 epoch 25: train loss 0.6767 (pos 0.5434), val pos L1 0.6456 (best epoch 23)
+2026-10-23 14:12:00,254 seed 42 epoch 50: train loss 0.5599 (pos 0.4294), val pos L1 0.6494 (best epoch 27)
+2026-10-23 14:12:29,602 seed 42 epoch 75: train loss 0.4870 (pos 0.3574), val pos L1 0.6534 (best epoch 66)
+2026-10-23 14:12:59,386 seed 42 epoch 100: train loss 0.4440 (pos 0.3171), val pos L1 0.6580 (best epoch 66)
+2026-10-23 14:13:28,991 seed 42 epoch 125: train loss 0.4171 (pos 0.2924), val pos L1 0.6644 (best epoch 66)
+2026-10-23 14:13:30,182 seed 42 epoch 126: train loss 0.4167 (pos 0.2915), val pos L1 0.6612 (best epoch 66)
+2026-10-23 14:13:59,646 seed 43 epoch 25: train loss 0.6864 (pos 0.5549), val pos L1 0.6433 (best epoch 23)
+2026-10-23 14:14:29,513 seed 43 epoch 50: train loss 0.5679 (pos 0.4337), val pos L1 0.6366 (best epoch 34)
+2026-10-23 14:14:58,985 seed 43 epoch 75: train loss 0.4954 (pos 0.3649), val pos L1 0.6507 (best epoch 34)
+2026-10-23 14:15:21,049 seed 43 epoch 94: train loss 0.4606 (pos 0.3316), val pos L1 0.6504 (best epoch 34)
+2026-10-23 14:15:50,869 seed 44 epoch 25: train loss 0.6631 (pos 0.5321), val pos L1 0.6521 (best epoch 22)
+2026-10-23 14:16:20,687 seed 44 epoch 50: train loss 0.5488 (pos 0.4181), val pos L1 0.6532 (best epoch 38)
+2026-10-23 14:16:49,638 seed 44 epoch 75: train loss 0.4849 (pos 0.3566), val pos L1 0.6596 (best epoch 38)
+2026-10-23 14:17:16,161 seed 44 epoch 98: train loss 0.4474 (pos 0.3197), val pos L1 0.6595 (best epoch 38)
+2026-10-23 14:17:35,029 train MPJPE body: B 0.168±0.014 B0 0.218 B1 0.257 | diversity B 0.55 B0 0.00 B1 0.97
+2026-10-23 14:17:35,029 val   MPJPE body: B 0.216±0.005 B0 0.229 B1 0.265 | DTW body B 0.192 B0 0.209 B1 0.205 | diversity B 0.46 B0 0.00 B1 0.94

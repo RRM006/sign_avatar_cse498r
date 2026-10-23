@@ -1,0 +1,5 @@
+2026-10-23 14:28:31,084 agreement with the rule glosser (G0 pseudo-gloss); references are G0 auto_draft outputs, not BdSL annotation; says nothing about BdSL correctness | run DRYRUN_G0REF_text2gloss_kaggle400_20261023T142831Z | {'train': 320, 'val': 40} | vocab {'src': 420, 'tgt': 408} | 2,082,968 parameters | seeds [42, 43, 44] | device cuda:0
+2026-10-23 14:28:38,496 seed 42: DRY RUN stopped after 1 optimiser step(s): train loss 6.0432, device cuda:0
+2026-10-23 14:28:38,570 seed 43: DRY RUN stopped after 1 optimiser step(s): train loss 6.0382, device cuda:0
+2026-10-23 14:28:38,614 seed 44: DRY RUN stopped after 1 optimiser step(s): train loss 6.1362, device cuda:0
+2026-10-23 14:28:38,618 dry run finished (no checkpoint, not resumable, never a result)

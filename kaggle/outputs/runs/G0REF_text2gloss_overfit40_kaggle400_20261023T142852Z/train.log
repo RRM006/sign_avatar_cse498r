@@ -1,0 +1,4 @@
+2026-10-23 14:28:52,624 agreement with the rule glosser (G0 pseudo-gloss); references are G0 auto_draft outputs, not BdSL annotation; says nothing about BdSL correctness | run G0REF_text2gloss_overfit40_kaggle400_20261023T142852Z | {'train': 40} | vocab {'src': 84, 'tgt': 82} | 1,705,810 parameters | seeds [42] | device cuda:0
+2026-10-23 14:29:00,865 seed 42 epoch 10: loss 1.063, train WER 1.1, exact 98% (best epoch 9)
+2026-10-23 14:29:03,047 seed 42 epoch 13: loss 0.931, train WER 0.0, exact 100% (best epoch 13)
+2026-10-23 14:29:03,687 train agreement with G0 | A-GRU WER 0.0±0.0 exact 100% tags 100% BLEU 100.0 chrF 100.0

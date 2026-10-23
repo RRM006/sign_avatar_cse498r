@@ -1,0 +1,4 @@
+﻿split,clips,groups,minimal-pair held-out,with train minimal-pair sibling,OOV token rate vs train,sentences with OOV,mean duration (s)
+train,320,318,0,-,-,-,7.33
+val,40,40,10,21,20.7%,22/40,7.33
+test,40,40,10,21,12.1%,16/40,7.31

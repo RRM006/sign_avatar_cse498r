@@ -1,0 +1,94 @@
+{
+  "bootstrap": {
+    "ci": 95,
+    "resamples": 1000,
+    "seed": 20261023
+  },
+  "code": {
+    "branch": null,
+    "commit": "933e9032ac3a3664e447c4e658a335f0ed621ffa",
+    "dirty": false,
+    "dirty_files": [],
+    "package_created_utc": "2026-10-23T06:36:08+00:00",
+    "source": "package"
+  },
+  "config_hash": "83e62cae0fe05fcd092bbd50ad93a3d6143b4e82b9d833b172d2d499e5f5d453",
+  "for_paper": true,
+  "frozen_utc": "20261023T151021Z",
+  "label": "kaggle400 frozen configuration for the single final test evaluation",
+  "runs": {
+    "model_a": {
+      "checkpoints": {
+        "42": {
+          "file": "seed42/ckpt_best.pt",
+          "sha256": "00c2569bb63ead7911f2492773e1350e0f732bdca6a210b39c0571034651cfb8"
+        },
+        "43": {
+          "file": "seed43/ckpt_best.pt",
+          "sha256": "0cacd6fdd7086875f41da6bee139dd4c5c87c9585757336ee95564eb224ffe58"
+        },
+        "44": {
+          "file": "seed44/ckpt_best.pt",
+          "sha256": "5f8e62435a68d8c9168689fdb868385854fb1c2e3b692af22e2e649daee04379"
+        }
+      },
+      "description": "Model A (G0-reference A-GRU)",
+      "run_id": "G0REF_text2gloss_kaggle400_20261023T142908Z",
+      "run_json_sha256": "7b4f570f71a294c02dffe50c81a92d7a57bca16f58d592acd23dd6deaf725c71",
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "model_b_gloss": {
+      "checkpoints": {
+        "42": {
+          "file": "seed42/ckpt_best.pt",
+          "sha256": "a338e296b9c2717b18fe3ab6d2ad77f889b70f758bbc9eaef5f13d6513698845"
+        },
+        "43": {
+          "file": "seed43/ckpt_best.pt",
+          "sha256": "bba8261140807357bdd90f7d21c5c9b83107eadfaaf2cbe4c584a54697a983d1"
+        },
+        "44": {
+          "file": "seed44/ckpt_best.pt",
+          "sha256": "55285f531cda288bccd58aae8e7f38a0e1f078ff84fd7e9cb85834e546aada22"
+        }
+      },
+      "description": "Model B (G0 gloss input)",
+      "run_id": "gloss2motion_gloss_kaggle400_20261023T135437Z",
+      "run_json_sha256": "c1b582b6ff1c9f4384b0e9219c149891aa07a3dbfc8a5af1fac76d67d770f36a",
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "model_b_text": {
+      "checkpoints": {
+        "42": {
+          "file": "seed42/ckpt_best.pt",
+          "sha256": "2259a8e0f11c50b6937968bc22f03b5bbd960c1506c575804fcf41f9584c8f18"
+        },
+        "43": {
+          "file": "seed43/ckpt_best.pt",
+          "sha256": "75130565aa4428800d4eb20bc9acde581146bb43a00b96dc5501abb7decd35a7"
+        },
+        "44": {
+          "file": "seed44/ckpt_best.pt",
+          "sha256": "870127b89a56034ea13fbbcf155c714ec978166d4761d4f9c39566aae1bf7561"
+        }
+      },
+      "description": "Model B (Bangla word input, ablation T)",
+      "run_id": "gloss2motion_text_kaggle400_20261023T141059Z",
+      "run_json_sha256": "e2bae80720a90e8827ea2c2105e99d3ab0681b916c720d750869f89f5ffdc244",
+      "seeds": [
+        42,
+        43,
+        44
+      ]
+    }
+  },
+  "split_lock_sha256": "529d82c2619f56265f6a1357beb3969e3f1bdae0001274c1a755189a67d79cee"
+}

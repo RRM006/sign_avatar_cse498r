@@ -195,7 +195,21 @@ is report + literature review + trained model + results, aimed at a publishable 
 
 ### G3. Kaggle limits
 - Weekly GPU hours, session length and disk: record the numbers shown in the owner's account.
-  **Status:** Open (measurement at account setup).
+- **Account-specific values** (owner, read in the own Kaggle account on 2026-10-23; settings only — no code
+  run, no accelerator selected): GPU offered **NVIDIA T4 x2**; TPU offered **TPU v5e-8**; weekly GPU quota
+  **30 h** (used 0 h, remaining 30 h on 2026-10-23).
+- **Official documented limits** (owner, from https://www.kaggle.com/docs/notebooks, 2026-10-23): maximum
+  execution time **12 h** for CPU/GPU notebooks and **9 h** for TPU notebooks. Interactive sessions also have
+  a separate **idle timeout** (value not recorded); it is not the same as the maximum execution time. (The AI
+  could not read that page itself — it loads its text with JavaScript — so these values rest on the owner's
+  check.)
+- **Measured by notebook 00** (Kaggle GPU T4 x2 session, 2026-10-23, `test_log.md`): free disk **20.9 GB of
+  21.0 GB** in `/kaggle/working`; 4 CPU cores; 33.7 GB RAM; Python 3.13.15; PyTorch 2.11.0+cu128.
+- Code fact (AI, from the repository, not a Kaggle limit): training uses one GPU (`cuda:0`,
+  `src/bdsl/device.py`), so the second T4 stays unused; no project code uses a TPU.
+  **Status:** Answered 2026-10-23 — GPU type, weekly GPU quota and execution-time limits (owner); disk,
+  CPU and RAM measured by notebook 00. The idle-timeout value is not recorded (not needed: we run saved
+  versions).
 
 ### G4. Python 3.12 + mediapipe 0.10.35
 - The wheel lists 3.12; not installed or tested yet. Day 1 Step 1 checks it (ADR-0016).
@@ -262,6 +276,10 @@ is report + literature review + trained model + results, aimed at a publishable 
   files get Windows line endings on checkout and their byte hash changes (annotation CSV: working
   copy `9cd37d3d…`, committed blob `a0be4e91…`, which the Day 3 runs recorded). Proposal 05 Step B4
   suggests fixed `eol=lf`. (TBD — decide with owner). **Status:** Open (owner input).
+- New evidence 2026-10-23 (kaggle400 Step B): `git archive` applies `core.autocrlf`, so the `code/` folder
+  of the upload zip `bdsl-k400-933e9032.zip` has CRLF text files (data/ is LF). Checked harmless: a smoke
+  run of all notebooks on a package built the same way gave identical results (`test_log.md`). The
+  split lock and gloss checks already ignore line endings.
 
 ### G13. GPU device support in the training code
 - Found in the 2026-10-22 audit: `src/bdsl/models/` never moves models or tensors to a GPU, so
@@ -281,7 +299,12 @@ is report + literature review + trained model + results, aimed at a publishable 
 - `FINAL_TEST_LOCK.json` is written in notebook 07's output. A NEW version of notebook 07 that does not
   have the earlier output attached cannot see the lock and would run the test again. Proposal: never
   re-run 07 after a successful version (GUIDE section 12); download the lock and commit it; if 07 must
-  be re-run, attach its previous output (then the second run is refused). **Status:** Open (owner).
+  be re-run, attach its previous output (then the second run is refused).
+- 2026-10-23: Version 1 of notebook 07 crashed (no Internet → no sacrebleu) after the code had read the test
+  split in memory, but before any test number was printed or saved; no lock was written (`test_log.md`).
+  Owner decision (chat): run 07 once more with the same frozen runs and report the failed attempt openly;
+  a safety stop for the missing package was added to notebook 07. **Status:** Open (owner) for the general
+  rule; this case decided.
 
 ### G16. Confirm proposed ADR-0028 (kaggle400 technical choices)
 - Selection details, B1 exclusions, freeze rule, MediaPipe model download, `max_frames` 360.
@@ -289,7 +312,50 @@ is report + literature review + trained model + results, aimed at a publishable 
 
 ### G17. Does Kaggle unpack the uploaded zip?
 - Unknown until the upload. The notebooks work either way (they unpack a kept zip into `/tmp`).
-  **Status:** Open (measurement at upload).
+- Measured 2026-10-23 (owner, Kaggle dataset page after uploading `bdsl-k400-933e9032.zip`): Kaggle
+  **unzipped** the archive automatically. The Data Explorer shows `code/`, `data/`, `PACKAGE_INFO.json`,
+  `README_UPLOAD.md`, `UPLOAD_MANIFEST.csv`; size 5.94 GB, 535 files, Version 1, Private, no error.
+  The notebook setup cell searches `/kaggle/input` at any depth for the folder with `UPLOAD_MANIFEST.csv` +
+  `PACKAGE_INFO.json`, so the unzipped layout needs no change. Notebook 01 re-hashes every file.
+  **Status:** Answered 2026-10-23 — unzipped (owner's observation).
+
+### G18. Small fixes that need a new commit and a new upload package
+- Found in Step B (2026-10-23), both harmless now: (1) the guide says the zip is "about 5.95 GB", but
+  Windows shows the same 5.94 GB file (5,938,005,200 bytes) as 5.53 GB (it counts 1 GB = 1024³ bytes);
+  (2) `package.py` could call `git -c core.autocrlf=false archive` so `code/` is byte-identical to the
+  repository (see G12). (3) Notebook 01 shows `SPLIT_REPORT.md` right after the live split check; its
+  section 7 is the selection-time snapshot ("7 passed, 3 skipped", before the copy), which the owner first
+  read as the live result (2026-10-23). Proposal: the final list prints the live `RESULT:` counts, and the
+  displayed report marks section 7 as "historical". (4) Progress lines of a child command (e.g. extraction
+  "20/400 clips") reach the Kaggle log only when the command ends, because the child's stdout is buffered;
+  the owner saw a silent log for ~57 min in notebook 02 (2026-10-23). Proposal: `flush=True` in the
+  progress prints or `PYTHONUNBUFFERED=1` in `Setup._stream`. (5) A failed `pip install` (no Internet) does not
+  stop a notebook: notebook 07 Version 1 went on to freeze and to the final test without `sacrebleu`
+  (2026-10-23). Proposal: notebooks stop when `S.pip_install(...)` returns non-zero, before any test access.
+  (6) `FINAL_TEST_LOCK.json` is written only after a successful final evaluation, so a crash after the test
+  split was read leaves no record in the code's own files. Proposal: write an "attempt started" record
+  before reading test. (7) The skeleton MP4s (`src/bdsl/avatar/export.py`, OpenCV fourcc `mp4v` = MPEG-4
+  Part 2) do not play in browsers (Kaggle's player stays at 0:00; owner, 2026-10-23). Proposal: re-encode to
+  H.264 with ffmpeg after writing (or write H.264 directly where available). (8) `Setup.finish()` appends the
+  "finished" entry to `STATE.json` after writing `OUTPUT_HASHES.csv`, so `verify-download` always reports
+  STATE.json as a mismatch (run 1: 2,447/2,448; proven harmless, `test_log.md`). Proposal: hash after the
+  final STATE.json write, or leave STATE.json out of the list. Changing any of these touches
+  code paths, so the uploaded `code/` would no longer equal commit `933e903`. Proposal: do them only when a new package is needed anyway, or after the Kaggle runs.
+  **Status:** Open (owner).
+
+### G19. Run the final TEST now, or improve Model B on VAL first?
+- Found 2026-10-23 after notebooks 04–06 (`test_log.md`): on VAL, Model B (gloss and text input) has slightly
+  lower position error than B0, but its motion is strongly damped (velocity ratio 0.13 gloss / 0.18 text vs
+  0.98 for real-clip retrieval B1). Notebook 07 freezes the 04/05/06 runs and reads TEST once
+  (`FINAL_TEST_LOCK.json`). After that, any changed model judged on the same test split is test-informed.
+- Options: (a) freeze now and run 07 once — report Model B as it is (fast, clean); (b) first try
+  improvements judged on VAL only (needs code/config changes → new commit, new `code/` on Kaggle, re-run
+  04–06), then run 07; (c) wait and decide later (all outputs up to 06 are saved).
+- Fact for the choice (measured from `S1_v0.csv`): 437 clips of the S1 test partition are not in kaggle400,
+  so a later, changed model can be tested on clips this experiment never touched.
+  **Status:** Answered 2026-10-23 — owner chose (a): freeze the 04/05/06 runs and run notebook 07 once now;
+  Model B is reported as it is, with the damped motion as a measured limitation. (To be written as an ADR at
+  the end of the session.)
 
 ---
 
@@ -349,6 +415,13 @@ is report + literature review + trained model + results, aimed at a publishable 
 - **2026-10-22** — F10 Data-location wording → corrected (ADR-0017).
 - **2026-10-22** — F11 `misc/pdf/` → left alone (ADR-0021).
 - **2026-10-22** — G4 Python 3.12 + mediapipe 0.10.35 → works (Day 1 Step 1; `test_log.md`).
+- **2026-10-23** — G3 Kaggle limits → account: GPU T4 x2, TPU v5e-8, 30 GPU h/week; official docs
+  (owner-checked): max 12 h per CPU/GPU notebook, 9 h per TPU notebook, separate idle timeout; measured by
+  notebook 00: 20.9 GB free disk in `/kaggle/working`, 4 CPU cores, 33.7 GB RAM.
+- **2026-10-23** — G19 Final TEST now or improve Model B first? → freeze 04/05/06 and run notebook 07 once
+  now; report Model B as it is (owner, chat).
+- **2026-10-23** — G17 Does Kaggle unpack the uploaded zip? → yes, unzipped automatically (owner, dataset
+  `bdsl-k400` Version 1: 535 files, 5.94 GB, Private).
 - **2026-10-23** — G13 GPU device support → yes (owner, chat; implemented Session 8; proposed ADR-0028).
 - **2026-10-23** — G14 clean-commit rule → refuse dirty result runs or mark NOT FOR PAPER (owner, chat;
   kaggle400; proposed ADR-0028).

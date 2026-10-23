@@ -1,0 +1,11 @@
+{
+  "b1": {
+    "index": 1663,
+    "sentence_norm": "আমার বাবা বিমানে যাবে"
+  },
+  "final_eval": "FINAL_test_20261023T151119Z",
+  "g0_gloss": "আমার ভাই? বিমানে? যাবে?",
+  "label": "kaggle400 test sentence export - not checked by a BdSL-competent person",
+  "sentence": "আমার ভাই বিমানে যাবে",
+  "sentence_norm": "আমার ভাই বিমানে যাবে"
+}

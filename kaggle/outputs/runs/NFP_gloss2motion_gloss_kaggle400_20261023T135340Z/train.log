@@ -1,0 +1,4 @@
+2026-10-23 13:53:40,227 kaggle400 Model B, G0 pseudo-gloss input (320/40 train/val clips; small-scale, signer-dependent) | input gloss | run NFP_gloss2motion_gloss_kaggle400_20261023T135340Z | {'train': 320, 'val': 40} | vocab 408 | 2,722,577 parameters | seeds [42] | device cuda:0
+2026-10-23 13:53:46,951 seed 42 epoch 4: train loss 0.8315 (pos 0.6762), val pos L1 0.6855 (best epoch 4)
+2026-10-23 13:53:58,808 train MPJPE body: B 0.226±0.000 B0 0.218 B1 0.257 | diversity B 0.01 B0 0.00 B1 0.97
+2026-10-23 13:53:58,808 val   MPJPE body: B 0.236±0.000 B0 0.229 B1 0.265 | DTW body B 0.221 B0 0.209 B1 0.205 | diversity B 0.01 B0 0.00 B1 0.94

@@ -332,7 +332,15 @@ NB["07_baselines_eval"] = [
            "you add this notebook's Output as Input; then a second test run is refused. Re-running the test means "
            "the test is no longer clean."),
     code(SETUP.format(name="07_baselines_eval")),
-    code('S.pip_install("sacrebleu==2.6.0")\nrc_list = S.bdsl("list-runs")'),
+    code('# Safety stop (added 2026-10-23: Version 1 ran without Internet, sacrebleu was missing, and the notebook\n'
+         '# went on to the freeze and the final test). If sacrebleu cannot be installed, stop HERE: before the\n'
+         '# freeze and before any access to the test split.\n'
+         'import subprocess\n'
+         'rc_pip = S.pip_install("sacrebleu==2.6.0")\n'
+         'ok = rc_pip == 0 and subprocess.run([sys.executable, "-c", "import sacrebleu"]).returncode == 0\n'
+         'assert ok, "STOP: sacrebleu is not installed (turn Internet On). Nothing was frozen; the test split was not touched."\n'
+         'print("sacrebleu OK")\n'
+         'rc_list = S.bdsl("list-runs")'),
     md("## Step 1 — Freeze (newest finished, for-paper run of each kind)"),
     code('rc_freeze = S.bdsl("freeze")\nfrozen = json.load(open(S.state_root / "outputs/frozen_config.json"))\nprint(json.dumps({r: v["run_id"] for r, v in frozen["runs"].items()}, indent=1))'),
     md("## Step 2 — VAL evaluation (bootstrap 95% CI, paired differences, error analysis)"),

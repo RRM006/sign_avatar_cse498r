@@ -21,3 +21,8 @@ kaggle/outputs/**/*.zip
 kaggle/work/
 kaggle.json
 .kaggle/
+# kaggle400 run 1: contains the owner's Kaggle username (owner, 2026-10-23, ADR-0029)
+kaggle/outputs/env/mediapipe_route.json
+# landmarks derived from real people's recordings never go into the public repo (ADR-0017)
+kaggle/outputs/avatar/**/motion_real.json
+kaggle/outputs/avatar/**/motion_B1.json

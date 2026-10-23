@@ -1,0 +1,15 @@
+2026-10-23 13:54:37,628 kaggle400 Model B, G0 pseudo-gloss input (320/40 train/val clips; small-scale, signer-dependent) | input gloss | run gloss2motion_gloss_kaggle400_20261023T135437Z | {'train': 320, 'val': 40} | vocab 408 | 2,722,577 parameters | seeds [42, 43, 44] | device cuda:0
+2026-10-23 13:55:09,018 seed 42 epoch 25: train loss 0.6761 (pos 0.5442), val pos L1 0.6549 (best epoch 24)
+2026-10-23 13:55:38,086 seed 42 epoch 50: train loss 0.5622 (pos 0.4312), val pos L1 0.6459 (best epoch 38)
+2026-10-23 13:56:07,071 seed 42 epoch 75: train loss 0.4925 (pos 0.3643), val pos L1 0.6616 (best epoch 38)
+2026-10-23 13:56:33,601 seed 42 epoch 98: train loss 0.4528 (pos 0.3263), val pos L1 0.6621 (best epoch 38)
+2026-10-23 13:57:03,215 seed 43 epoch 25: train loss 0.6809 (pos 0.5487), val pos L1 0.6473 (best epoch 18)
+2026-10-23 13:57:32,643 seed 43 epoch 50: train loss 0.5611 (pos 0.4287), val pos L1 0.6580 (best epoch 27)
+2026-10-23 13:58:02,107 seed 43 epoch 75: train loss 0.4937 (pos 0.3631), val pos L1 0.6543 (best epoch 27)
+2026-10-23 13:58:16,031 seed 43 epoch 87: train loss 0.4699 (pos 0.3408), val pos L1 0.6568 (best epoch 27)
+2026-10-23 13:58:45,489 seed 44 epoch 25: train loss 0.6751 (pos 0.5444), val pos L1 0.6482 (best epoch 18)
+2026-10-23 13:59:14,677 seed 44 epoch 50: train loss 0.5593 (pos 0.4283), val pos L1 0.6524 (best epoch 18)
+2026-10-23 13:59:43,836 seed 44 epoch 75: train loss 0.4912 (pos 0.3626), val pos L1 0.6610 (best epoch 18)
+2026-10-23 13:59:47,333 seed 44 epoch 78: train loss 0.4838 (pos 0.3543), val pos L1 0.6568 (best epoch 18)
+2026-10-23 14:00:06,175 train MPJPE body: B 0.187±0.013 B0 0.218 B1 0.257 | diversity B 0.44 B0 0.00 B1 0.97
+2026-10-23 14:00:06,175 val   MPJPE body: B 0.218±0.000 B0 0.229 B1 0.265 | DTW body B 0.194 B0 0.209 B1 0.205 | diversity B 0.38 B0 0.00 B1 0.94

@@ -1,0 +1,22 @@
+### Training-time vs held-out error (over-fitting check; measured)
+
+| method | split | MPJPE body (sw) | MPJPE L hand (mm) | MPJPE R hand (mm) | source |
+|---|---|---|---|---|---|
+| model_b_gloss | train | 0.187 | 42.3 | 47.7 | runs/gloss2motion_gloss_kaggle400_20261023T135437Z/metrics.json |
+| model_b_gloss | val | 0.218 | 52.1 | 61.6 | runs/gloss2motion_gloss_kaggle400_20261023T135437Z/metrics.json |
+| B0 (model_b_gloss run) | train | 0.218 | 53.7 | 62.5 | runs/gloss2motion_gloss_kaggle400_20261023T135437Z/metrics.json |
+| B0 (model_b_gloss run) | val | 0.229 | 56.8 | 63.4 | runs/gloss2motion_gloss_kaggle400_20261023T135437Z/metrics.json |
+| B1 (model_b_gloss run) | train | 0.257 | 61.7 | 67.7 | runs/gloss2motion_gloss_kaggle400_20261023T135437Z/metrics.json |
+| B1 (model_b_gloss run) | val | 0.265 | 66.2 | 67.4 | runs/gloss2motion_gloss_kaggle400_20261023T135437Z/metrics.json |
+| model_b_text | train | 0.168 | 34.8 | 39.6 | runs/gloss2motion_text_kaggle400_20261023T141059Z/metrics.json |
+| model_b_text | val | 0.216 | 52.4 | 62.3 | runs/gloss2motion_text_kaggle400_20261023T141059Z/metrics.json |
+| B0 (model_b_text run) | train | 0.218 | 53.7 | 62.5 | runs/gloss2motion_text_kaggle400_20261023T141059Z/metrics.json |
+| B0 (model_b_text run) | val | 0.229 | 56.8 | 63.4 | runs/gloss2motion_text_kaggle400_20261023T141059Z/metrics.json |
+| B1 (model_b_text run) | train | 0.257 | 61.7 | 67.7 | runs/gloss2motion_text_kaggle400_20261023T141059Z/metrics.json |
+| B1 (model_b_text run) | val | 0.265 | 66.2 | 67.4 | runs/gloss2motion_text_kaggle400_20261023T141059Z/metrics.json |
+| model_b_gloss | test | 0.199 | see T4 | see T4 | eval/FINAL_test_20261023T151119Z/metrics.json |
+| model_b_text | test | 0.198 | see T4 | see T4 | eval/FINAL_test_20261023T151119Z/metrics.json |
+| B0 | test | 0.212 | see T4 | see T4 | eval/FINAL_test_20261023T151119Z/metrics.json |
+| B1 | test | 0.249 | see T4 | see T4 | eval/FINAL_test_20261023T151119Z/metrics.json |
+
+Train numbers use the best (val-selected) checkpoint on clips the model was trained on.
