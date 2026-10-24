@@ -7,7 +7,7 @@
 > "Candidate options" are ideas found in the paper analyses (`research/paper_analyses/NN`) and the
 > design proposals (`research/design_proposals/`). They are **proposals, not decisions**.
 
-**Last updated:** 2026-10-22 (Session 3: B, C, E, F answered → ADR-0014–0021; open items now in §G)
+**Last updated:** 2026-10-24 (Session 10: G20 answered; open items remain in §G)
 
 ---
 
@@ -280,6 +280,8 @@ is report + literature review + trained model + results, aimed at a publishable 
   of the upload zip `bdsl-k400-933e9032.zip` has CRLF text files (data/ is LF). Checked harmless: a smoke
   run of all notebooks on a package built the same way gave identical results (`test_log.md`). The
   split lock and gloss checks already ignore line endings.
+- 2026-10-23 (commit `b705768`): Git warned "LF will be replaced by CRLF" for every new text file of the
+  run-1 results (`core.autocrlf=true`). Expected; the commit itself is fine.
 
 ### G13. GPU device support in the training code
 - Found in the 2026-10-22 audit: `src/bdsl/models/` never moves models or tensors to a GPU, so
@@ -304,7 +306,7 @@ is report + literature review + trained model + results, aimed at a publishable 
   split in memory, but before any test number was printed or saved; no lock was written (`test_log.md`).
   Owner decision (chat): run 07 once more with the same frozen runs and report the failed attempt openly;
   a safety stop for the missing package was added to notebook 07. **Status:** Open (owner) for the general
-  rule; this case decided.
+  rule; this case decided (ADR-0029).
 
 ### G16. Confirm proposed ADR-0028 (kaggle400 technical choices)
 - Selection details, B1 exclusions, freeze rule, MediaPipe model download, `max_frames` 360.
@@ -354,8 +356,13 @@ is report + literature review + trained model + results, aimed at a publishable 
 - Fact for the choice (measured from `S1_v0.csv`): 437 clips of the S1 test partition are not in kaggle400,
   so a later, changed model can be tested on clips this experiment never touched.
   **Status:** Answered 2026-10-23 — owner chose (a): freeze the 04/05/06 runs and run notebook 07 once now;
-  Model B is reported as it is, with the damped motion as a measured limitation. (To be written as an ADR at
-  the end of the session.)
+  Model B is reported as it is, with the damped motion as a measured limitation. Recorded as ADR-0029.
+
+### G20. Push the kaggle400 commits to the public GitHub repo?
+- Facts: The owner requested the push on 2026-10-24. Commits `933e903` and `b705768`, and the Session 10
+  project-memory update, were pushed to the public repository after checking the outgoing paths against the
+  project's exclusions.
+  **Status:** Answered 2026-10-24 — pushed at the owner's request; no ADR required.
 
 ---
 
@@ -419,7 +426,7 @@ is report + literature review + trained model + results, aimed at a publishable 
   (owner-checked): max 12 h per CPU/GPU notebook, 9 h per TPU notebook, separate idle timeout; measured by
   notebook 00: 20.9 GB free disk in `/kaggle/working`, 4 CPU cores, 33.7 GB RAM.
 - **2026-10-23** — G19 Final TEST now or improve Model B first? → freeze 04/05/06 and run notebook 07 once
-  now; report Model B as it is (owner, chat).
+  now; report Model B as it is (owner, chat; ADR-0029).
 - **2026-10-23** — G17 Does Kaggle unpack the uploaded zip? → yes, unzipped automatically (owner, dataset
   `bdsl-k400` Version 1: 535 files, 5.94 GB, Private).
 - **2026-10-23** — G13 GPU device support → yes (owner, chat; implemented Session 8; proposed ADR-0028).

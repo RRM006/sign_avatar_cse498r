@@ -24,6 +24,20 @@ Results are logged here only after they are actually run.
 
 ---
 
+## 2026-10-23 — kaggle400 run-1 local commit on the desktop (measured)
+- Setup: owner's desktop, PowerShell commit block from the chat: `uv run pytest -q`; then, only on success,
+  `git add` of the listed paths (`kaggle/outputs`, `kaggle/processed/qc`, notebook 07, `build_notebooks.py`,
+  `tests/test_k400_misc.py`, `agent_docs`, `DATASET_WORK_LOG.md`, `.gitignore`); a filter on the staged names
+  (`.pt/.pth/.ckpt/.npz/.mp4/.zip`, `motion_real`, `motion_B1`, `mediapipe_route`, `kaggle.json`) that unstages
+  everything and stops if any match; commit with `kaggle/work/commit_message_run1.txt`.
+- Result: **210 passed in 50.27 s**; filter: nothing matched; **162 files** committed as **`b705768`**
+  ("kaggle400 run 1: Kaggle results, notebook-07 safety stop, notes"); `git log`: `b705768` → `933e903` →
+  `acb711c` (origin/main); `git status --short` empty. **Not pushed.**
+- Notes: Git warned "LF will be replaced by CRLF" for every new text file (`core.autocrlf=true`, G12) —
+  expected. The run-1 report (Claude Doc, 2026-10-23) takes its numbers from the entries below; the output
+  folders it names (`kaggle/outputs/eval/`, `tables/`, `figures/`, `avatar/<5 clips>/`, `FINAL_TEST_LOCK.json`)
+  were confirmed on the desktop by a folder listing.
+
 ## 2026-10-23 — kaggle400 run-1 small results copied into the project + privacy scan (measured)
 - robocopy `…/run1/k400/outputs` → `kaggle/outputs` excluding `*.pt *.npz *.mp4 motion_real.json motion_B1.json`:
   2,031 files seen, **144 copied (4.25 MB)**, 1,887 skipped, 0 failed (6 "extras" = existing README/.gitkeep);

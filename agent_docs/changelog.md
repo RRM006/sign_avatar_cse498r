@@ -14,6 +14,34 @@
 
 ---
 
+## Session 10 — 2026-10-24 — kaggle400 commits pushed
+- Did:
+  - The owner asked to commit and push. Published `933e903` and `b705768` to the public GitHub repository
+    after checking the outgoing paths against the project's exclusions.
+  - Committed the project-memory updates for the kaggle400 run, G20, and the next-step status.
+- Decided: G20 answered by the owner's explicit request to push; no new research or model decision.
+- Broke / problem: None.
+- Deferred: The owner chooses the next work item; no experiment or model change was started.
+- Next: Ask the owner which work item to take next; see the options in `current_task.md`.
+
+## Session 9 (part 2) — 2026-10-23 — run-1 results committed locally (`b705768`) + 2-page run-1 report
+- Did:
+  - The owner ran the commit block on the desktop: **210 tests passed** (50.27 s); the forbidden-file check
+    found nothing (no `.pt/.pth/.ckpt/.npz/.mp4/.zip`, `motion_real`, `motion_B1`, `mediapipe_route`,
+    `kaggle.json`); **162 files** committed as **`b705768`** ("kaggle400 run 1: Kaggle results, notebook-07
+    safety stop, notes"); `git status --short` empty; **not pushed** (`origin/main` = `acb711c`).
+  - Wrote the 2-page run-1 report as a Claude Doc in the owner's claude.ai account: "kaggle400 Run 1 —
+    Bangla Text to BdSL Avatar: Experiment Report" (main findings · what we did · test results table · what
+    the skeleton videos show · what it means · how to improve it (proposals) · where each output comes
+    from). Numbers taken from `test_log.md` / `RUN1_NOTES.md`; the folders it names were checked on the desktop.
+    Not in the repo.
+- Decided: Nothing new (the local commit and "no push" are ADR-0029).
+- Broke / problem: Nothing failed. Git warned "LF will be replaced by CRLF" for every new text file
+  (`core.autocrlf`, G12) — expected.
+- Deferred: push (new question G20); paper write-up; improvement proposals (report section 6, not decided);
+  G16, G18.
+- Next: the owner reads the report and answers G20 (push or keep local) and picks the next work item.
+
 ## Session 9 — 2026-10-23 — kaggle400 on Kaggle: upload, notebooks 00–09, final test, results downloaded
 - Did: Owner did everything on Kaggle, step by step; the AI checked each result and recorded it (test_log):
   - C1 account + phone verified; C2 limits recorded (G3: T4 x2, 30 GPU h/week, 12 h per run; disk 20.9 GB
