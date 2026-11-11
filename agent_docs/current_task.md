@@ -148,10 +148,10 @@ Next useful owner check: uv run pytest -q once after cleanup to catch any surviv
 
 ---
 
-## Latest active handoff — 2026-11-11 — Scoped public commit/push authorized
+## Latest active handoff — 2026-11-11 — Scoped public commit/push complete
 
-The owner approved a safe scoped commit/push to the configured remote. `.gitignore` now excludes version-local data/features/checkpoints/run and demo state, the full dataset index, and model assets; source, docs, notebooks, tests, and safe aggregate results remain publishable. The large version state and local model assets are not staged. Workspace `AGENTS.md` is also excluded.
+The owner-approved safe scope was committed as `bf24f6f` and pushed to `origin/main`; remote ref verification matched. `.gitignore` excludes version-local data/features/checkpoints/run and demo state, the full dataset index, and model assets. Protected artifacts were not published. Workspace `AGENTS.md` remains untracked and was not committed.
 
-Post-cleanup Python/pytest/demo were not run by the assistant; the owner-reported 238 passed occurred before cleanup. No k600 folder/config/data exists.
+`git diff --cached --check` and the staged protected-path/secret-pattern audit passed. Post-cleanup Python/pytest/demo were not run by the assistant; owner-reported 238 passed occurred before cleanup. No k600 folder/config/data exists.
 
-Next: finish the staged-path safety audit, then commit and push to `origin/main`.
+Next: owner runs `uv run pytest -q` in the existing offline environment to check for legacy-path dependencies after cleanup. Assistant must not run Python. Do not rerun migration/cleanup scripts.

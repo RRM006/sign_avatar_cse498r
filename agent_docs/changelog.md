@@ -14,12 +14,12 @@
 
 ---
 
-## Session 11 (continued) — 2026-11-11 — Safe publishing scope prepared
-- Did: The owner approved a scoped commit/push to the configured remote. Added selective ignore rules for local version data, features, checkpoints, run/demo state, shared indexes/model assets, and updated the current layout/publishing docs. Staged the source, tests, notebooks, documentation, safe aggregate summaries, and reviewed path migration; protected artifacts were excluded.
+## Session 11 (continued) — 2026-11-11 — Canonical version layout published
+- Did: The owner approved a scoped commit/push. Added selective ignore rules for local version data, features, checkpoints, run/demo state, shared indexes/model assets, and updated the current layout/publishing docs. Committed the reviewed source, tests, notebooks, docs, safe aggregate summaries, and path migration as `bf24f6f`; pushed to `origin/main`. Protected artifacts were excluded; workspace `AGENTS.md` remains untracked.
 - Decided: The approved public scope does not include raw videos, derived feature files, checkpoints, model assets, full dataset indexes, or private run/demo state.
 - Broke / problem: No post-cleanup test run was performed; the owner-reported 238-pass suite predates cleanup.
-- Deferred: Commit and push until the staged-path audit is complete.
-- Next: Finish the staged safety check, then commit and push to `origin/main`.
+- Deferred: Post-cleanup pytest remains an owner-PC check.
+- Next: The owner runs `uv run pytest -q` in the existing offline environment, then chooses the next project task.
 
 ## Session 10 — 2026-10-24 — kaggle400 commits pushed
 - Did:
