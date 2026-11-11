@@ -4,13 +4,11 @@
                                                   ↘ B1: the real motion of the most similar training clip
     both → smoothing → retargeting → motion_modelB.json, motion_B1.json (browser viewer)
          → skeleton_side_by_side.mp4 (always) + demo_log.json (versions, hashes, round-trip errors)
-Model A is not used: it has run in TEST mode only (ADR-0025).
+Model A is not used: the demo uses G0 pseudo-glosses, without claiming BdSL validation.
 """
 
 from __future__ import annotations
 
-import hashlib
-import json
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,8 +18,8 @@ import torch
 from ..io import atomic_write_json, atomic_write_text, sha256_file
 from ..models.baselines import b1_retrieve, g0_gloss
 from ..models.gloss2motion import Gloss2Motion
-from ..models.text2gloss import Vocab, vocab_hash
-from ..models.train_gloss2motion import _git, input_tokens, load_items
+from ..models.train_gloss2motion import RESUME_KEYS, _git, input_tokens
+from .demo_inputs import load_demo_inputs
 from .export import MOTION_FORMAT, build_motion, skeleton_video, write_motion
 from .retarget import RETARGET_VER
 
@@ -46,63 +44,74 @@ LIMITATIONS = """# Day 5 demo — limitations (read before showing this anywhere
 """
 
 
-def run_demo(cfg: dict, sentence: str, out_root: Path, model_run: str, seed: int) -> dict:
-    from ..cli import check_model_b_inputs
-    from ..data.manifest import read_sheet
-    from ..text.gloss_rules import g0
-    from ..text.normalize import NORM_VER, normalize, tokens
+def _new_output(out_root: Path, stamp: str) -> Path:
+    """Reserve a fresh folder, including when two demos start in the same second."""
+    out_root.mkdir(parents=True, exist_ok=True)
+    suffix = 1
+    while True:
+        out = out_root / (f"demo_{stamp}" + (f"_{suffix}" if suffix > 1 else ""))
+        try:
+            out.mkdir(exist_ok=False)
+            return out
+        except FileExistsError:
+            suffix += 1
 
-    acfg, gcfg_now = cfg["avatar"], cfg["gloss2motion"]
+
+def run_demo(cfg: dict, sentence: str, out_root: Path, model_run: str, seed: int) -> dict:
+    from ..models.train_gloss2motion import b1_pool
+    from ..text.gloss_rules import g0
+    from ..text.normalize import NORM_VER, normalize
+
+    ctx = load_demo_inputs(cfg, model_run, seed)
+    run_dir, run_meta = ctx.run_dir, ctx.meta
+    df, items, train, vocab = ctx.rows, ctx.items, ctx.train, ctx.vocab
+    mean, sd, checks, blend_names = ctx.mean, ctx.sd, dict(ctx.checks), ctx.blend_names
+    pilot = ctx.paths["layout"] == "pilot"
+    acfg = cfg["avatar"]
     fps = float(cfg["features"]["fps"])
-    run_dir = Path(cfg["paths"]["runs_dir"]) / model_run
-    run_meta = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
-    if run_meta["input"] != "gloss":
-        raise ValueError(f"{model_run} is a {run_meta['input']!r} run; the demo uses a gloss run")
+    model_run = run_dir.name
+    model_label = MODEL_B_LABEL if pilot else f"Model B ({ctx.paths['data']}, {len(train)} training clips, G0 gloss input)"
 
     # Text → gloss (G0), exactly as gloss-draft builds its drafts.
     norm = normalize(sentence)
-    corpus = {t for s in read_sheet(cfg)["sentence_raw"] for t in tokens(s)}
-    gloss_auto, tags_auto, _ = g0(norm, corpus)
+    gloss_auto, tags_auto, _ = g0(norm, ctx.corpus)
     toks = input_tokens({"gloss_auto": gloss_auto, "tags_auto": tags_auto, "sentence_norm": norm}, "gloss")
-
-    # Rebuild the run's vocabulary and standardiser from the same inputs and check their hashes.
-    df, problems, inputs_sha = check_model_b_inputs(cfg)
-    if problems:
-        raise RuntimeError(f"Model B inputs failed the checks: {problems[:3]}")
-    features_dir = Path(cfg["paths"]["features_dir"]) / run_meta["feat_ver"]
-    items = load_items(df, features_dir, "gloss", run_meta["gloss2motion_config"]["max_gap"])
-    train = [it for it in items if it["split"] == "train"]
-    vocab = Vocab([t for it in train for t in it["tokens"]])
-    checks = {"inputs_sha256": inputs_sha == run_meta["inputs_sha256"],
-              "vocab_sha256": vocab_hash(vocab, vocab) == run_meta["vocab_sha256"]}
-    with np.load(run_dir / "standardizer.npz") as z:
-        mean, sd = z["mean"], z["sd"]
-    checks["standardizer_sha256"] = hashlib.sha256(mean.tobytes() + sd.tobytes()).hexdigest() == run_meta["standardizer_sha256"]
-    if not all(checks.values()):
-        raise RuntimeError(f"the run's inputs changed since training: {checks}")
 
     # Model B.
     ckpt = run_dir / f"seed{seed}" / "ckpt_best.pt"
+    checkpoint = torch.load(ckpt, weights_only=True, map_location="cpu")
+    wanted = {k: run_meta[k] for k in RESUME_KEYS}
+    different = [k for k, v in wanted.items() if checkpoint["meta"].get(k) != v]
+    if different or checkpoint["meta"].get("seed") != seed:
+        raise ValueError(f"checkpoint does not belong to this run/seed: {different or ['seed']}")
+    checks["checkpoint_meta"] = True
     model = Gloss2Motion(len(vocab), **run_meta["gloss2motion_config"]["model"])
-    model.load_state_dict(torch.load(ckpt, weights_only=True)["model"])
-    pred_z = model.generate(torch.tensor([vocab.encode(toks)]), gcfg_now["max_frames"])[0].numpy()
+    model.load_state_dict(checkpoint["model"])
+    pred_z = model.generate(torch.tensor([vocab.encode(toks)]), run_meta["gloss2motion_config"]["max_frames"])[0].numpy()
     raw_b = pred_z * sd + mean
     mask_b = np.ones((len(raw_b), 4), dtype=bool)
     unknown = [t for t in toks if t not in vocab.stoi]
 
     # B1: the most similar training clip (gloss-token Jaccard), its real recorded motion.
-    src = train[b1_retrieve(g0_gloss(gloss_auto), [t["gloss"] for t in train], [t["index"] for t in train])]
+    pool = train
+    if not pilot:
+        # A matched train/val query keeps the same copy/shared-segment exclusions as training.
+        matched_indices = set(df.loc[df["sentence_norm"] == norm, "index"].astype(int))
+        matches = [it for it in items if it["index"] in matched_indices]
+        for query in matches:
+            pool = b1_pool(query, pool)
+        if matches and any(t["index"] == q["index"] or (q.get("sha256") and t.get("sha256") == q["sha256"])
+                           or (q["link_group"] >= 0 and t["link_group"] == q["link_group"]) for q in matches for t in pool):
+            raise ValueError("no unrelated training motion is available for B1 retrieval")
+    src = pool[b1_retrieve(g0_gloss(gloss_auto), [t["gloss"] for t in pool], [t["index"] for t in pool])]
     by_index = {int(r["index"]): r for r in df.to_dict("records")}
     pilot_match = [int(r["index"]) for r in df.to_dict("records") if r["sentence_norm"] == norm]
 
-    with np.load(next(features_dir.glob("*.npz"))) as z:
-        blend_names = [str(n) for n in z["blendshape_names"]]
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out = out_root / f"demo_{stamp}"
-    out.mkdir(parents=True, exist_ok=True)
+    out = _new_output(Path(out_root), stamp)
     common = {"sentence": sentence, "sentence_norm": norm, "g0_gloss": gloss_auto, "g0_tags": tags_auto}
     b1_label = B1_LABEL.format(index=src["index"])
-    motion_b, rt_b = build_motion(raw_b, mask_b, fps, blend_names, MODEL_B_LABEL,
+    motion_b, rt_b = build_motion(raw_b, mask_b, fps, blend_names, model_label,
                                   common | {"source": "model_b", "run": model_run, "seed": seed}, acfg["smooth"])
     motion_1, rt_1 = build_motion(src["x"], src["mask"], fps, blend_names, b1_label,
                                   common | {"source": "b1", "b1_index": src["index"],
@@ -111,15 +120,16 @@ def run_demo(cfg: dict, sentence: str, out_root: Path, model_run: str, seed: int
     write_motion(out / "motion_B1.json", motion_1)
     sw = float(np.mean([it["shoulder_width_m"] for it in train]))
     n_video = skeleton_video(out / "skeleton_side_by_side.mp4",
-                             [{"raw": raw_b, "mask": mask_b, "title": "Model B (pilot)",
-                               "subtitle": "40 training clips, G0 gloss input"},
+                             [{"raw": raw_b, "mask": mask_b, "title": "Model B (pilot)" if pilot else f"Model B ({ctx.paths['data']})",
+                               "subtitle": f"{len(train)} training clips, G0 gloss input"},
                               {"raw": src["x"], "mask": src["mask"], "title": f"B1 retrieval: clip {src['index']}",
                                "subtitle": "real recording of a different sentence"}],
                              fps, sw, "Pipeline test - not checked by a BdSL signer. Sentence: see demo_log.json")
 
-    # Round-trip check of the retargeter on every recorded pilot clip (canonical T-pose).
+    # Preserve the old pilot round trip. Split demos check only their selected B1 source;
+    # this is an inference/export check, not another evaluation of the dataset.
     rt_all = {"body": [], "hands": [], "fingers": [], "head": []}
-    for it in items:
+    for it in (items if pilot else [src]):
         _, s = build_motion(it["x"], it["mask"], fps, blend_names, "roundtrip", {}, acfg["smooth"])
         for k in rt_all:
             if s[k]["n"]:
@@ -135,7 +145,7 @@ def run_demo(cfg: dict, sentence: str, out_root: Path, model_run: str, seed: int
         "model_b": {"run": model_run, "seed": seed, "checkpoint": ckpt.relative_to(run_dir).as_posix(),
                     "checkpoint_sha256": sha256_file(ckpt), "run_json_sha256": sha256_file(run_dir / "run.json"),
                     "input_tokens": toks, "unknown_tokens": unknown, "predicted_frames": len(raw_b),
-                    "hash_checks": checks, "label": MODEL_B_LABEL},
+                    "hash_checks": checks, "label": model_label},
         "b1": {"index": src["index"], "split": src["split"], "sentence_norm": by_index[src["index"]]["sentence_norm"],
                "g0_gloss": by_index[src["index"]]["gloss_auto"], "frames": len(src["x"]),
                "hand_coverage": {"left": float(src["mask"][:, 1].mean()), "right": float(src["mask"][:, 2].mean())},
@@ -143,12 +153,31 @@ def run_demo(cfg: dict, sentence: str, out_root: Path, model_run: str, seed: int
         "pilot_match": pilot_match, "feat_ver": run_meta["feat_ver"], "fps": fps,
         "post_processing": {"one_euro": acfg["smooth"], "hand_rest_blend_frames": 3},
         "retarget_ver": RETARGET_VER, "motion_format": MOTION_FORMAT,
-        "roundtrip_demo_deg": {"model_b": rt_b, "b1": rt_1}, "roundtrip_pilot50_deg": roundtrip_pilot,
+        "data": ctx.paths["data"], "roundtrip_demo_deg": {"model_b": rt_b, "b1": rt_1},
+        "roundtrip_pilot50_deg" if pilot else "roundtrip_b1_source_deg": roundtrip_pilot,
         "skeleton_video": {"file": "skeleton_side_by_side.mp4", "frames": n_video},
         "viewer": {"page": "web/avatar_viewer/index.html", **acfg["viewer"],
                    "vrm_sha256": sha256_file(vrm) if vrm.exists() else None},
         "versions": {"torch": torch.__version__, "numpy": np.__version__}, "git": _git(cfg["_meta"]["project_root"]),
     }
+    if not pilot:
+        log["label"] = f"{ctx.paths['data']} demo — G0 pseudo-glosses; not checked by a BdSL-competent person"
+        log["version_match"] = log.pop("pilot_match")
+        log["roundtrip_source_index"] = src["index"]
+        log["input_splits"] = ["train", "val"]
+        log["input_paths"] = {"runs": str(ctx.paths["runs"]), "data": str(ctx.paths["data_dir"]),
+                              "state": str(ctx.paths["state_root"])}
     atomic_write_json(out / "demo_log.json", log)
-    atomic_write_text(out / "LIMITATIONS.md", LIMITATIONS)
+    limitations = LIMITATIONS if pilot else f"""# {ctx.paths['data']} demo — limitations
+
+- Model B used {len(train)} training clips. This is a small-scale, signer-dependent demo.
+- Glosses are G0 pseudo-glosses; Model A is not used. G0REF scores measure rule-glosser agreement only.
+- B0 mean motion is a strong baseline. Read the saved evaluation with its motion-energy limitations;
+  low coordinate error does not prove correct BdSL.
+- B1 replays a different training recording, not a translation of the requested sentence.
+- Unknown input tokens map to <unk>; their motion is not a validated sign or fingerspelling fallback.
+- No BdSL expert validation exists. Hand sides, monocular depth and facial-expression mapping remain limited.
+- Demo input checks use train/val only; no final test evaluation or test-lock update is performed.
+"""
+    atomic_write_text(out / "LIMITATIONS.md", limitations)
     return {"out_dir": str(out), "log": log}

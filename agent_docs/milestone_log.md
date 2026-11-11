@@ -67,3 +67,23 @@ is still not approved.
 - 2026-10-22: notebooks `01_manifest`, `02_extract`, `03_gloss` were added as thin wrappers of the
   Day 1–2 CLI steps (not executed); `00_env_check` ran on Day 1. The Session 6 reports and memory
   updates, along with six earlier commits, were published in Session 7 at `62e719e`.
+
+
+---
+
+## 2026-11-11 — Session 11 status supplement (append-only)
+
+- Research phase ও পুরোনো milestones-এর status পরিবর্তন করা হয়নি; milestone 8-এর real gloss-review blocker বহাল। নতুন model training বা final evaluation হয়নি।
+- Version overview/data-copy কাজ সম্পন্ন: দুইটি version, 1,899 copied files, সব source/copy SHA-256 identical। পাঁচটি overview/run/how-to documentation file-ও তৈরি হয়েছে।
+- Version-aware demo implementation ও tests লিখিত; runtime acceptance **not run**, Gate 7 pending। ADR-0030 **Proposed**।
+- k600 **not started**; কোনো folder/config/data নেই। `/versions/` ignore rule owner-এর হাতে; assistant কোনো git add/commit/push করেনি।
+- এটি dated supplement; পুরোনো status board historical অবস্থায় অক্ষত রাখা হয়েছে।
+
+
+---
+
+## 2026-11-11 — Local engineering acceptance supplement
+
+Version consolidation and reviewed redundant cleanup completed. Owner PC full pytest: 238 passed before cleanup. Real pilot50/k400 checkpoint demo artifacts and both canonical browser viewers verified; pilot regression matches. Post-removal hashes/counts verify canonical data retained. Assistant Python execution/post-cleanup full pytest not run.
+
+This closes the local folder migration/cleanup work, not a new research milestone. Human-reviewed Model A/BdSL expert validation remains open; no new training/final evaluation or k600 experiment.

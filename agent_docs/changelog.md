@@ -14,6 +14,13 @@
 
 ---
 
+## Session 11 (continued) — 2026-11-11 — Safe publishing scope prepared
+- Did: The owner approved a scoped commit/push to the configured remote. Added selective ignore rules for local version data, features, checkpoints, run/demo state, shared indexes/model assets, and updated the current layout/publishing docs. Staged the source, tests, notebooks, documentation, safe aggregate summaries, and reviewed path migration; protected artifacts were excluded.
+- Decided: The approved public scope does not include raw videos, derived feature files, checkpoints, model assets, full dataset indexes, or private run/demo state.
+- Broke / problem: No post-cleanup test run was performed; the owner-reported 238-pass suite predates cleanup.
+- Deferred: Commit and push until the staged-path audit is complete.
+- Next: Finish the staged safety check, then commit and push to `origin/main`.
+
 ## Session 10 — 2026-10-24 — kaggle400 commits pushed
 - Did:
   - The owner asked to commit and push. Published `933e903` and `b705768` to the public GitHub repository
@@ -353,3 +360,82 @@
   is current (B2).
 - Next: First research/design session. The owner gives first ideas and answers A1, B1 and B5 in
   `open_questions.md`.
+
+
+---
+
+## Session 11 — 2026-11-11 — Version overview, copy verification ও demo code (runtime pending)
+
+এই entry owner-এর append-only নির্দেশে file-এর শেষে; পুরোনো newest-first entries অপরিবর্তিত।
+
+- Did: read-only audit ও source/config review; Gate 2-এ version-aware demo/resolver/tests লিখেছি; Gates 3–4-এ 28 dry-run/copy jobs দিয়ে 1,899 file / 907,101,104 bytes copy করেছি, সব source/copy SHA-256 identical। Gate 5-এ পাঁচটি documentation file লিখেছি; Gate 6-এ exact text দেখিয়ে append-only memory updates করেছি।
+- Decided: owner প্রতিটি gate-এর কাজ অনুমোদন করেছেন; ADR-0030 explicit confirmation না পাওয়া পর্যন্ত **Proposed**। কোনো নতুন research/model decision নয়। k600 এখন শুধু guide।
+- Broke / problem: uv cache error 183 ও interpreter-query Access denied error 5; তাই pytest, config-hash runtime regression, pilot/k400 local demos ও viewer **not run**। পরিচিত historical STATE.json hash/size mismatch অপরিবর্তিত রেখে current source/copy hashes মিলিয়েছি।
+- Deferred: owner PC runtime outputs, Gate 7 acceptance, owner-এর `/versions/` ignore rule ও ADR-0030 final confirmation। কোনো install/download/retrain/final-test rerun হয়নি।
+- Next: Gate 7 go ও owner PC outputs; `versions/RUN_AND_SHOW.md` অনুযায়ী tests, pilot regression, k400 validation demo ও viewer যাচাই। Outputs না পাওয়া পর্যন্ত success দাবি নয়।
+
+Git add/commit/push হয়নি। AGENTS.md ও `.gitignore` অপরিবর্তিত; original data/output folders অক্ষত।
+
+
+---
+
+## Session 11 addendum — 2026-11-11 — Gate 7 evidence
+
+- Did: saved TEMP demo logs/files ও current checkpoint/run.json hashes যাচাই; pilot motion JSONs পুরোনো reference-এর সঙ্গে byte-identical; localhost browser-এ pilot50 ও k400 avatar দেখা গেছে। Temporary Node helper বন্ধ করা হয়েছে।
+- Decided: কোনো নতুন decision নয়; ADR-0030 Proposed থাকে।
+- Broke / problem: k400 viewer-এ পুরোনো pilot captions রয়ে গেছে; code বদলানো হয়নি।
+- Deferred: pytest ও exact PC command transcripts; full Gate 7 acceptance। Assistant Python execution not run। নতুন TEMP outputs versions/-এ copy করা হয়নি।
+- Next: owner-এর pytest output সংগ্রহ; error থাকলে exact output দিয়ে diagnosis। Git add/commit/push হয়নি; .gitignore অপরিবর্তিত।
+
+
+---
+
+2026-11-11 — Owner copy-only goal বদলে consolidation/duplicate cleanup ও notebook relocation চেয়েছেন। Read-only inventory/hash audit ও exact proposed file-action CSV প্রস্তুত। Proposed: 1387 unique moves, 1 preserved variant, 2053 redundant instances / 911823762 bytes removal after acceptance। কোনো move/delete/source/config/notebook edit হয়নি; implementation পরের gate-এ। Shared src/configs/web শুধু pilot50-এর নয়। PC tests pending; git mutation হয়নি।
+
+
+---
+
+## Session 11 migration implementation — 2026-11-11
+
+- Did: approved 1,388 file moves, source/destination SHA-256 verified; canonical configs/video separation, shared assets, 17 notebook locations/bootstrap, helper imports, pytest paths, viewer paths/captions ও docs ঠিক করেছি। Local helper script এখন validation-only; automatic git mutation/raw-copy/package steps বাদ।
+- Decided: ADR-0031 records owner-approved local consolidation; archival-only ADR-0030 proposal historical।
+- Checks: 127 unique checkpoints/metrics/run JSON (146 plan references), Get-FileHash mismatch 0; 2,053 deferred duplicate pairs এখনও identical। 17 notebook JSON valid, saved outputs preserved; JavaScript/PowerShell syntax checks ও tracked git diff --check clean। Non-path YAML settings source comparison unchanged। Python tests/demos **not run**।
+- Deferred: owner PC pytest/demo acceptance, duplicate removal, publishing/ignore policy। Git mutations, installs/downloads, raw-video changes, retraining ও final-test rerun হয়নি।
+- Next: owner PC commands in versions/RUN_AND_SHOW.md; exact error হলে diagnosis। Tests ছাড়া duplicate cleanup নয়।
+
+
+---
+
+## Session 11 follow-up — 2026-11-11 — Fix missed test references
+
+- Owner PC result: 5 failed, 203 passed, 3 skipped in 53.55s.
+- Fixed: missed old test roots for k400 notebooks/tools/corpus, pilot annotations and shared manifest/split index; updated the obsolete script copy/commit expectation to validation-only checks.
+- Verified statically: target files present, expected notebook/helper lists discoverable, helper ASCII and scoped diff whitespace clean. Python retest not run by assistant.
+- Next: owner full pytest output; demo acceptance and duplicate cleanup remain pending. No model/data changes or git mutations.
+
+
+---
+
+## Session 11 follow-up — 2026-11-11 — Owner PC tests passed
+
+Owner reports uv run pytest -q: 238 passed in 46.03s. No new code changes. Next is the pilot50 seed-42 real-checkpoint demo on the owner's PC, followed by k400/viewer acceptance. Assistant Python execution and duplicate cleanup remain pending.
+
+
+---
+
+## Session 11 follow-up — 2026-11-11 — Pilot regression accepted; k400 pending
+
+Owner pilot demo output received; independent file inspection found five outputs and two motion JSONs byte-identical to the historical reference. Read-only cleanup preflight found 2,053 matching pairs, 911,823,762 bytes, no mismatch. No deletions.
+
+Owner authorized k400 validation demo followed by duplicate cleanup. Assistant Python execution remains prohibited/not run; await the owner's k400 PC result, then artifact/viewer acceptance and reviewed cleanup.
+
+
+---
+
+## Session 11 completion — 2026-11-11 — Canonical cleanup verified
+
+- Did: accepted owner k400 demo log, inspected both real outputs/hashes and browser viewers, then executed the already-approved 2,053-file redundant cleanup; 194 empty directories removed. Updated version/run/future guides with exact current results and paths.
+- Measured: 911,823,762 logical bytes removed; 1,931 retained file SHA-256 and all 127 critical hashes match; file-count/byte reduction exact; no unexpected loss. Pilot motion regression byte-identical.
+- Decided: no new research/model decision; ADR-0031 local consolidation implemented. Protected raw videos/upload, differing line-ending corpus provenance and k600 remain unchanged/absent.
+- Deferred: optional final owner post-cleanup pytest; selective Git ignore/publishing decision; full future k600 workflow and the existing expert/gloss-review blockers. Owner pre-cleanup pytest: 238 passed; assistant Python not run.
+- Next: owner post-cleanup pytest output, then owner chooses next project work. No add/commit/push/install/download/retraining/final-evaluation run.

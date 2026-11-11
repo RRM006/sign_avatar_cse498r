@@ -9,15 +9,19 @@ project:
 
 paths:
   data_root: ${project_root}/dataset/initial_dataset   # source data, read-only
-  work_dir: ${project_root}/work                       # every generated output (gitignored)
-  models_dir: ${paths.work_dir}/models                 # downloaded pretrained models
+  pilot50_root: ${project_root}/versions/pilot50
+  shared_root: ${project_root}/shared
+  dataset_index_root: ${paths.shared_root}/dataset_index
+  work_dir: ${paths.pilot50_root}                      # default version: pilot50
+  models_dir: ${paths.shared_root}/models              # one shared copy of pretrained assets
   reports_dir: ${paths.work_dir}/reports
-  manifests_dir: ${paths.work_dir}/manifests
-  splits_dir: ${paths.work_dir}/splits
-  pilot_work_dir: ${paths.work_dir}/pilot              # pilot selection before copying
-  pilot_dest_dir: ${project_root}/dataset/pilot50_v1   # pilot copies + their manifest (ADR-0017)
+  manifests_dir: ${paths.dataset_index_root}/manifests
+  splits_dir: ${paths.dataset_index_root}/splits
+  pilot_work_dir: ${paths.pilot50_root}/pilot
+  pilot_dest_dir: ${paths.pilot50_root}/pilot          # metadata only; videos stay in dataset/
   features_dir: ${paths.work_dir}/features             # <feat_ver>/<Index>.npz + qc.csv
   annotations_dir: ${project_root}/annotations         # tracked in git: a commit publishes it (ADR-0017)
+  reviewers_dir: ${project_root}/annotations           # shared reviewer register; no duplicated CSV
   runs_dir: ${paths.work_dir}/runs                     # training runs: logs, metrics, checkpoints
   demo_dir: ${paths.work_dir}/demo                     # Day 5 demo outputs
   vrm_file: ${paths.models_dir}/vrm/Base_Female.vrm    # CC0 VRoid sample avatar (VRM 0.x), gitignored

@@ -243,7 +243,8 @@ def cmd_extract(args) -> int:
 def _annotation_paths(cfg):
     d = Path(cfg["paths"]["annotations_dir"])
     a = cfg["annotations"]
-    return d / a["pilot_file"], d / a["reviewers_file"]
+    reviewers = Path(cfg["paths"].get("reviewers_dir", d))
+    return d / a["pilot_file"], reviewers / a["reviewers_file"]
 
 
 def cmd_gloss_draft(args) -> int:
@@ -605,15 +606,31 @@ def cmd_evaluate(args) -> int:
 def cmd_demo(args) -> int:
     from .avatar.demo import run_demo
 
-    cfg = load_config(env=args.env, data="pilot50")
-    a = cfg["avatar"]
-    result = run_demo(cfg, args.sentence, cfg_path(cfg, "demo_dir"), args.model_run or a["demo_model_run"],
-                      args.seed if args.seed is not None else a["demo_seed"])
+    import re
+
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", args.data):
+        print(f"Demo refused: invalid data version {args.data!r}.", file=sys.stderr)
+        return 2
+    try:
+        cfg = load_config(env=args.env, data=args.data)
+        if cfg["data"]["name"] != args.data:
+            raise ValueError("the data config's name does not match --data")
+        a = cfg["avatar"]
+        if args.data != "pilot50" and not args.model_run:
+            raise ValueError("--model-run is required for this version; choose its gloss-input run")
+        result = run_demo(cfg, args.sentence,
+                          Path(args.out_root) if args.out_root else cfg_path(cfg, "demo_dir"),
+                          args.model_run or a["demo_model_run"],
+                          args.seed if args.seed is not None else a["demo_seed"])
+    except (FileNotFoundError, KeyError, ValueError, RuntimeError, OSError) as exc:
+        print(f"Demo refused for {args.data!r}: {exc}", file=sys.stderr)
+        return 2
     log = result["log"]
     print(json.dumps({"out_dir": result["out_dir"], "g0_gloss": log["g0_gloss"],
                       "model_b_frames": log["model_b"]["predicted_frames"], "unknown_tokens": log["model_b"]["unknown_tokens"],
                       "b1": {k: log["b1"][k] for k in ("index", "sentence_norm", "frames")},
-                      "roundtrip_pilot50_deg": log["roundtrip_pilot50_deg"]}, indent=1, ensure_ascii=False))
+                      **{k: log[k] for k in ("roundtrip_pilot50_deg", "roundtrip_b1_source_deg") if k in log}},
+                     indent=1, ensure_ascii=False))
     return 0
 
 
@@ -687,9 +704,11 @@ def main(argv: list[str] | None = None) -> int:
     ev.add_argument("--device", default=None, help="cuda, cpu or auto (default: config env.device)")
     ev.set_defaults(func=cmd_evaluate)
     d = sub.add_parser("demo", help="Day 5: one sentence → Model B + B1 motion JSON, skeleton video, log")
+    d.add_argument("--data", default="pilot50", help="data config name (default: pilot50)")
     d.add_argument("--sentence", required=True)
     d.add_argument("--model-run", default=None, help="default: avatar.demo_model_run")
     d.add_argument("--seed", type=int, default=None, help="default: avatar.demo_seed")
+    d.add_argument("--out-root", default=None, help="new demo folders go here (default: paths.demo_dir)")
     d.set_defaults(func=cmd_demo)
     args = ap.parse_args(argv)
     return args.func(args)

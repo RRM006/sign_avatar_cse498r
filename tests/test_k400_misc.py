@@ -12,7 +12,7 @@ import pytest
 from k400_helpers import BLEND
 
 ROOT = Path(__file__).resolve().parents[1]
-K = ROOT / "kaggle"
+K = ROOT / "versions" / "k400"
 _ABSOLUTE = re.compile(r"(?<![A-Za-z])[A-Za-z]:[\\/]|\\Users\\|/home/")
 
 
@@ -22,7 +22,7 @@ def test_g0_corpus_reproduces_the_pilot_drafts():
     from k400.gloss import read_corpus
 
     corpus_file = K / "processed" / "glosses" / "g0_corpus_v1.txt"
-    ann = ROOT / "annotations" / "pilot50_v1_gloss_v01.csv"
+    ann = ROOT / "versions" / "pilot50" / "annotations" / "pilot50_v1_gloss_v01.csv"
     if not corpus_file.is_file() or not ann.is_file():
         pytest.skip("corpus or pilot annotation file not present")
     corpus = read_corpus(corpus_file)
@@ -35,7 +35,7 @@ def test_committed_glosses_match_a_fresh_run(tmp_path):
     from k400.gloss import compare, make_glosses, read_corpus
 
     if not (K / "data" / "train" / "train_manifest.csv").is_file():
-        pytest.skip("kaggle/data manifests not present")
+        pytest.skip("canonical versions/k400/data manifests not present")
     make_glosses(K / "data", tmp_path, read_corpus(K / "processed" / "glosses" / "g0_corpus_v1.txt"), "G0-v0.1")
     assert compare(tmp_path, K / "processed" / "glosses") == {"train": "IDENTICAL", "val": "IDENTICAL", "test": "IDENTICAL"}
 
@@ -71,12 +71,16 @@ def test_no_machine_specific_paths_in_kaggle_code(path):
     assert not hits, hits
 
 
-def test_powershell_script_is_ascii_and_never_pushes():
+def test_powershell_validation_script_is_ascii_and_read_only():
     ps = (K / "tools" / "run_local_steps.ps1").read_bytes()
     ps.decode("ascii")                                   # Windows PowerShell 5.1 reads BOM-less files as ANSI
     text = ps.decode("ascii")
-    assert "git push" not in text.replace("NOT push", "").replace("no push", "")
-    assert "--confirm" in text and "verify_split.py" in text and "pytest" in text
+    # The migrated helper validates the existing state; it no longer copies videos,
+    # installs packages, stages files, or commits. Tests require an explicit opt-in.
+    assert not re.search(r"(?im)^\s*(?:&\s+)?git\s+(?:add|commit|push|reset|clean|checkout|switch|restore|rm|mv)\b", text)
+    assert "--confirm" not in text and "copy-videos" not in text
+    assert "pip install" not in text and "uv sync" not in text
+    assert "if ($RunTests)" in text and "uv run pytest -q" in text
 
 
 def test_mediapipe_probe_script_compiles():
@@ -136,8 +140,8 @@ def test_extraction_qc_flags_rotation_and_missing_clips(tmp_path):
     assert (tmp_path / "qc" / "hand_coverage_summary.csv").is_file()
 
 
-@pytest.mark.skipif(not (ROOT / "work" / "models" / "holistic_landmarker.task").is_file(),
-                    reason="needs the MediaPipe model file in work/models (desktop)")
+@pytest.mark.skipif(not (ROOT / "shared" / "models" / "holistic_landmarker.task").is_file(),
+                    reason="needs the MediaPipe model file in shared/models (desktop)")
 def test_real_mediapipe_extraction_resume_and_feat_ver(tmp_path):
     pytest.importorskip("mediapipe")
     import cv2
@@ -158,7 +162,7 @@ def test_real_mediapipe_extraction_resume_and_feat_ver(tmp_path):
         pd.DataFrame([{"index": 7, "filename": "7.mp4", "display_w": 160, "display_h": 120, "duration_s": 1.0}]).to_csv(
             data / sp / f"{sp}_manifest.csv", index=False)
     cfg = load_config(env="local", data="kaggle400")
-    model = ROOT / "work" / "models" / "holistic_landmarker.task"
+    model = ROOT / "shared" / "models" / "holistic_landmarker.task"
     s = run(cfg, data, tmp_path / "state", model, workers=1, splits=("train",), log=lambda *a: None)
     assert s["complete"] and s["feat_ver"] == cfg["gloss2motion"]["feat_ver"] and s["rotation_ok_all"]
     again = run(cfg, data, tmp_path / "state", model, workers=1, splits=("train",), log=lambda *a: None)
@@ -183,7 +187,7 @@ def test_child_pythons_never_inherit_the_jupyter_plot_backend(monkeypatch):
 
     monkeypatch.setenv("MPLBACKEND", "module://matplotlib_inline.backend_inline")
     assert clean_env()["MPLBACKEND"] == "Agg"
-    assert "MPLBACKEND" in (ROOT / "kaggle" / "src" / "k400_run.py").read_text(encoding="utf-8")
+    assert "MPLBACKEND" in (K / "src" / "k400_run.py").read_text(encoding="utf-8")
 
 
 def test_notebook_07_stops_before_freeze_and_test_when_sacrebleu_is_missing():

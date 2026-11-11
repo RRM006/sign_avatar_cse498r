@@ -6,4 +6,6 @@ env:
 
 paths:
   data_root: /kaggle/input/bdsl-features   # (TBD) slug of the private features dataset, set on Day 3
-  work_dir: /kaggle/working/work           # saved with "Save Version"
+  pilot50_root: /kaggle/working/versions/pilot50
+  work_dir: ${paths.pilot50_root}         # saved with "Save Version"
+  models_dir: ${paths.work_dir}/models

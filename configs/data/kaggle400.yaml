@@ -1,5 +1,5 @@
-# kaggle400 — the 400-video Kaggle experiment (owner-approved 2026-10-23; everything lives in kaggle/).
-# Selection: kaggle/src/k400/select.py; split usage rules: kaggle/README.md. Not the pilot (pilot50.yaml).
+# kaggle400: canonical derived state/notebooks/helpers live in versions/k400/.
+# Raw videos remain in kaggle/data/; shared experiment settings below are unchanged.
 data:
   name: kaggle400
   subset: kaggle400_v1
@@ -8,8 +8,13 @@ data:
 paths:
   # Roots end with _root, so they never change the config hash. Kaggle notebooks set them with the
   # env vars K400_DATA_ROOT (the uploaded dataset) and K400_STATE_ROOT (/kaggle/working/k400).
-  k400_data_root: ${project_root}/kaggle    # holds data/{train,val,test}/ and SPLIT_LOCK.json
-  k400_state_root: ${project_root}/kaggle   # holds processed/ and outputs/
+  k400_data_root: ${project_root}/versions/k400
+  k400_state_root: ${project_root}/versions/k400
+  k400_video_root: ${project_root}/kaggle/data
+  work_dir: ${paths.k400_state_root}/work
+  demo_dir: ${paths.k400_state_root}/demo
+  demo_data_root: ${paths.k400_data_root}
+  demo_state_root: ${paths.k400_state_root}
 
 kaggle400:
   version: v1

@@ -29,7 +29,8 @@ ENV_NAMES = ("local", "kaggle", "colab")
 ENV_VAR_ROOTS = {"BDSL_DATA_ROOT": "data_root", "BDSL_WORK_DIR": "work_dir",
                  # kaggle400 experiment (configs/data/kaggle400.yaml): where data/ lives, and where
                  # processed/ + outputs/ are written (on Kaggle: the dataset input and /kaggle/working).
-                 "K400_DATA_ROOT": "k400_data_root", "K400_STATE_ROOT": "k400_state_root"}
+                 "K400_DATA_ROOT": "k400_data_root", "K400_STATE_ROOT": "k400_state_root",
+                 "K400_VIDEO_ROOT": "k400_video_root"}
 _REF = re.compile(r"\$\{([^}]+)\}")
 
 
@@ -160,8 +161,18 @@ def load_config(
             raise FileNotFoundError(f"Missing config layer: {layer}")
 
     cfg: dict = {}
+    data_paths: dict = {}
     for layer in layers:
-        deep_merge(cfg, _read_yaml(layer))
+        values = _read_yaml(layer)
+        deep_merge(cfg, values)
+        if data and layer == layers[-1]:
+            data_paths = values.get("paths", {})
+    # A compatible future split-layout version must never inherit pilot50 outputs
+    # simply because its new config declares only input/state roots.
+    if data_paths.get("demo_state_root"):
+        for key, relative in (("demo_dir", "demo"), ("work_dir", "work")):
+            if key not in data_paths:
+                cfg["paths"][key] = "${paths.demo_state_root}/" + relative
     if overrides:
         deep_merge(cfg, overrides)
     used_env_vars = []
@@ -169,6 +180,15 @@ def load_config(
         if os.environ.get(var):
             cfg.setdefault("paths", {})[key] = os.environ[var]
             used_env_vars.append(var)
+
+    # Attached Kaggle datasets and temporary test layouts keep videos beside their
+    # manifests. The desktop canonical layout deliberately leaves videos outside
+    # versions/. An explicit video-root override always wins.
+    path_overrides = (overrides or {}).get("paths", {})
+    if (os.environ.get("K400_DATA_ROOT") or "k400_data_root" in path_overrides) and not (
+        os.environ.get("K400_VIDEO_ROOT") or "k400_video_root" in path_overrides
+    ):
+        cfg.setdefault("paths", {})["k400_video_root"] = "${paths.k400_data_root}/data"
 
     cfg = _interpolate(cfg, {"project_root": root.as_posix()})
     cfg["_meta"] = {

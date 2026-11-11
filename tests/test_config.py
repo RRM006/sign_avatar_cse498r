@@ -7,6 +7,7 @@ import pytest
 from bdsl.config import ENV_NAMES, config_hash, deep_merge, detect_env, load_config
 
 _ENV_VARS = ("BDSL_ENV", "BDSL_DATA_ROOT", "BDSL_WORK_DIR", "BDSL_PROJECT_ROOT",
+             "K400_DATA_ROOT", "K400_STATE_ROOT", "K400_VIDEO_ROOT",
              "KAGGLE_KERNEL_RUN_TYPE", "COLAB_RELEASE_TAG")
 
 
@@ -20,8 +21,8 @@ def test_local_defaults_resolve_inside_project():
     cfg = load_config(env="local")
     root = Path(cfg["_meta"]["project_root"])
     assert cfg["env"]["name"] == "local"
-    assert Path(cfg["paths"]["work_dir"]) == root / "work"
-    assert Path(cfg["paths"]["reports_dir"]) == root / "work" / "reports"
+    assert Path(cfg["paths"]["work_dir"]) == root / "versions/pilot50"
+    assert Path(cfg["paths"]["reports_dir"]) == root / "versions/pilot50/reports"
     assert Path(cfg["data"]["sample_dir"]) == root / "dataset" / "initial_dataset" / "videos"
     assert "${" not in str(cfg)
 
@@ -35,8 +36,8 @@ def test_every_env_layer_loads(env):
 
 def test_kaggle_layer_overrides_roots_and_derived_paths_follow():
     cfg = load_config(env="kaggle")
-    assert cfg["paths"]["work_dir"] == "/kaggle/working/work"
-    assert cfg["paths"]["models_dir"] == "/kaggle/working/work/models"
+    assert cfg["paths"]["work_dir"] == "/kaggle/working/versions/pilot50"
+    assert cfg["paths"]["models_dir"] == "/kaggle/working/versions/pilot50/models"
 
 
 def test_env_var_work_dir_moves_every_derived_path(monkeypatch, tmp_path):

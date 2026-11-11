@@ -143,3 +143,20 @@ Run from the project root. The environment is the uv-managed `.venv` (Python 3.1
 **At the END of every session**, update `changelog.md` and `current_task.md` (and
 `milestone_log.md` / `decisions.md` / `open_questions.md` / `test_log.md` / `codebase_map.md` if they
 changed). The exact steps are in `session_protocol.md`.
+
+
+## 2026-11-11 owner-approved layout amendment
+
+The owner replaced copy-only archiving with canonical version folders and deferred hash-verified duplicate cleanup. Unique files and notebooks have moved: versions/pilot50/ and versions/k400/. Shared src/configs/web stay at root; shared/models/ and shared/dataset_index/ hold one shared asset/index set. Read versions/README.md and versions/RUN_AND_SHOW.md before using older commands above. Default demo outputs are now version-specific. Raw videos and the existing raw-video ZIP remain untouched. No k600 folder/data/config exists. Python/tests/demos after this migration are not run by the assistant; await owner PC outputs before duplicate removal. AGENTS.md and .gitignore are not edited; git mutations remain prohibited.
+
+
+---
+
+## 2026-11-11 cleanup completion supplement
+
+Canonical version consolidation and reviewed cleanup are complete: 2,053 redundant files and 194 empty directories removed with retained hash/count verification. Root work/ and notebooks/ no longer exist; use versions/README.md and versions/RUN_AND_SHOW.md. Owner PC pytest reported 238 passed; both real demo artifacts/browser viewers verified. Assistant Python and post-cleanup full pytest were not run. Raw videos/upload ZIP remain in their protected old locations; k600 is absent. Ignore/publishing policy still awaits owner review; no git mutation.
+
+
+## 2026-11-11 owner-approved publishing scope
+
+The owner approved a scoped commit and push to the configured remote: source, tests, notebooks, documentation and safe aggregate research summaries may be published. `.gitignore` selectively keeps version data, derived features, checkpoints, run/demo state, the full dataset index, and model assets local. Never publish those protected artifacts. The workspace `AGENTS.md` remains untracked and is not included.

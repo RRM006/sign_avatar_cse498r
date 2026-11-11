@@ -454,3 +454,40 @@
   configuration did not change; transparency about the failed attempt (`kaggle/outputs/RUN1_NOTES.md`).
 - Status: **Accepted** (owner). ADR-0028 (technical choices) is still PROPOSED (G16).
 
+
+
+---
+
+## ADR-0030 — 2026-11-11 — versions overview ও version-aware local demo
+
+- Status: **Proposed**। Owner implementation/copy/documentation-এর প্রতিটি gate অনুমোদন করেছেন; এই ADR final করার স্পষ্ট confirmation এখনো পাওয়া যায়নি।
+- Owner requirements (chat): original files রেখে শুধু copies; overview names `pilot50` ও `k400`; raw videos/engineering runs overview-তে নয়; `k600` folder/data এখন তৈরি নয়, শুধু how-to; public git-এ heavy artifacts নয়।
+- Proposed/implemented layout: `versions/README.md`, `pilot50/`, `k400/`, `HOW_TO_ADD_NEW_VERSION.md`, `RUN_AND_SHOW.md`। মূল execution inputs original `work/` ও `kaggle/`-এ থাকবে।
+- Proposed/implemented demo interface: `--data` default `pilot50`; `--out-root` ছাড়া পুরোনো `work/demo/` output path। Split-layout demo config-এ `paths.demo_data_root` ও `paths.demo_state_root`; k400 full state = `${project_root}/kaggle/work/downloads/run1/k400`। Existing training roots বদলানো হয়নি।
+- Code লিখিত: version/run identity, split/input/vocab/standardizer/checkpoint fingerprints; CPU `map_location`; train-only B1 sources; fresh output folder allocation। New resolver ও tests আছে; execution acceptance **not run**।
+- Hash design: `config.py::_hashable_view` পুরো `paths` section বাদ দেয়; নতুন demo keys সেখানেই। Saved k400 training hash অপরিবর্তিত থাকার runtime regression test **not run**; success দাবি করা হয়নি।
+- Measured evidence: Gate 4-এ 1,899 copied files / 907,101,104 bytes; 1,899/1,899 SHA-256 identical; mismatch 0। Required 30 checkpoints + 12 metrics/run JSON-ও মেলে। Gate 5-এ পাঁচটি documentation file তৈরি হয়েছে।
+- Runtime acceptance: owner PC-তে pytest, pilot “আমি স্কুল যাই” seed 42 regression, k400 val Index 912 “আমার নানা অনেক ভালো” seed 42 demo ও viewer checks বাকি; assistant Python চালাবে না। Final evaluation/notebook 07 আবার চলবে না।
+- Future work: compatible split/G0 artifacts থাকলে নতুন data config দিয়ে demo version যোগের ব্যবস্থা লিখিত; tests **not run**। বর্তমান training CLI শুধু `pilot50`/`kaggle400`; k600 selection/training-এর পরিকল্পনা আলাদা, এখন **not started**।
+- Existing evidence limits অপরিবর্তিত: pilot review rows fake; G0REF rule-glosser agreement only; B0 শক্ত baseline; k400 coordinate gains-এর সঙ্গে damped motion; small-scale/signer-dependent; expert validation নেই। কোনো নতুন research result বা model decision যোগ হয়নি।
+- Git: `/versions/` ignore line শুধু প্রস্তাবিত; owner নিজে যোগ করবেন। এই session-এ git add/commit/push হয়নি।
+
+
+---
+
+## ADR-0031 — Canonical version state and notebook consolidation
+
+- Date: 2026-11-11.
+- Status: Accepted for the local layout/move implementation (owner requested consolidation instead of copies, then approved the exact move/path-fix plan with go). Runtime acceptance and duplicate removal remain pending.
+- Supersedes: ADR-0030's Proposed copy-only overview goal; the historical entry is preserved.
+- Decision: pilot50 state/notebooks belong in versions/pilot50/; k400 state/notebooks/helpers belong in versions/k400/. Root src/configs/web are shared, not pilot50-only. Shared model assets/full-set index have one canonical shared/ location. Version-specific defaults route new demo/training outputs to their own state roots.
+- Safety boundary: preserve raw-video folders/upload ZIP, experiment settings, checkpoints, saved run metadata and final-test lock. Keep engineering/superseded evidence separate. Only reviewed hash-identical redundant copies may be removed after owner PC acceptance. No git mutation or dependency changes.
+- Evidence: 1,388 moves verified; runtime tests not run by assistant.
+- Future limit: no k600 folder/data/config now. Compatible future demo roots resolve generically; a full k600 training workflow still needs implementation/approval. No research/model/evaluation decision changed.
+
+
+---
+
+## ADR-0031 implementation note — 2026-11-11
+
+The owner-approved local consolidation has been implemented and its requested duplicate cleanup executed after owner PC tests/demo evidence and independent viewer/hash checks. Exact removals: 2,053 reviewed redundant files; 194 verified-empty directories. No additional data/model/evaluation policy changed. The publishing/ignore policy and future full k600 training remain unresolved; no git mutation was performed.

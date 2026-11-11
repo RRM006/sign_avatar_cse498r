@@ -6,7 +6,7 @@
 <title>BdSL Avatar Demo</title>
 <!-- Day 5 viewer (design doc 04 §F-12, ADR-0019). Pinned versions; served locally, never deployed.
      Open via: uv run python -m http.server 8765 --bind 127.0.0.1   (from the project root), then
-     http://127.0.0.1:8765/web/avatar_viewer/?demo=/work/demo/<demo folder>/ -->
+     http://127.0.0.1:8765/web/avatar_viewer/?demo=/versions/pilot50/demo/<demo folder>/ -->
 <script type="importmap">
 {
   "imports": {
@@ -32,7 +32,7 @@
 <body>
 <main>
   <h1>BdSL avatar demo: Model B and B1 retrieval, side by side</h1>
-  <p class="muted">Pipeline test on 50 pilot clips. Not checked by a BdSL-competent person. See LIMITATIONS.md in the demo folder.</p>
+  <p class="muted">Research prototype. Check demo_log.json for the version. Not checked by a BdSL-competent person. See LIMITATIONS.md in the demo folder.</p>
   <canvas id="out"></canvas>
   <canvas id="gl"></canvas>
   <div class="controls">

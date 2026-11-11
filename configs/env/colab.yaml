@@ -6,4 +6,6 @@ env:
 
 paths:
   data_root: /content/data
-  work_dir: /content/work
+  pilot50_root: /content/versions/pilot50
+  work_dir: ${paths.pilot50_root}
+  models_dir: ${paths.work_dir}/models

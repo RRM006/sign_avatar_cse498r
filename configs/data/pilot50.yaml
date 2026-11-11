@@ -1,6 +1,9 @@
-# 50-video pilot (pilot50_v1), drawn from split S1 in Day 1 Step 2 — the folder does not exist yet.
+# 50-video pilot (pilot50_v1); canonical derived state is versions/pilot50/.
 # Not the same set as the committed sample50 in data.sample_dir.
 data:
   name: pilot50
   subset: pilot50_v1
-  video_root: ${paths.pilot_dest_dir}/videos
+  video_root: ${project_root}/dataset/pilot50_v1/videos
+
+paths:
+  annotations_dir: ${paths.pilot50_root}/annotations

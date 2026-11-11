@@ -114,4 +114,5 @@ def full_layout(root: Path, **kw) -> dict:
 def k400_env(monkeypatch, root: Path) -> None:
     monkeypatch.setenv("K400_DATA_ROOT", str(root))
     monkeypatch.setenv("K400_STATE_ROOT", str(root))
+    monkeypatch.setenv("K400_VIDEO_ROOT", str(root / "data"))
     monkeypatch.setenv("BDSL_ENV", "local")

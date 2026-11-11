@@ -433,3 +433,45 @@ is report + literature review + trained model + results, aimed at a publishable 
 - **2026-10-23** — G14 clean-commit rule → refuse dirty result runs or mark NOT FOR PAPER (owner, chat;
   kaggle400; proposed ADR-0028).
 - **2026-10-23** — Push policy for the kaggle400 task → no push (owner, chat). General policy still open.
+
+
+---
+
+## 2026-11-11 — Session 11 additive open items
+
+পুরোনো answered/open entries পরিবর্তন করা হয়নি।
+
+### G21. Version-aware demo runtime acceptance ও ADR-0030 final confirmation
+
+- Owner PC থেকে pytest, config-hash regression, pilot seed 42 regression, k400 val Index 912 demo ও viewer outputs প্রয়োজন। এখন status **not run**; outputs পাওয়া যায়নি।
+- ADR-0030 **Proposed** থাকবে যতক্ষণ owner স্পষ্টভাবে final confirmation না দেন। Copy verification এই acceptance পূরণ করে না।
+- Status: Open; Gate 7 pending।
+
+### G22. Owner কি /versions/ ignore rule প্রয়োগ করেছেন?
+
+- Proposed exact line: `/versions/`। Owner নিজে যোগ করবেন; assistant প্রয়োগ করেনি। Overview বর্তমানে untracked, git-এ add/commit করা হয়নি।
+- Status: Open; rule প্রয়োগ ও read-only verification বাকি।
+
+### G23. Future k600 data selection/training workflow
+
+- কোনো k600 folder, config বা data তৈরি হয়নি। Guide শুধু compatible future artifacts থেকে একই demo/overview structure যোগ করার পদ্ধতি দেয়।
+- বর্তমান training CLI-তে supported data choices pilot50/kaggle400; k600-এর source selection, split, seeds, training launcher ও evaluation protocol owner-এর সঙ্গে নির্ধারণ বাকি।
+- Status: Future work / not started; এই session-এ কোনো model/dataset decision নেওয়া হয়নি।
+
+
+---
+
+## 2026-11-11 migration follow-up
+
+- Runtime acceptance: owner PC pytest and seed-42 pilot50/k400 validation demos are pending; duplicate removal waits for these outputs.
+- Publishing/ignore policy: blanket /versions/ hides the relocated notebooks/helpers as well as data. Before publishing, owner must review selective ignore rules or explicitly keep version code local-only. .gitignore is not applied by assistant; heavy artifacts must never be committed.
+- Future k600: default demo/output root isolation implemented generically, but full training/extraction/evaluation routing remains future work; no k600 files created.
+
+
+---
+
+## 2026-11-11 — Cleanup follow-up status
+
+Owner PC pytest and both real-checkpoint demo/viewer acceptance received; reviewed duplicate cleanup completed with matching retained hashes/counts. A final owner post-cleanup pytest is still useful; assistant did not run it.
+
+Ignore/publishing policy remains open: /versions/ would hide the relocated helper code/notebooks too. .gitignore is unchanged; no heavy artifact may be committed. k600 is not started; full training/extraction/evaluation routing is future work. Expert BdSL/gloss review blockers remain unchanged.

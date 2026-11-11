@@ -93,17 +93,17 @@ def test_pool_is_one_representative_per_sentence():
     assert set(pool["duration_quartile"]) == {"q1", "q2", "q3", "q4"}
 
 
-@pytest.mark.skipif(not (ROOT / "work" / "manifests" / "manifest_v1.csv").is_file()
-                    or not (ROOT / "kaggle" / "data" / "subset_manifest.csv").is_file(),
-                    reason="needs work/manifests/manifest_v1.csv and the committed kaggle/data manifests (desktop)")
+@pytest.mark.skipif(not (ROOT / "shared" / "dataset_index" / "manifests" / "manifest_v1.csv").is_file()
+                    or not (ROOT / "versions" / "k400" / "data" / "subset_manifest.csv").is_file(),
+                    reason="needs shared/dataset_index and canonical versions/k400/data manifests (desktop)")
 def test_real_selection_reproduces_committed_manifests():
     from bdsl.config import load_config
 
     cfg = load_config(env="local", data="kaggle400")
-    m = pd.read_csv(ROOT / "work" / "manifests" / "manifest_v1.csv", dtype={"sha256": str})
-    s = pd.read_csv(ROOT / "work" / "splits" / "S1_v0.csv")
+    m = pd.read_csv(ROOT / "shared" / "dataset_index" / "manifests" / "manifest_v1.csv", dtype={"sha256": str})
+    s = pd.read_csv(ROOT / "shared" / "dataset_index" / "splits" / "S1_v0.csv")
     sel, _, _ = select_subset(m, s, cfg["kaggle400"], cfg["split"]["known_shared_segment_links"])
-    committed = pd.read_csv(ROOT / "kaggle" / "data" / "subset_manifest.csv", encoding="utf-8-sig")
+    committed = pd.read_csv(ROOT / "versions" / "k400" / "data" / "subset_manifest.csv", encoding="utf-8-sig")
     assert sorted(zip(sel["index"], sel["split"])) == sorted(zip(committed["index"], committed["split"]))
 
 
@@ -228,8 +228,8 @@ def test_package_allow_list_clean_commit_and_verify(tmp_path):
     from k400.package import PackageError, build, forbidden, verify
 
     proj = tmp_path / "proj"
-    for rel, text in {"src/bdsl/x.py": "x = 1\n", "configs/base.yaml": "a: 1\n", "kaggle/src/k400/y.py": "y = 2\n",
-                      "kaggle/README.md": "# k\n", "tests/test_x.py": "def test(): pass\n", "pyproject.toml": "[project]\n",
+    for rel, text in {"src/bdsl/x.py": "x = 1\n", "configs/base.yaml": "a: 1\n", "versions/k400/src/k400/y.py": "y = 2\n",
+                      "versions/k400/tools/README.md": "# k\n", "tests/test_x.py": "def test(): pass\n", "pyproject.toml": "[project]\n",
                       "uv.lock": "lock\n", "README.md": "# p\n", "research/papers/a.pdf": "pdf",
                       "dataset/initial_dataset/videos/0.mp4": "video", ".gitignore": "kaggle/data/\nkaggle/work/\n"}.items():
         (proj / rel).parent.mkdir(parents=True, exist_ok=True)

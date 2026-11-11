@@ -919,3 +919,101 @@ Results are logged here only after they are actually run.
   in `FinalSheet2.xlsx`.
 - Notes: The first `git mv` failed with "Permission denied" because the shell's working directory was
   inside the folder being moved. Retrying from the repo root worked.
+
+
+---
+
+## 2026-11-11 — versions copy/inventory verification ও runtime blocker
+
+- Setup (measured): PowerShell/Robocopy; approved exact file list; প্রতিটি real copy-এর আগে fresh `robocopy /L`; existing destination overwrite নয়। কোনো Python training/evaluation চালানো হয়নি।
+- Gate 4 copy snapshot (measured):
+  - pilot50: 205 files, 287,080,095 bytes, 12 checkpoints।
+  - k400: 1,694 files, 620,021,009 bytes, 18 checkpoints।
+  - মোট: 1,899 files, 907,101,104 bytes; 28 real-copy jobs; Robocopy failed count 0।
+- SHA-256 (measured): source/copy সব 1,899 file identical; required 30 `.pt` + 12 `metrics.json`/`run.json` = 42 critical file approved source hashes-সহ মেলে। Missing/extra path 0; byte/count mismatch 0। এটি copy-integrity result, model-quality result নয়।
+- STATE.json (measured): source ও copy 3,057 bytes; SHA-256 `8d6603c85f8ced36ce2b5a4ffa8fe7a91549cae721ae302bef130d7a5be22768`। Historical OUTPUT_HASHES row 2,869 bytes / `759f3cbfc47dcd0921ac97b620e552681167502bddb609a7aa3ca53a78447496`; পরিচিত finish-event issue অপরিবর্তিত রাখা হয়েছে।
+- Scope checks (measured): overview-তে 7 generated skeleton MP4, raw-video directory 0, excluded engineering-run directory 0; k600 folder/config তৈরি হয়নি। Raw videos read/copied হয়নি।
+- Gate 5 documentation (measured): পাঁচটি নতুন Markdown file; preview করা text-এর সঙ্গে exact UTF-8 readback মেলে, local Markdown links আছে। তখন overview total 1,904 files / 907,131,074 bytes। নতুন পাঁচটি doc Gate 4-এর data snapshot-এর বাইরে।
+- Baseline attempt (observed failure): `uv run pytest -q` প্রথমে uv cache initialization-এ os error 183 দিয়েছে। Persistent cache বন্ধ করার পর interpreter query-তে:
+
+```text
+error: Failed to query Python interpreter
+  Caused by: Access is denied. (os error 5)
+```
+
+- কোনো pytest collection/test result পাওয়া যায়নি। New tests, config-hash runtime regression, real checkpoint compatibility, pilot regression, k400 local demo এবং viewer: **not run**। Owner PC outputs এখনো পাওয়া যায়নি; পুরোনো 210-pass record নতুন validation নয়।
+- No new metric score, human review বা expert validation দাবি করা হয়নি; saved historical results পুনরায় evaluate করা হয়নি। Copy reports ও পূর্ণ SHA-256 CSV এই chat-এ দেখানো হয়েছে; version documentation-এ snapshot/provenance লেখা আছে।
+
+
+---
+
+## 2026-11-11 — Gate 7: saved demo artifacts ও browser যাচাই
+
+- Assistant Python/pytest/demo execution: **not run**। PC command transcript ও pytest summary পাওয়া যায়নি।
+- Observed artifacts: `%TEMP%/bdsl_gate2_1d43f0f934ff467c8ff1e571022ea1f0/`-এ pilot50/demo_20261111T103545Z এবং k400/demo_20261111T103717Z; প্রতিটিতে 5টি output file। কে/কোন exact terminal command চালিয়েছে তা independently জানা নেই।
+- Saved logs: দুইটিতেই seed 42 ও unknown_tokens=[]। Pilot “আমি স্কুল যাই”: Model B 91 frames, B1 train Index 3225। k400 validation Index 912 “আমার নানা অনেক ভালো”: Model B 135 frames, B1 train Index 903। Logged input checks সব true; এগুলো saved-log evidence।
+- Independently measured: দুইটি checkpoint ও দুইটি run.json-এর current SHA-256 saved logs-এর সঙ্গে মেলে। Pilot motion_modelB.json ও motion_B1.json পুরোনো work/demo/demo_20261022T141520Z-এর সঙ্গে byte-identical।
+- Pilot regression hashes: Model B aad1ba863dafbc482fab0f8558dd57fd1859c358f647bec840dc612d6f835bfd; B1 61f8e6992ad563c974a75f765bbcff6a9e089387e2181b6ffb952763dbdb1107।
+- Browser measured: read-only Node helper দিয়ে শুধু viewer, original VRM ও saved generated outputs localhost-এ serve করা হয়েছে। /gate7/pilot50/ ও /gate7/k400/ alias-এ দুই-panel avatar এবং সঠিক sentence/version-specific Model B label দেখা গেছে; model inference পুনরায় চালানো হয়নি। Helper বন্ধ করা হয়েছে; alias URLs স্থায়ী নয়।
+- Viewer limitation: k400 page-এর static description-এ “50 pilot clips” এবং canvas subtitle-এ “pilot model” এখনও লেখা আছে। Dynamic Model B label-এ kaggle400/320 training clips আছে। Gate 7-এ code edit করা হয়নি; caption correction একটি proposal।
+- Gate 7 acceptance pending: owner-এর pytest output ও terminal transcripts দরকার। CLI acceptance, complete test suite ও config-hash runtime test: **not run by assistant / result unknown**। BdSL correctness বা expert validation দাবি নয়।
+
+
+---
+
+## 2026-11-11 — Canonical migration checks (runtime not run)
+
+- Move dry run: every approved move previewed with Move-Item -WhatIf; absolute paths checked inside project; protected data/video/upload paths excluded; collisions/source changes refused।
+- Measured real moves: 1,388 files, 1,227,494,033 bytes; every move hashed before/after with Get-FileHash SHA-256; mismatch 0। Immediate critical-file subset 85।
+- After authorized code/doc edits: 127 unique .pt/metrics.json/run.json files covered by 146 plan references; Get-FileHash mismatch 0। No checkpoint, saved run/env metadata, standardizer, vocab, manifest or final-test lock edited।
+- Measured pending duplicates: all 2,053 reviewed source/retained pairs still exist and match planned SHA-256; deletion count 0। Full artifact/move coverage check found no issue; one differing corpus preserved under versions/k400/provenance/variants/।
+- Static checks: 17 relocated notebooks parse as JSON; cell counts/execution_count/saved outputs unchanged from Git HEAD; notebooks not executed। node --check viewer.js passed; PowerShell AST parsing passed without executing the helper; git diff --check passed। Five changed YAML layers retain identical non-path source settings after applying the hash function's exclusions; actual config-hash tests **not run**।
+- Snapshot after code/docs: versions/pilot50 = 762 files / 1,210,492,164 bytes; versions/k400 = 2,513 files / 875,520,399 bytes; shared = 9 files / 46,945,322 bytes। No raw-video directories in versions; k600 absent।
+- New routing/metadata-video separation/notebook syntax tests written. Python/pytest, local inference, model regression and post-migration viewer: **not run by assistant**। No new research metric or expert validation।
+- Evidence folder: C:/Users/User/AppData/Local/Temp/bdsl_restructure_plan_5e02d2e6-9d35-4997-b40e-e4206df30025/execution_1648dc03bc5f4f48857f621630f95f58/ (moves_verified.csv, post_migration_verification.json, critical_sha256_after_edits.csv)।
+
+
+---
+
+## 2026-11-11 — Owner PC pytest failure report and test-path correction
+
+- Owner-provided result: uv run pytest -q → 5 failed, 203 passed, 3 skipped in 53.55s. This is the owner's PC output, not assistant execution.
+- Failures: test_committed_glosses_match_a_fresh_run; test_ten_notebooks_exist; test_powershell_script_is_ascii_and_never_pushes; test_child_pythons_never_inherit_the_jupyter_plot_backend; test_notebook_07_stops_before_freeze_and_test_when_sacrebleu_is_missing. All stopped on old kaggle/ locations or an empty notebook list.
+- Correction: test_k400_misc.py now uses versions/k400/ and canonical pilot annotations; test_k400_split.py uses shared/dataset_index and canonical k400 manifests. The PowerShell contract now checks the approved validation-only helper instead of requiring obsolete video-copy flags. No test was removed or disabled.
+- Static inspection: all referenced canonical files exist; 10 k400 notebooks and 19 helper Python files are discoverable; helper is ASCII; scoped git diff --check clean. The two preserved corpus files differ only by CRLF/LF; each has 1,398 unique words.
+- Retest after correction: **not run by assistant**. Owner must rerun the full suite; collection count may change when formerly empty parameter lists resolve. No source/model/data changes, duplicate removal, dependency changes or git mutations.
+
+
+---
+
+## 2026-11-11 — Owner PC full pytest retest passed
+
+Owner supplied the terminal result for uv run pytest -q: 238 passed in 46.03s. No failures or skips were reported. The earlier stale-test-path failures are resolved in this reported run. Execution was on the owner's PC; the assistant did not run Python.
+
+Real-checkpoint pilot50/k400 demos, pilot motion regression and post-migration avatar viewers remain pending. This test result is engineering validation, not a new research metric or BdSL validation. Duplicate removal remains gated on demo acceptance.
+
+
+---
+
+## 2026-11-11 — Owner pilot validation artifacts and cleanup preflight
+
+- Owner supplied pilot50 demo log created 20261111T150500Z: sentence "আমি স্কুল যাই", seed 42, Model B 91 frames, B1 train Index 3225 / 79 frames, unknown_tokens=[], all logged hash checks true.
+- Independently inspected versions/pilot50/demo_validation/demo_20261111T150500Z/: all five expected outputs exist. Both motion JSONs are byte-identical to versions/pilot50/demo/demo_20261022T141520Z/. Model B SHA-256 aad1ba863dafbc482fab0f8558dd57fd1859c358f647bec840dc612d6f835bfd; B1 61f8e6992ad563c974a75f765bbcff6a9e089387e2181b6ffb952763dbdb1107.
+- Read-only cleanup preflight: all 2,053 approved source/retained pairs still match planned SHA-256; 911,823,762 source bytes; issue count 0; deletion count 0.
+- No new post-migration k400 demo was found. Assistant Python/demo execution remains not run; awaiting owner PC validation Index 912 demo. Viewer acceptance is not inferred from the JSON/hash checks. No BdSL-quality claim.
+
+
+---
+
+## 2026-11-11 — k400 acceptance and reviewed duplicate cleanup completed
+
+- Owner PC supplied k400 demo log created 20261111T151556Z: validation Index 912, sentence "আমার নানা অনেক ভালো", seed 42, Model B 135 frames, B1 train Index 903 / 122 frames, unknown_tokens=[], all 12 logged input checks true. Canonical input_paths point to versions/k400/.
+- Independent file checks: both versions' five expected demo outputs exist; checkpoint/run.json/VRM SHA-256 match their saved logs. k400 motion hashes: modelB d861efefedd1bb4ad646c98ef1ad2ca23d43ecb62a5a7578efbaddb9dbd74221; B1 a10775e2e0aa258007fe2b2b6a66aea88c1eb17505f91634606c2bd9e0eb7d8a. Pilot regression remains byte-identical to reference.
+- Browser observed both new canonical validation URLs loading the two avatars, correct sentences/version labels and shared VRM. Reused the already-running localhost server; no Python was launched by the assistant. This is engineering/rendering validation, not expert/BdSL validation.
+- Cleanup authorization: owner requested k400 demo followed by duplicate cleanup. All 2,053 reviewed pairs were revalidated, absolute paths/reparse ancestors/protected roots checked, and every removal previewed with -WhatIf. Only listed redundant files were removed after their canonical copy matched SHA-256/size.
+- Measured removal: 2,053 files / 911,823,762 logical bytes. Post-removal SHA-256 verifies 1,931 unique retained files; Get-FileHash verifies all 127 unique checkpoints/metrics/run JSON; mismatch 0. No unexpected missing/added files or retained size changes.
+- Scoped inventory immediately around removal (excluding protected raw data/upload, git/env/Python caches): 5,467 files / 3,069,639,580 bytes → 3,414 files / 2,157,815,818 bytes. Differences exactly match the approved removals. Later documentation/memory edits change text-byte totals only.
+- Empty directories: 194 removed non-recursively, each verified empty and previewed; raw-video parents untouched. Root work/ and notebooks/ no longer exist. Legacy kaggle/src may retain ignored Python caches; no unreviewed cache files were deleted.
+- After final version-doc edits: pilot50 766 files / 1,211,747,819 bytes; k400 2,518 files / 877,158,767 bytes; shared 9 files / 46,945,322 bytes. Raw upload ZIP size/mtime unchanged (ZIP content hash was not reread). Corpus line-ending variant retained; k600 folder/config absent.
+- Owner full pytest result remains 238 passed in 46.03s from before cleanup. Post-cleanup full pytest/inference by assistant: not run. Data-path/hash coverage and browser observations are recorded separately; no new research metrics, retraining or final-test rerun.
+- Evidence: C:/Users/User/AppData/Local/Temp/bdsl_restructure_plan_5e02d2e6-9d35-4997-b40e-e4206df30025/cleanup_2d34252e95db4c4a891551124e0d0765/ (validated_pairs.csv, removed_verified.csv, post_removal_inventory_verification.json, critical_sha256_after_removal.csv, empty_directory_summary.json, final_folder_snapshot.json).

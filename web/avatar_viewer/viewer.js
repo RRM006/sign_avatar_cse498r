@@ -15,7 +15,7 @@ const SIDES = ['left', 'right'];
 
 const params = new URLSearchParams(location.search);
 const demoDir = (params.get('demo') || '').replace(/\/?$/, '/');
-const vrmUrl = params.get('vrm') || '/work/models/vrm/Base_Female.vrm';
+const vrmUrl = params.get('vrm') || '/shared/models/vrm/Base_Female.vrm';
 const statusEl = document.getElementById('status');
 const out = document.getElementById('out');
 const glCanvas = document.getElementById('gl');
@@ -194,12 +194,12 @@ function wrapText(text, x, y, maxW, lineH) {
 }
 
 async function main() {
-  if (!params.get('demo')) throw new Error('add ?demo=/work/demo/<demo folder>/ to the address');
+  if (!params.get('demo')) throw new Error('add ?demo=/versions/pilot50/demo/<demo folder>/ to the address');
   const get = async (f) => { const r = await fetch(demoDir + f); if (!r.ok) throw new Error(`${f}: HTTP ${r.status}`); return r.json(); };
   const [log, mB, m1] = await Promise.all([get('demo_log.json'), get('motion_modelB.json'), get('motion_B1.json')]);
   const vrms = [await loadVRM(), await loadVRM()];
   const panels = [mB, m1].map((m, i) => new Panel(vrms[i], m));
-  const subtitles = ['predicted from the G0 gloss (pilot model)', `replays: ${log.b1.sentence_norm}`];
+  const subtitles = ['predicted from the G0 pseudo-gloss', `replays: ${log.b1.sentence_norm}`];
 
   state.roundtrip = { modelB: panels[0].roundtrip(), B1: panels[1].roundtrip() };
   const renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true });

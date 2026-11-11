@@ -134,3 +134,46 @@ Details: research/design_proposals/04_… §F-13. New papers → research/papers
   committed directly (no Git LFS).
 - Several file and folder names contain spaces (e.g. analysis 05, most PDFs). Quote paths in shell
   commands.
+
+
+---
+
+## 2026-11-11 — Session 11 additions (append-only)
+
+আগের map অপরিবর্তিত; নিচের paths নতুন/current additions। Runtime checks **not run**।
+
+| Path | কাজ / অবস্থা |
+|---|---|
+| `src/bdsl/avatar/demo_inputs.py` | Pilot অথবা config-selected split/G0 inputs; read-only version/run/fingerprint checks; লিখিত, not run |
+| `src/bdsl/avatar/demo.py`, `src/bdsl/cli.py` | `demo --data`, default pilot50, `--out-root`, CPU checkpoint loading ও fresh output allocation-এর code |
+| `tests/test_demo_versions.py` | Default/version rejection, future temporary config, hash invariance, CPU loading ও output checks; not run |
+| `configs/data/kaggle400.yaml` | `paths.demo_data_root` ও `paths.demo_state_root`; full desktop state download path config-এ |
+| `versions/pilot50/` | Selected VIDEO features/QC, manifests/splits, দুই Model B run, complete পুরোনো demos ও README; raw videos নেই |
+| `versions/k400/` | Processed data, metadata-only data folder, তিনটি main run, eval/tables/figures/predictions/avatar ও provenance |
+| `versions/README.md`, `HOW_TO_ADD_NEW_VERSION.md`, `RUN_AND_SHOW.md` | Version map, future guide ও commands/supervisor cheat sheet; পাঁচটি নতুন doc-এর তিনটি root-এ |
+
+Original inputs থাকে `work/` ও `kaggle/work/downloads/run1/k400/`-এ; নতুন demo outputs `--out-root` দিয়ে আলাদা রাখতে হবে। `versions/`-এ copy যাচাই হয়েছে; folder untracked, ignore rule এখনো owner প্রয়োগ করেননি। k600 folder/config তৈরি হয়নি।
+
+
+---
+
+## 2026-11-11 — Active canonical map (supersedes older execution paths)
+
+- versions/pilot50/: features, annotations, pilot metadata, runs, demo, reports, 7 notebooks; engineering_checks/ and history/ keep non-result work।
+- versions/k400/: data metadata, processed/, outputs/, 10 notebooks, src/k400 helpers, tools/; engineering_checks/runs/ separate from main results।
+- shared/models/: one MediaPipe/VRM asset set; shared/dataset_index/{manifests,splits}/: full-set index।
+- Shared engine/config/viewer/tests remain root src/, configs/, web/, tests/; pyproject pytest pythonpath now versions/k400/src।
+- configs/data/{pilot50,kaggle400}.yaml select canonical inputs/output roots। Raw video paths remain external; K400_VIDEO_ROOT can specify attached video data separately।
+- versions/RUN_AND_SHOW.md: current commands and viewer URLs; HOW_TO_ADD_NEW_VERSION.md: future guide only। k600 not created。
+- Old work/kaggle folders now contain deferred redundant files or protected raw data/ZIP; do not use them as active derived-state roots।
+
+
+---
+
+## 2026-11-11 — Post-cleanup map
+
+Old work/ and root notebooks/ have been removed after all unique data/notebooks moved and redundant pairs were verified. Active pilot50 state/notebooks: versions/pilot50/. Active k400 metadata/processed/outputs/notebooks/helpers: versions/k400/. Shared src/configs/web/tests stay at root; models and full-set index stay in shared/.
+
+kaggle/data/{train,val,test}/videos and kaggle/work/upload/bdsl-k400-933e9032.zip remain protected external raw-data locations. Ignored old helper Python caches may remain in kaggle/src/. Shared reviewer register/convention stay in annotations/; pilot CSV is in versions/pilot50/annotations/.
+
+Actual validation output folders and browser URLs are in versions/RUN_AND_SHOW.md. Default demo roots are versions/pilot50/demo and versions/k400/demo; explicit --out-root wins. k600 has not been created.

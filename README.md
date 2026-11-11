@@ -1,8 +1,10 @@
+> Current layout (2026-11-11): pilot50 state/notebooks are in versions/pilot50/; k400 state/notebooks/helpers are in versions/k400/. Shared engine stays in src/, configs/, web/. Models and the full-dataset index are in shared/. New model commands and output/viewer paths: [versions/RUN_AND_SHOW.md](versions/RUN_AND_SHOW.md). Owner PC tests (238 passed), both demo artifacts and browser viewers were verified; reviewed duplicate cleanup is complete; older work/kaggle paths below are historical.
+
 # Bangla Text → Bangla Sign Language (BdSL) Translation Using a 3D Avatar
 
 CSE498R research project (NSU). A Bangla text sentence goes in; the BdSL translation is performed by a 3D avatar.
 
-**Status (2026-10-22):** The literature review is closed. The research design was approved in principle on 2026-10-22 (`agent_docs/decisions.md`, ADR-0014–0024). The 5-day prototype is in progress: Day 1 (environment, configuration, dataset manifest, split S1 v0, 50-video pilot) and Day 2 (pilot feature extraction; provisional gloss convention and automatic gloss drafts awaiting team review) are done. There are no trained models or experimental results yet.
+**Status (2026-11-11):** The literature review and initial design are complete; the 5-day pilot prototype and the first 400-video Kaggle experiment are complete. Pilot gloss review and expert BdSL validation remain open. The kaggle400 findings are small-scale and signer-dependent, and its generated motion is strongly damped; see [versions/README.md](versions/README.md) for current status and limitations.
 
 ## Scope (confirmed)
 
@@ -17,8 +19,9 @@ CSE498R research project (NSU). A Bangla text sentence goes in; the BdSL transla
 |---|---|
 | `dataset/` | Team dataset: current and superseded spreadsheets, 50-clip video sample (the full video set is local and gitignored). See `dataset/README.md`. |
 | `dataset/pilot50_v1/` | The 50-video pilot set: selection protocol and manifest (videos are local copies, gitignored). |
-| `configs/`, `src/bdsl/`, `tests/`, `notebooks/` | Pipeline code (Python package `bdsl`), layered configs, tests and notebooks. Setup and commands: `CLAUDE.md`. |
-| `annotations/` | Provisional gloss convention, review guide, reviewer register (codes only) and pilot gloss annotations (`auto_draft` until reviewed). |
+| `configs/`, `src/bdsl/`, `tests/`, `web/` | Shared pipeline code, layered configs, tests and avatar viewer. Setup and commands: `CLAUDE.md`. |
+| `versions/pilot50/`, `versions/k400/` | Version-specific notebooks, guides and canonical research state. Large/private artifacts remain local and gitignored. |
+| `annotations/` | Provisional gloss convention, review guide and reviewer register; pilot gloss annotations are in `versions/pilot50/annotations/`. |
 | `research/papers/` | The six source PDFs (see the notice in its README: use the analyses instead of reading the PDFs). |
 | `research/paper_analyses/` | `01`–`06`: one analysis per paper. `07`–`08`: cross-paper comparisons. |
 | `research/design_proposals/` | Research/design documents. `01`–`03` are proposals; `04` is the design review approved in principle on 2026-10-22. |

@@ -26,3 +26,36 @@ kaggle/outputs/env/mediapipe_route.json
 # landmarks derived from real people's recordings never go into the public repo (ADR-0017)
 kaggle/outputs/avatar/**/motion_real.json
 kaggle/outputs/avatar/**/motion_B1.json
+
+# Canonical version state is local; publish its source, docs and notebooks, not data or runs.
+versions/k400/data/
+versions/k400/processed/
+versions/k400/provenance/
+versions/**/features/
+versions/**/runs/
+versions/**/history/
+versions/**/engineering_checks/
+versions/**/reports/
+versions/**/*.log
+versions/**/demo/
+versions/**/demo_validation/
+versions/k400/outputs/runs/
+versions/k400/outputs/eval/
+versions/k400/outputs/predictions/
+versions/k400/outputs/avatar/
+versions/k400/outputs/env/
+versions/k400/outputs/OUTPUT_HASHES*.csv
+versions/k400/outputs/tables/per_item_*.csv
+versions/k400/tools/commit_message.txt
+versions/**/*.npz
+versions/**/*.pt
+versions/**/*.pth
+versions/**/*.ckpt
+versions/**/*.mp4
+versions/**/*.vrm
+versions/**/*.zip
+versions/**/*.task
+
+# These shared data indexes and model assets are not part of the public source tree.
+shared/dataset_index/
+shared/models/

@@ -70,12 +70,13 @@ def _guard(split: str) -> None:
 def paths(cfg: dict) -> dict:
     """Every kaggle400 path, from the config (no machine-specific path in code)."""
     d = Path(cfg["paths"]["k400_data_root"]) / "data"
+    videos = Path(cfg["paths"].get("k400_video_root", d))
     s = Path(cfg["paths"]["k400_state_root"])
     out = s / "outputs"
     return {
         "data_dir": d, "lock": d / LOCK_FILE, "subset_manifest": d / "subset_manifest.csv",
         "manifest": {sp: d / sp / f"{sp}_manifest.csv" for sp in SPLITS},
-        "videos": {sp: d / sp / "videos" for sp in SPLITS},
+        "videos": {sp: videos / sp / "videos" for sp in SPLITS},
         "state_root": s, "features": {sp: s / "processed" / "features" / sp for sp in SPLITS},
         "glosses": {sp: s / "processed" / "glosses" / f"gloss_g0_{sp}.csv" for sp in SPLITS},
         "vocab_dir": s / "processed" / "vocab", "qc_dir": s / "processed" / "qc",
@@ -92,7 +93,7 @@ def check_split_lock(cfg: dict, splits: tuple[str, ...] = TRAINING_SPLITS) -> di
     and `evaluate --final` check every locked file."""
     p = paths(cfg)
     if not p["lock"].is_file():
-        raise SplitLockError(f"{p['lock']} is missing: run the copy step (kaggle/tools/run_local_steps.ps1) first.")
+        raise SplitLockError(f"{p['lock']} is missing: restore this version's approved metadata; do not recreate its locked split.")
     lock = json.loads(p["lock"].read_text(encoding="utf-8"))
     if "test" in splits:
         _guard("test")

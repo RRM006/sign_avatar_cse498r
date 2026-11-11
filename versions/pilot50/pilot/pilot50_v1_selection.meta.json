@@ -1,0 +1,153 @@
+{
+  "config_hash": "08230f0a1b6348194a366504625956367356a653e4a32c741ef51aaa57f1850a",
+  "csv": "pilot50_v1_selection.csv",
+  "csv_sha256": "8affc876aacecf782a8e1521ad8dfb036b9b322efa0398e8a23aef5d82a9a0f3",
+  "generated_at_utc": "2026-10-22T07:16:56+00:00",
+  "pilot": "pilot50_v1",
+  "pilot_config": {
+    "core": {
+      "families": 6,
+      "train_per_family": 4
+    },
+    "counts": {
+      "test": 5,
+      "train": 40,
+      "val": 5
+    },
+    "diversity_heldout": [
+      [
+        "val",
+        "question"
+      ],
+      [
+        "val",
+        "negation"
+      ],
+      [
+        "test",
+        "question"
+      ],
+      [
+        "test",
+        "negation"
+      ]
+    ],
+    "diversity_train": {
+      "long": 3,
+      "negation": 2,
+      "number_time": 3,
+      "other": 4,
+      "question": 2,
+      "short": 2
+    },
+    "heldout_fallback_pool": true,
+    "heldout_prefer_in_vocab": true,
+    "long_min_tokens": 7,
+    "low_res_short_side": 500,
+    "name": "pilot50_v1",
+    "quotas": {
+      "all_duration_quartiles": true,
+      "landscape_min": 7,
+      "low_res_min": 3
+    },
+    "seed": 20261022,
+    "short_max_tokens": 2
+  },
+  "report": {
+    "counts": {
+      "test": 5,
+      "train": 40,
+      "val": 5
+    },
+    "counts_ok": true,
+    "duration_quartiles": {
+      "q1": 15,
+      "q2": 21,
+      "q3": 6,
+      "q4": 8
+    },
+    "families": [
+      "5|আমার _ রান্না খেতে মজা",
+      "6|আমার _ পেয়ারা খেতে পছন্দ করে",
+      "4|আমি এপ্রিলে _ যাব",
+      "2|আমি _",
+      "4|আমার মামা _ যাবে",
+      "4|আমি মঙ্গলবার _ যাব"
+    ],
+    "hard_share": 0.24,
+    "heldout_all_words_seen": 6,
+    "heldout_fallback_pool": true,
+    "heldout_prefer_in_vocab": true,
+    "heldout_total": 10,
+    "landscape": 9,
+    "low_res": 3,
+    "ok": true,
+    "pool_size": 3378,
+    "quotas_unmet": [],
+    "strata": [
+      {
+        "n": 1,
+        "split": "test",
+        "stratum": "negation"
+      },
+      {
+        "n": 2,
+        "split": "test",
+        "stratum": "other"
+      },
+      {
+        "n": 2,
+        "split": "test",
+        "stratum": "question"
+      },
+      {
+        "n": 3,
+        "split": "train",
+        "stratum": "long"
+      },
+      {
+        "n": 2,
+        "split": "train",
+        "stratum": "negation"
+      },
+      {
+        "n": 3,
+        "split": "train",
+        "stratum": "number_time"
+      },
+      {
+        "n": 24,
+        "split": "train",
+        "stratum": "other"
+      },
+      {
+        "n": 2,
+        "split": "train",
+        "stratum": "question"
+      },
+      {
+        "n": 6,
+        "split": "train",
+        "stratum": "short"
+      },
+      {
+        "n": 1,
+        "split": "val",
+        "stratum": "negation"
+      },
+      {
+        "n": 3,
+        "split": "val",
+        "stratum": "other"
+      },
+      {
+        "n": 1,
+        "split": "val",
+        "stratum": "question"
+      }
+    ],
+    "unique_index": true,
+    "unique_sentence": true
+  },
+  "split_csv_sha256": "40481a5faedc962a0ad92d5f7ec515c36aa34a46bf6d6127db77d81009c76cc0"
+}
